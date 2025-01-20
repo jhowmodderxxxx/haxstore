@@ -43,7 +43,7 @@ if DeviceType == "Pc" then
     ImageLabel.BorderSizePixel = 0
     ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
-    ImageLabel.Image = "rbxassetid://" -- add image here
+    ImageLabel.Image = "rbxassetid:115939816657500"
 
     TextButton.Parent = MainFrame
     TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -64,7 +64,7 @@ if DeviceType == "Pc" then
 end
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAXSTORE - Premium",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | Nome do seu HUB - Premium",
     SubTitle = " (discord.gg/hUZmYVUC)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -106,9 +106,9 @@ local WaitForSomeone = RenderStepped.Wait
 
 -- // // // Variables // // // --
 local CastMode = "Legit"
-local ShakeMode = "Navegação"
-local ReelMode = "Flagrante"
-local CollectMode = "Teleportes"
+local ShakeMode = "Navigation"
+local ReelMode = "Blatant"
+local CollectMode = "Teleports"
 local teleportSpots = {}
 local FreezeChar = false
 local DayOnlyLoop = nil
@@ -119,7 +119,7 @@ local RunCount = false
 -- // // // Functions // // // --
 function ShowNotification(String)
     Fluent:Notify({
-        Title = "HAXSTORE - welcome"
+        Title = "HAXSTORE",
         Content = String,
         Duration = 5
     })
@@ -176,7 +176,7 @@ local function autoCast()
                             end)
                         end
                     end)
-                elseif CastMode == "Flagrante"
+                elseif CastMode == "Blatant" then
                     local rod = LocalCharacter and LocalCharacter:FindFirstChildOfClass("Tool")
                     if rod and rod:FindFirstChild("values") and string.find(rod.Name, "Rod") then
                         task.wait(0.5)
@@ -194,7 +194,7 @@ end
 local autoShakeEnabled = false
 local autoShakeConnection
 local function autoShake()
-    if ShakeMode == "Navegação"
+    if ShakeMode == "Navigation" then
         task.wait()
         xpcall(function()
             local shakeui = PlayerGui:FindFirstChild("shakeui")
