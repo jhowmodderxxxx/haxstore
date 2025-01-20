@@ -1082,4 +1082,12 @@ do
 
 end
 
+
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "HAX STORE",
+    Content = "Executed!",
+    Duration = 8
+})
+
 OrionLib:Init()
