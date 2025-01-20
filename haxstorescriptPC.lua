@@ -1069,7 +1069,6 @@ do
         end
     })
 
-    local section = Tabs.Trade:AddSection("Coming Soon...")
 end
 
 Window:SelectTab(1)
