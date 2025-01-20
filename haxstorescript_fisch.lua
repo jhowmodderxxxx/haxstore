@@ -1040,5 +1040,3 @@ Fluent:Notify({
 })
 
 OrionLib:Init()
-
-OrionLib:Destroy()
