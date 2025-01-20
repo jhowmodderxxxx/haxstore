@@ -1,4 +1,4 @@
-if getgenv().hub then warn("HAX STORE : ja foi executado!") return end
+if getgenv().hub then warn("HAX STORE : Already executed!") return end
 getgenv().hub = true
 
 if not game:IsLoaded() then
