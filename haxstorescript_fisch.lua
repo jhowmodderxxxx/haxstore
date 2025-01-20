@@ -74,10 +74,16 @@ if DeviceType == "Mobile" then
     end)
 end
 
+local amplitude = 10
+local frequency = 2
+
 imageButton.MouseButton1Click:Connect(function()
- modMenu.Visible = not modMenu.Visible
+ modMenu.Visible = not modMenu.Visible + offset
  end)
 
+ game:GetService("RunService").RenderStepped:Connect(function()
+    local offset = UDim2.new(0, 0, 0, math.sin(tick() * frequency) * amplitude)
+     imageButton.Position = originalPosition + offset
 
 
 local Window = Fluent:CreateWindow({
