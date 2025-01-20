@@ -1,18 +1,3 @@
-local exploit = getexecutorname or identifyexecutor
-local support = {
-    ["Fluxus"] = true,
-    ["Trigon"] = true,
-    ["Codex"] = true,
-    ["Delta"] = true,
-    ["Vega X"] = true,
-    ["Hydrogen"] = false,
-    ["alysse"] = false,
-    ["ArceusX"] = true,
-    ["Electron"] = false,
-    ["Seliware"] = true,
-    ["Wave"] = true,
-}
-
 local Options = Fluent.Options
 do
 OrionLib:MakeNotification(
