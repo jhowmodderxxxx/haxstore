@@ -10,7 +10,7 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-if DeviceType == "Mobile" then
+if DeviceType == "Pc" then
     local ClickButton = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
     local ImageLabel = Instance.new("ImageLabel")
@@ -551,7 +551,7 @@ local Tabs = { -- https://lucide.dev/icons/
 
 local Options = Fluent.Options
 
-Window:SelectTabs(Home)
+Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
