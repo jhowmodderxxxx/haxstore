@@ -539,12 +539,12 @@ end)
 -- // // // Tabs Gui // // // --
 
 local Tabs = { -- https://lucide.dev/icons/
-    Home = Window:AddTab({ Title = "HAXSTORE DISCORD", Icon = "arrow-right" }),
-    Exclusives = Window:AddTab({ Title = "Premium", Icon = "heart" }),
+    Home = Window:AddTab({ Title = "HAXSTORE DISCORD", Icon = "send" }),
+    Exclusives = Window:AddTab({ Title = "Premium", Icon = "hand-coins" }),
     Main = Window:AddTab({ Title = "Inicio", Icon = "list" }),
     Items = Window:AddTab({ Title = "Items", Icon = "box" }),
     Teleports = Window:AddTab({ Title = "Teleportes", Icon = "map-pin" }),
-    Misc = Window:AddTab({ Title = "Outros", Icon = "file-text" }),
+    Misc = Window:AddTab({ Title = "Outros", Icon = "rotate-ccw" }),
 }
 
 local Options = Fluent.Options
