@@ -6,9 +6,10 @@ if not game:IsLoaded() then
 end
 
 
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+--local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+--local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+--local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 if DeviceType == "Pc" then
@@ -64,15 +65,20 @@ if DeviceType == "Pc" then
     end)
 end
 
-local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE PREMIUM V1",
-    SubTitle = " (discord.gg/hUZmYVUC)", -- discord link
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 460),
-    Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "White",
-    MinimizeKey = Enum.KeyCode.LeftAlt -- Used when theres no MinimizeKeybind
-})
+
+local Window = OrionLib:MakeWindow({Name = "HAX STORE FISCH", HidePremium = false, SaveConfig = true, ConfigFolder = "HaxStore"})
+
+--[[
+Name = <string> - The name of the UI.
+HidePremium = <bool> - Whether or not the user details shows Premium status or not.
+SaveConfig = <bool> - Toggles the config saving in the UI.
+ConfigFolder = <string> - The name of the folder where the configs are saved.
+IntroEnabled = <bool> - Whether or not to show the intro animation.
+IntroText = <string> - Text to show in the intro animation.
+IntroIcon = <string> - URL to the image you want to use in the intro animation.
+Icon = <string> - URL to the image you want displayed on the window.
+CloseCallback = <function> - Function to execute when the window is closed.
+]]
 
 -- // // // Services // // // --
 local VirtualInputManager = game:GetService("VirtualInputManager")
@@ -1072,6 +1078,8 @@ do
     })
 
 end
+
+OrionLib:Init()
 
 Window:SelectTab(1)
 Fluent:Notify({
