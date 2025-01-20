@@ -1,4 +1,4 @@
-if getgenv().hub then warn("HAXSTORE : Already executed!") return end
+if getgenv().hub then warn("HAX STORE : Already executed!") return end
 getgenv().hub = true
 
 if not game:IsLoaded() then
@@ -10,7 +10,8 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-if DeviceType == "Mobile" then
+if DeviceType == "Pc" then
+    if DeviceType == "Mobile" then
     local ClickButton = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
     local ImageLabel = Instance.new("ImageLabel")
