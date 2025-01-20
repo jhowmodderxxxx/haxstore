@@ -74,7 +74,11 @@ if DeviceType == "Mobile" then
     end)
 end
 
-imageButton.MouseButton1Click:Connect(function() modMenu.Visible = not modMenu.Visible end)
+imageButton.MouseButton1Click:Connect(function()
+ modMenu.Visible = not modMenu.Visible
+ end)
+
+
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | Nome do seu HUB - Premium",
