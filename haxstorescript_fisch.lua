@@ -43,7 +43,7 @@ if DeviceType == "PC" then
     ImageLabel.BorderSizePixel = 0
     ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
-    ImageLabel.Image = "rbxassetid://" -- add image here
+    ImageLabel.Image = "rbxassetid://"
 
     TextButton.Parent = MainFrame
     TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -58,19 +58,19 @@ if DeviceType == "PC" then
     TextButton.TextSize = 20
 
     TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftControl", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
     end)
 end
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | Nome do seu HUB - Premium",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052) " | HAX STORE - Premium",
     SubTitle = " (discord.gg/J37PW97j6a)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, 
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftAlt -- Used when theres no MinimizeKeybind
 })
 
 -- // // // Services // // // --
