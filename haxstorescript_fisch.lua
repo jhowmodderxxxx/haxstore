@@ -25,6 +25,7 @@ if DeviceType == "Mobile" then
     local TextButton = Instance.new("TextButton")
     local UICorner = Instance.new("UICorner")
     local UICorner_2 = Instance.new("UICorner")
+    local ImageButton = Instance.new("ImageButton")
 
     ClickButton.Name = "ClickButton"
     ClickButton.Parent = game.CoreGui
@@ -1091,4 +1092,3 @@ Fluent:Notify({
     Duration = 8
 })
 
-OrionLib:Init()
