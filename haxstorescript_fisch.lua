@@ -7,10 +7,6 @@ end
 
 
 local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
-
 
     TextButton.MouseButton1Click:Connect(function()
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
@@ -1031,12 +1027,5 @@ do
     })
 
 end
-
-Window:SelectTab(1)
-Fluent:Notify({
-    Title = "haxstore",
-    Content = "EXECUTADO!",
-    Duration = 8
-})
 
 OrionLib:Init()
