@@ -38,7 +38,7 @@ if DeviceType == "Pc" then
     ClickButton.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
     MainFrame.Name = "MainFrame"
-    ImageLabel.Parent = rbxassetid://115939816657500
+    ImageLabel.Parent = ClickButton
     MainFrame.AnchorPoint = Vector2.new(1, 0)
     MainFrame.BackgroundTransparency = 0.8
     MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38) 
