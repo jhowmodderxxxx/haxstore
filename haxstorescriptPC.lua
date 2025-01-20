@@ -65,7 +65,7 @@ end
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
-    SubTitle = "FEITO POR JHOWMODDERX", -- discord link
+    SubTitle = "", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
