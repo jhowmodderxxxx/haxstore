@@ -129,7 +129,7 @@ end
 local function GetPlayerStats()
     local hud = LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("hud")
     if hud and hud.safezone then
-        local coins = hud.safezone:FindFirstChild("DINHEIRO (COINS)") and hud.safezone.coins.Text or "N/A"
+        local coins = hud.safezone:FindFirstChild("coins") and hud.safezone.coins.Text or "N/A"
         local jobId = game.JobId
         local joinScript = string.format("game:GetService('TeleportService'):TeleportToPlaceInstance(%d, '%s', game:GetService('Players').LocalPlayer)", game.PlaceId, jobId)
         return {
