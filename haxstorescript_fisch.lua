@@ -54,7 +54,7 @@ if DeviceType == "Pc" then
     TextButton.Size = UDim2.new(0, 45, 0, 45)
     TextButton.AutoButtonColor = false
     TextButton.Font = Enum.Font.SourceSans
-    TextButton.Text = "HAXSTORE"
+    TextButton.Text = "Open"
     TextButton.TextColor3 = Color3.new(220, 125, 255)
     TextButton.TextSize = 25
 
