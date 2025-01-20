@@ -1078,7 +1078,7 @@ do
 end
 
 
-Window:SelectTabs(1)
+Window:SelectTab(1)
 Fluent:Notify({
     Title = "HAX STORE",
     Content = "Executed!",
