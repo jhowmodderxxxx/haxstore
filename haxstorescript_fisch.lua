@@ -601,7 +601,7 @@ do
         Description = "",
         Callback = function()
             local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-            if not RequireRod then return ShowNotification("Requirement Rod Of The Depths") end
+            if not RequireRod then return ShowNotification("REQUER Rod Of The Depths") end
             for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do 
                 if v:FindFirstChild("offer") then
                     v.Parent = LocalPlayer.Character
@@ -1049,7 +1049,7 @@ do
             if UserPlayer:FindFirstChild("level") then UserPlayer.user.Text = "HIDDEN" end
             local hud = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("hud"):WaitForChild("safezone")
             if hud:FindFirstChild("coins") then hud.coins.Text = "HIDDEN$" end
-            if hud:FindFirstChild("lvl") then hud.lvl.Text = "ESCONDER LEVEL (SAFE)" end
+            if hud:FindFirstChild("lvl") then hud.lvl.Text = "HIDDEN" end
             task.wait(0.01)
         end
     end)
