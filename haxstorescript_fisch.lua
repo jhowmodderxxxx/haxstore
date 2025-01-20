@@ -1055,11 +1055,6 @@ do
     end)
 
 
-    if getgenv().ED_AntiKick then
-        return
-    end
-
-
     -- // Load Tab // --
     local section = Tabs.Misc:AddSection("Load Scripts")
     Tabs.Misc:AddButton({
