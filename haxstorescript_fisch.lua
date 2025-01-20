@@ -84,7 +84,7 @@ imageButton.MouseButton1Click:Connect(function()
  game:GetService("RunService").RenderStepped:Connect(function()
     local offset = UDim2.new(0, 0, 0, math.sin(tick() * frequency) * amplitude)
      imageButton.Position = originalPosition + offset
-
+ end)
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | Nome do seu HUB - Premium",
