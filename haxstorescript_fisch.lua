@@ -10,13 +10,14 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-if DeviceType == "Mobile" then
+if DeviceType == "Pc" then
     local ClickButton = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
     local ImageLabel = Instance.new("ImageLabel")
     local TextButton = Instance.new("TextButton")
     local UICorner = Instance.new("UICorner")
     local UICorner_2 = Instance.new("UICorner")
+    local ImageButton = Instance.new("ImageButton")
 
     ClickButton.Name = "ClickButton"
     ClickButton.Parent = game.CoreGui
@@ -45,6 +46,14 @@ if DeviceType == "Mobile" then
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
     ImageLabel.Image = "rbxassetid://115939816657500"
     
+    local imageButton = Instance.new("ImageButton")
+    imageButton.Size = UDim2.new(0, 75, 0, 75)
+    imageButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+    imageButton.AnchorPoint = Vector2.new(0.5, 0.5)
+    imageButton.Image = "rbxassetid://115939816657500"
+    imageButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
+    imageButton.BackgroundTransparency = 1 
+    imageButton.Parent = screenGui
 
     TextButton.Parent = MainFrame
     TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -67,6 +76,9 @@ if DeviceType == "Mobile" then
         Theme = "White",
         MinimizeKey = Enum.KeyCode.LeftAlt 
     })
+
+
+    imageButton.MouseButton1Click:Connect(function() modMenu.Visible = not modMenu.Visible end)
 
 
     
