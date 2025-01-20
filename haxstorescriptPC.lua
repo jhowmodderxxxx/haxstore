@@ -520,14 +520,14 @@ shadowCountLabel.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 shadowCountLabel.TextColor3 = Color3.new(220, 125, 255)
 shadowCountLabel.Font = Enum.Font.SourceSans
 shadowCountLabel.TextSize = 24
-shadowCountLabel.Text = "Contagem de Sombras: 0"
+shadowCountLabel.Text = "Shadow Count: 0"
 
 local corner = Instance.new("UICorner", shadowCountLabel)
 corner.CornerRadius = UDim.new(0, 10)
 
 local function updateShadowCount()
     local count = #workspace.Shadows:GetChildren()
-    shadowCountLabel.Text = "Contagem de Sombras: " .. count
+    shadowCountLabel.Text = "Shadow Count: " .. count
 end
 
 spawn(function()
@@ -540,12 +540,13 @@ end)
 -- // // // Tabs Gui // // // --
 
 local Tabs = { -- https://lucide.dev/icons/
-    Home = Window:AddTab({ Title = "HAXSTORE DISCORD", Icon = "send" }),
-    Exclusives = Window:AddTab({ Title = "Premium", Icon = "hand-coins" }),
-    Main = Window:AddTab({ Title = "Inicio", Icon = "list" }),
+    Home = Window:AddTab({ Title = "Home", Icon = "home" }),
+    Exclusives = Window:AddTab({ Title = "Exclusives", Icon = "heart" }),
+    Main = Window:AddTab({ Title = "Main", Icon = "list" }),
     Items = Window:AddTab({ Title = "Items", Icon = "box" }),
-    Teleports = Window:AddTab({ Title = "Teleportes", Icon = "map-pin" }),
-    Misc = Window:AddTab({ Title = "Outros", Icon = "rotate-ccw" }),
+    Teleports = Window:AddTab({ Title = "Teleports", Icon = "map-pin" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "file-text" }),
+    Trade = Window:AddTab({ Title = "Trade", Icon = "gift" })
 }
 
 local Options = Fluent.Options
@@ -554,19 +555,19 @@ Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
-        Title = "clique para copiar o link do discord",
-        Description = "HAX STORE 2025",
+        Title = "Copy Discord link",
+        Description = "Join our main discord!",
         Callback = function()
-            setclipboard("https://https://discord.gg/MbqyhEJ3") -- discord link
+            setclipboard("https://discord.gg/J37PW97j6a") -- discord link
         end
     })
 
     -- // Exclusives Tab // --
-    local sectionExclus = Tabs.Exclusives:AddSection("FUNÇÕES PREMIUM")
+    local sectionExclus = Tabs.Exclusives:AddSection("Exclusives Features")
     local CountShadows = Tabs.Exclusives:AddToggle("CountShadows", {Title = "Show Count Shadows", Default = false })
     CountShadows:OnChanged(function()
         local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-        if not RequireRod then return ShowNotification("REQUER Rod Of The Depths") end
+        if not RequireRod then return ShowNotification("Requirement Rod Of The Depths") end
         if Options.CountShadows.Value == true then
             shadowCountLabel.Visible = true
         else
@@ -576,7 +577,7 @@ do
     local RodDupe = Tabs.Exclusives:AddToggle("RodDupe", {Title = "Rod Of The Depths Spam", Default = false })
     RodDupe:OnChanged(function()
         local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-        if not RequireRod then return ShowNotification("REQUER Rod Of The Depths") end
+        if not RequireRod then return ShowNotification("Requirement Rod Of The Depths") end
         while Options.RodDupe.Value do
             local args1 = {[1] = "Flimsy Rod"}
             game:GetService("ReplicatedStorage").events.equiprod:FireServer(unpack(args1))
@@ -602,7 +603,7 @@ do
         Description = "",
         Callback = function()
             local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-            if not RequireRod then return ShowNotification("REQUER Rod Of The Depths") end
+            if not RequireRod then return ShowNotification("Requirement Rod Of The Depths") end
             for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do 
                 if v:FindFirstChild("offer") then
                     v.Parent = LocalPlayer.Character
@@ -627,89 +628,89 @@ do
         end
     })
 
--- // Main Tab // --
-local section = Tabs.Main:AddSection("Auto Fishing")
-local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "Auto Cast", Default = false })
-autoCast:OnChanged(function()
-    local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
-    if Options.autoCast.Value == true then
-        autoCastEnabled = true
-        if LocalPlayer.Backpack:FindFirstChild(RodName) then
-            LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(RodName))
-        end
-        if LocalCharacter then
-            local tool = LocalCharacter:FindFirstChildOfClass("Tool")
-            if tool then
-                local hasBobber = tool:FindFirstChild("bobber")
-                if not hasBobber then
-                    if CastMode == "Legit" then
-                        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, LocalPlayer, 0)
-                        HumanoidRootPart.ChildAdded:Connect(function()
-                            if HumanoidRootPart:FindFirstChild("power") ~= nil and HumanoidRootPart.power.powerbar.bar ~= nil then
-                                HumanoidRootPart.power.powerbar.bar.Changed:Connect(function(property)
-                                    if property == "Size" then
-                                        if HumanoidRootPart.power.powerbar.bar.Size == UDim2.new(1, 0, 1, 0) then
-                                            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, LocalPlayer, 0)
+    -- // Main Tab // --
+    local section = Tabs.Main:AddSection("Auto Fishing")
+    local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "Auto Cast", Default = false })
+    autoCast:OnChanged(function()
+        local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
+        if Options.autoCast.Value == true then
+            autoCastEnabled = true
+            if LocalPlayer.Backpack:FindFirstChild(RodName) then
+                LocalPlayer.Character.Humanoid:EquipTool(LocalPlayer.Backpack:FindFirstChild(RodName))
+            end
+            if LocalCharacter then
+                local tool = LocalCharacter:FindFirstChildOfClass("Tool")
+                if tool then
+                    local hasBobber = tool:FindFirstChild("bobber")
+                    if not hasBobber then
+                        if CastMode == "Legit" then
+                            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, LocalPlayer, 0)
+                            HumanoidRootPart.ChildAdded:Connect(function()
+                                if HumanoidRootPart:FindFirstChild("power") ~= nil and HumanoidRootPart.power.powerbar.bar ~= nil then
+                                    HumanoidRootPart.power.powerbar.bar.Changed:Connect(function(property)
+                                        if property == "Size" then
+                                            if HumanoidRootPart.power.powerbar.bar.Size == UDim2.new(1, 0, 1, 0) then
+                                                VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, LocalPlayer, 0)
+                                            end
                                         end
-                                    end
-                                end)
+                                    end)
+                                end
+                            end)
+                        elseif CastMode == "Blatant" then
+                            local rod = LocalCharacter and LocalCharacter:FindFirstChildOfClass("Tool")
+                            if rod and rod:FindFirstChild("values") and string.find(rod.Name, "Rod") then
+                                task.wait(0.5)
+                                local Random = math.random(90, 99)
+                                rod.events.cast:FireServer(Random)
                             end
-                        end)
-                    elseif CastMode == "Blatant" then
-                        local rod = LocalCharacter and LocalCharacter:FindFirstChildOfClass("Tool")
-                        if rod and rod:FindFirstChild("values") and string.find(rod.Name, "Rod") then
-                            task.wait(0.5)
-                            local Random = math.random(90, 99)
-                            rod.events.cast:FireServer(Random)
                         end
                     end
                 end
+                task.wait(1)
             end
-            task.wait(1)
-        end
-    else
-        autoCastEnabled = false
-    end
-end)
-local autoShake = Tabs.Main:AddToggle("autoShake", {Title = "Auto Shake", Default = false })
-autoShake:OnChanged(function()
-    if Options.autoShake.Value == true then
-        autoShakeEnabled = true
-        startAutoShake()
-    else
-        autoShakeEnabled = false
-        stopAutoShake()
-    end
-end)
-local autoReel = Tabs.Main:AddToggle("autoReel", {Title = "Auto Reel", Default = false })
-autoReel:OnChanged(function()
-    if Options.autoReel.Value == true then
-        autoReelEnabled = true
-        startAutoReel()
-    else
-        autoReelEnabled = false
-        stopAutoReel()
-    end
-end)
-local FreezeCharacter = Tabs.Main:AddToggle("FreezeCharacter", {Title = "Freeze Character", Default = false })
-FreezeCharacter:OnChanged(function()
-    local oldpos = HumanoidRootPart.CFrame
-    FreezeChar = Options.FreezeCharacter.Value
-    task.wait()
-    while WaitForSomeone(RenderStepped) do
-        if FreezeChar and HumanoidRootPart ~= nil then
-            task.wait()
-            HumanoidRootPart.CFrame = oldpos
         else
-            break
+            autoCastEnabled = false
         end
-    end
-end)
+    end)
+    local autoShake = Tabs.Main:AddToggle("autoShake", {Title = "Auto Shake", Default = false })
+    autoShake:OnChanged(function()
+        if Options.autoShake.Value == true then
+            autoShakeEnabled = true
+            startAutoShake()
+        else
+            autoShakeEnabled = false
+            stopAutoShake()
+        end
+    end)
+    local autoReel = Tabs.Main:AddToggle("autoReel", {Title = "Auto Reel", Default = false })
+    autoReel:OnChanged(function()
+        if Options.autoReel.Value == true then
+            autoReelEnabled = true
+            startAutoReel()
+        else
+            autoReelEnabled = false
+            stopAutoReel()
+        end
+    end)
+    local FreezeCharacter = Tabs.Main:AddToggle("FreezeCharacter", {Title = "Freeze Character", Default = false })
+    FreezeCharacter:OnChanged(function()
+        local oldpos = HumanoidRootPart.CFrame
+        FreezeChar = Options.FreezeCharacter.Value
+        task.wait()
+        while WaitForSomeone(RenderStepped) do
+            if FreezeChar and HumanoidRootPart ~= nil then
+                task.wait()
+                HumanoidRootPart.CFrame = oldpos
+            else
+                break
+            end
+        end
+    end)
 
     -- // Mode Tab // --
     local section = Tabs.Main:AddSection("Mode Fishing")
     local autoCastMode = Tabs.Main:AddDropdown("autoCastMode", {
-        Title = "MODO Auto Cast",
+        Title = "Auto Cast Mode",
         Values = {"Legit", "Blatant"},
         Multi = false,
         Default = CastMode,
@@ -718,7 +719,7 @@ end)
         CastMode = Value
     end)
     local autoShakeMode = Tabs.Main:AddDropdown("autoShakeMode", {
-        Title = "MODO Auto Shake",
+        Title = "Auto Shake Mode",
         Values = {"Navigation", "Mouse"},
         Multi = false,
         Default = ShakeMode,
@@ -727,7 +728,7 @@ end)
         ShakeMode = Value
     end)
     local autoReelMode = Tabs.Main:AddDropdown("autoReelMode", {
-        Title = "MODO Auto Reel",
+        Title = "Auto Reel Mode",
         Values = {"Legit", "Blatant"},
         Multi = false,
         Default = ReelMode,
@@ -739,14 +740,14 @@ end)
     -- // Sell Tab // --
     local section = Tabs.Items:AddSection("Sell Items")
     Tabs.Items:AddButton({
-        Title = "VENDER ITENS NA MÃO",
+        Title = "Sell Hand",
         Description = "",
         Callback = function()
             SellHand()
         end
     })
     Tabs.Items:AddButton({
-        Title = "VENDER TUDO",
+        Title = "Sell All",
         Description = "",
         Callback = function()
             SellAll()
@@ -756,13 +757,13 @@ end)
     -- // Treasure Tab // --
     local section = Tabs.Items:AddSection("Treasure")
     Tabs.Items:AddButton({
-        Title = "TELEPORTAR PRO Jack Marrow",
+        Title = "Teleport to Jack Marrow",
         Callback = function()
             HumanoidRootPart.CFrame = CFrame.new(-2824.359, 214.311, 1518.130)
         end
     })
     Tabs.Items:AddButton({
-        Title = "REPARAR MAPA",
+        Title = "Repair Map",
         Callback = function()
             for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
                 if v.Name == "Treasure Map" then
@@ -773,7 +774,7 @@ end)
         end
     })
     Tabs.Items:AddButton({
-        Title = "COLETAR TESOURO",
+        Title = "Collect Treasure",
         Callback = function()
             for i, v in ipairs(game:GetService("Workspace"):GetDescendants()) do
                 if v.ClassName == "ProximityPrompt" then
@@ -797,7 +798,7 @@ end)
     -- // Teleports Tab // --
     local section = Tabs.Teleports:AddSection("Select Teleport")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
-        Title = "TELEPORTE AREAS",
+        Title = "Area Teleport",
         Values = teleportSpots,
         Multi = false,
         Default = nil,
@@ -812,7 +813,7 @@ end)
         end
     end)
     local TotemTPDropdownUI = Tabs.Teleports:AddDropdown("TotemTPDropdownUI", {
-        Title = "SELECIONE UM TOTEM",
+        Title = "Select Totem",
         Values = {"Aurora", "Sundial", "Windset", "Smokescreen", "Tempest"},
         Multi = false,
         Default = nil,
@@ -837,7 +838,7 @@ end)
         end
     end)
     local WorldEventTPDropdownUI = Tabs.Teleports:AddDropdown("WorldEventTPDropdownUI", {
-        Title = "SELECIONE EVENTOS DO MAR OU GLOBAL",
+        Title = "Select World Event",
         Values = {"Strange Whirlpool", "Great Hammerhead Shark", "Great White Shark", "Whale Shark", "The Depths - Serpent"},
         Multi = false,
         Default = nil,
@@ -877,8 +878,8 @@ end)
         end
     end)
     Tabs.Teleports:AddButton({
-        Title = "TELEPORTE PARA O Traveler Merchant",
-        Description = "TELEPORTE PARA O Traveler Merchant.",
+        Title = "Teleport to Traveler Merchant",
+        Description = "Teleports to the Traveler Merchant.",
         Callback = function()
             local Merchant = game.Workspace.active:FindFirstChild("Merchant Boat")
             if not Merchant then return ShowNotification("Not found Merchant") end
@@ -886,7 +887,7 @@ end)
         end
     })
     Tabs.Teleports:AddButton({
-        Title = "IR PARA UMA ZONA SEGURA",
+        Title = "Create Safe Zone",
         Callback = function()
             local SafeZone = Instance.new("Part")
             SafeZone.Size = Vector3.new(30, 1, 30)
@@ -917,7 +918,7 @@ end)
 		end
     end)
     local WalkOnWaterZone = Tabs.Misc:AddDropdown("WalkOnWaterZone", {
-        Title = "ANDAR SOBRE A ÁGUA",
+        Title = "Walk On Water Zone",
         Values = {"Ocean", "Desolate Deep", "The Depths"},
         Multi = false,
         Default = "Ocean",
@@ -926,7 +927,7 @@ end)
         WalkZone = Value
     end)
     local WalkSpeedSliderUI = Tabs.Misc:AddSlider("WalkSpeedSliderUI", {
-        Title = "VELOCIDADE DE MOVIMENTO",
+        Title = "Walk Speed",
         Min = 16,
         Max = 200,
         Default = 16,
@@ -936,7 +937,7 @@ end)
         LocalPlayer.Character.Humanoid.WalkSpeed = value
     end)
     local JumpHeightSliderUI = Tabs.Misc:AddSlider("JumpHeightSliderUI", {
-        Title = "PULO ALTO",
+        Title = "Jump Height",
         Min = 50,
         Max = 200,
         Default = 50,
@@ -984,7 +985,7 @@ end)
 			end
         end
     end)
-    local RemoveFog = Tabs.Misc:AddToggle("REMOVER NEBLINA", {Title = "REMOVER NEBLINA", Default = false })
+    local RemoveFog = Tabs.Misc:AddToggle("RemoveFog", {Title = "Remove Fog", Default = false })
     RemoveFog:OnChanged(function()
         if Options.RemoveFog.Value == true then
             if game:GetService("Lighting"):FindFirstChild("Sky") then
@@ -996,7 +997,7 @@ end)
             end
         end
     end)
-    local DayOnly = Tabs.Misc:AddToggle("APENAS DE DIA", {Title = "APENAS DE DIA", Default = false })
+    local DayOnly = Tabs.Misc:AddToggle("DayOnly", {Title = "Day Only", Default = false })
     DayOnly:OnChanged(function()
         if Options.DayOnly.Value == true then
             DayOnlyLoop = RunService.Heartbeat:Connect(function()
@@ -1019,13 +1020,13 @@ end)
             end
         end
     end)
-    local DisableOxygen = Tabs.Misc:AddToggle("NAO MORRER PARA AGUA", {Title = "NAO MORRER PARA AGUA", Default = true })
+    local DisableOxygen = Tabs.Misc:AddToggle("DisableOxygen", {Title = "Disable Oxygen", Default = true })
     DisableOxygen:OnChanged(function()
         LocalPlayer.Character.client.oxygen.Disabled = Options.DisableOxygen.Value
     end)
     Tabs.Misc:AddButton({
-        Title = "COPIAR LOCALIZAÇÃO XYZ",
-        Description = "COPIADO",
+        Title = "Copy XYZ",
+        Description = "Copy Clipboard",
         Callback = function()
             local XYZ = tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
             setclipboard("game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. XYZ .. ")")
@@ -1070,6 +1071,7 @@ end)
         end
     })
 
+    local section = Tabs.Trade:AddSection("Coming Soon...")
 end
 
 Window:SelectTab(1)
