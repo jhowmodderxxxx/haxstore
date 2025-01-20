@@ -7,6 +7,7 @@ local InterfaceManager = {} do
         Acrylic = true,
         Transparency = true,
         MenuKeybind = "LeftAlt"
+      Image = "rbxassetid://115939816657500"
     }
 
     function InterfaceManager:SetFolder(folder)
