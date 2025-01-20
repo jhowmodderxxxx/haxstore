@@ -9,14 +9,6 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
-
-    TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
-    end)
-end
-
-
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 if DeviceType == "Mobile" then
     local ClickButton = Instance.new("ScreenGui")
@@ -94,6 +86,15 @@ if DeviceType == "Mobile" then
     Amplitude da flutuação em pixels local frequency = 2 -- 
    local originalPosition = imageButton.Position -- 
     game:GetService("RunService").RenderStepped:Connect(function() local offset = UDim2.new(0, 0, 0, math.sin(tick() * frequency) * amplitude) imageButton.Position = originalPosition + offset end)
+
+
+    
+    TextButton.MouseButton1Click:Connect(function()
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
+    end)
+end
+
 
 -- // // // Services // // // --
 local VirtualInputManager = game:GetService("VirtualInputManager")
