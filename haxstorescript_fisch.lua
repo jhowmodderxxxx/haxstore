@@ -63,14 +63,14 @@ if DeviceType == "PC" then
     end)
 end
 
-local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .. " | HAX STORE - Premium",
-    SubTitle = " (discord.gg/J37PW97j6a)", -- discord link
+llocal Window = Fluent:CreateWindow({
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
+    SubTitle = " (https://discord.gg/MbqyhEJ3)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = false, 
+    Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftAlt -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
 -- // // // Services // // // --
@@ -556,7 +556,7 @@ do
         Title = "clique para copiar o link do discord",
         Description = "HAX STORE 2025",
         Callback = function()
-            setclipboard("https://discord.gg/J37PW97j6a") -- discord link
+            setclipboard("https://https://discord.gg/MbqyhEJ3") -- discord link
         end
     })
 
