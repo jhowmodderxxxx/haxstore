@@ -1,57 +1,79 @@
--- Certifique-se de ter a biblioteca "Orion Library" carregada
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+-- Variáveis
+local OrionLib = require(game:GetService("ReplicatedStorage"):WaitForChild("OrionLib")) -- A biblioteca Orion deve estar no ReplicatedStorage
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local autoFarmEnabled = false
+local meleeWeapon = "Sword"  -- Troque pelo nome do objeto de melee, como espada ou faca
 
--- Criação da GUI
-local Window = Library:MakeWindow({Name = "Meme Sea Auto Farm", HidePremium = false, SaveConfig = true, ConfigFolder = "MemeSeaConfig"})
-
--- Auto Farm
-local AutoFarmTab = Window:MakeTab({Name = "Auto Farm", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-AutoFarmTab:AddToggle({
-    Name = "Auto Farm",
-    Default = false,
-    Callback = function(Value)
-        -- Código para a funcionalidade de Auto Farm
-    end    
+-- Criar janela GUI com Orion
+local Window = OrionLib:MakeWindow({
+    Name = "Meme Sea Melee AutoFarm", 
+    HidePremium = true, 
+    IntroEnabled = false
 })
 
--- Auto Boss
-local AutoBossTab = Window:MakeTab({Name = "Auto Boss", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-AutoBossTab:AddToggle({
-    Name = "Auto Boss",
-    Default = false,
-    Callback = function(Value)
-        -- Código para funcionalidade de Auto Boss
-    end    
+-- Criar o botão de Toggle para AutoFarm
+Window:Button({
+    Name = "Toggle AutoFarm",
+    Callback = function()
+        autoFarmEnabled = not autoFarmEnabled
+        if autoFarmEnabled then
+            startAutoFarm()
+        else
+            stopAutoFarm()
+        end
+    end
 })
 
--- Auto Stats
-local AutoStatsTab = Window:MakeTab({Name = "Auto Stats", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-AutoStatsTab:AddToggle({
-    Name = "Auto Stats",
-    Default = false,
-    Callback = function(Value)
-        -- Código para funcionalidade de Auto Stats
-    end    
-})
+-- Função para iniciar o Auto-Farm
+function startAutoFarm()
+    while autoFarmEnabled do
+        -- Encontrar alvo farmável e atacar
+        local target = findFarmableTarget()
+        if target then
+            meleeAttack(target)
+        end
+        wait(1)  -- Atraso entre ações para não sobrecarregar
+    end
+end
 
--- Auto Detect Level
-local AutoDetectLevelTab = Window:MakeTab({Name = "Auto Detect Level", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-AutoDetectLevelTab:AddToggle({
-    Name = "Auto Detect Level",
-    Default = false,
-    Callback = function(Value)
-        -- Código para funcionalidade de Auto Detect Level
-    end    
-})
+-- Função para parar o Auto-Farm
+function stopAutoFarm()
+    -- Aqui você pode adicionar lógicas adicionais para parar a farmação
+    print("Auto-farm parado")
+end
 
--- Auto Raid
-local AutoRaidTab = Window:MakeTab({Name = "Auto Raid", Icon = "rbxassetid://4483345998", PremiumOnly = false})
-AutoRaidTab:AddToggle({
-    Name = "Auto Raid",
-    Default = false,
-    Callback = function(Value)
-        -- Código para funcionalidade de Auto Raid
-    end    
-})
+-- Função para encontrar alvos farmáveis (no caso, inimigos ou mobs)
+function findFarmableTarget()
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("Model") and obj:FindFirstChild("Humanoid") and obj.Humanoid.Health > 0 then
+            -- Verifique se o objeto é um inimigo ou mob com um Humanoid
+            return obj
+        end
+    end
+    return nil
+end
 
-Library:Init()
+-- Função para realizar o ataque melee
+function meleeAttack(target)
+    -- Achar a espada ou arma de melee no personagem
+    local weapon = character:FindFirstChild(meleeWeapon)
+    if weapon then
+        -- Assumir que o script de ataque está sendo chamado ao interagir com o inimigo
+        local humanoid = target:FindFirstChild("Humanoid")
+        if humanoid then
+            -- Exemplo de ataque simples: Você pode usar uma animação ou função do seu jogo para atacar
+            humanoid:TakeDamage(10)  -- Dano fixo de 10 (ajuste conforme necessário)
+            print("Atacando: " .. target.Name)
+        end
+    else
+        print("Arma de melee não encontrada!")
+    end
+end
+
+-- Notificação quando o script for carregado
+OrionLib:MakeNotification({
+    Name = "Script Carregado", 
+    Content = "Meme Sea AutoFarm Script Carregado com sucesso!", 
+    Time = 5
+})
