@@ -539,13 +539,12 @@ end)
 -- // // // Tabs Gui // // // --
 
 local Tabs = { -- https://lucide.dev/icons/
-    Home = Window:AddTab({ Title = "Home", Icon = "home" }),
-    Exclusives = Window:AddTab({ Title = "Exclusives", Icon = "heart" }),
-    Main = Window:AddTab({ Title = "Main", Icon = "list" }),
+    Home = Window:AddTab({ Title = "Discord", Icon = "arrow-right" }),
+    Exclusives = Window:AddTab({ Title = "Premium", Icon = "dollar-sign" }),
+    Main = Window:AddTab({ Title = "Início", Icon = "list" }),
     Items = Window:AddTab({ Title = "Items", Icon = "box" }),
-    Teleports = Window:AddTab({ Title = "Teleports", Icon = "map-pin" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "file-text" }),
-    Trade = Window:AddTab({ Title = "Trade", Icon = "gift" })
+    Teleports = Window:AddTab({ Title = "Teleportes", Icon = "map-pin" }),
+    Misc = Window:AddTab({ Title = "Outros", Icon = "file-text" }),
 }
 
 local Options = Fluent.Options
@@ -554,15 +553,15 @@ Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
-        Title = "Copy Discord link",
-        Description = "Join our main discord!",
+        Title = "Copiar o link do discord?",
+        Description = "HAXSTORE 2025",
         Callback = function()
             setclipboard("https://discord.gg/hUZmYVUC") -- discord link
         end
     })
 
     -- // Exclusives Tab // --
-    local sectionExclus = Tabs.Exclusives:AddSection("Exclusives Features")
+    local sectionExclus = Tabs.Exclusives:AddSection("Funcões Premium")
     local CountShadows = Tabs.Exclusives:AddToggle("CountShadows", {Title = "Show Count Shadows", Default = false })
     CountShadows:OnChanged(function()
         local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
@@ -628,7 +627,7 @@ do
     })
 
     -- // Main Tab // --
-    local section = Tabs.Main:AddSection("Auto Fishing")
+    local section = Tabs.Main:AddSection("Auto Pescar")
     local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "Auto Cast", Default = false })
     autoCast:OnChanged(function()
         local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
@@ -718,7 +717,7 @@ do
         CastMode = Value
     end)
     local autoShakeMode = Tabs.Main:AddDropdown("autoShakeMode", {
-        Title = "Auto Shake Mode",
+        Title = "Modo shake",
         Values = {"Navigation", "Mouse"},
         Multi = false,
         Default = ShakeMode,
@@ -739,14 +738,14 @@ do
     -- // Sell Tab // --
     local section = Tabs.Items:AddSection("Sell Items")
     Tabs.Items:AddButton({
-        Title = "Sell Hand",
+        Title = "Vender tudo da Mão",
         Description = "",
         Callback = function()
             SellHand()
         end
     })
     Tabs.Items:AddButton({
-        Title = "Sell All",
+        Title = "Vender tudo",
         Description = "",
         Callback = function()
             SellAll()
@@ -756,13 +755,13 @@ do
     -- // Treasure Tab // --
     local section = Tabs.Items:AddSection("Treasure")
     Tabs.Items:AddButton({
-        Title = "Teleport to Jack Marrow",
+        Title = "Teleportar para o Jack Marrow",
         Callback = function()
             HumanoidRootPart.CFrame = CFrame.new(-2824.359, 214.311, 1518.130)
         end
     })
     Tabs.Items:AddButton({
-        Title = "Repair Map",
+        Title = "reparar o mapa",
         Callback = function()
             for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
                 if v.Name == "Treasure Map" then
@@ -773,7 +772,7 @@ do
         end
     })
     Tabs.Items:AddButton({
-        Title = "Collect Treasure",
+        Title = "Coletar tesouros",
         Callback = function()
             for i, v in ipairs(game:GetService("Workspace"):GetDescendants()) do
                 if v.ClassName == "ProximityPrompt" then
@@ -795,9 +794,9 @@ do
     })
 
     -- // Teleports Tab // --
-    local section = Tabs.Teleports:AddSection("Select Teleport")
+    local section = Tabs.Teleports:AddSection("Selecione local de teleporte")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
-        Title = "Area Teleport",
+        Title = "Ilhas e areas de teleporte",
         Values = teleportSpots,
         Multi = false,
         Default = nil,
@@ -812,7 +811,7 @@ do
         end
     end)
     local TotemTPDropdownUI = Tabs.Teleports:AddDropdown("TotemTPDropdownUI", {
-        Title = "Select Totem",
+        Title = "Selecione o Totem",
         Values = {"Aurora", "Sundial", "Windset", "Smokescreen", "Tempest"},
         Multi = false,
         Default = nil,
@@ -837,7 +836,7 @@ do
         end
     end)
     local WorldEventTPDropdownUI = Tabs.Teleports:AddDropdown("WorldEventTPDropdownUI", {
-        Title = "Select World Event",
+        Title = "Selecione o Evento Global",
         Values = {"Strange Whirlpool", "Great Hammerhead Shark", "Great White Shark", "Whale Shark", "The Depths - Serpent"},
         Multi = false,
         Default = nil,
@@ -877,12 +876,12 @@ do
         end
     end)
     Tabs.Teleports:AddButton({
-        Title = "Teleport to Traveler Merchant",
-        Description = "Teleports to the Traveler Merchant.",
+        Title = "Teleportar pro Traveler Merchant",
+        Description = "Teleportar pro the Traveler Merchant.",
         Callback = function()
-            local Merchant = game.Workspace.active:FindFirstChild("Merchant Boat")
-            if not Merchant then return ShowNotification("Not found Merchant") end
-            HumanoidRootPart.CFrame = CFrame.new(game.Workspace.active["Merchant Boat"].Boat["Merchant Boat"].r.HandlesR.Position)
+            local Merchant = game.Workspace.active:FindFirstChild("Barco Merchant")
+            if not Merchant then return ShowNotification("Nao foi possivel encontrar o Merchant") end
+            HumanoidRootPart.CFrame = CFrame.new(game.Workspace.active["Barco Merchant"].Boat["Barco Merchant"].r.HandlesR.Position)
         end
     })
     Tabs.Teleports:AddButton({
@@ -984,7 +983,7 @@ do
 			end
         end
     end)
-    local RemoveFog = Tabs.Misc:AddToggle("RemoveFog", {Title = "Remove Fog", Default = false })
+    local RemoveFog = Tabs.Misc:AddToggle("Remover neblina", {Title = "Remover neblina", Default = false })
     RemoveFog:OnChanged(function()
         if Options.RemoveFog.Value == true then
             if game:GetService("Lighting"):FindFirstChild("Sky") then
@@ -1070,12 +1069,11 @@ do
         end
     })
 
-    local section = Tabs.Trade:AddSection("Coming Soon...")
 end
 
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "haxstore",
-    Content = "Executed!",
+    Content = "EXECUTADO!",
     Duration = 8
 })
