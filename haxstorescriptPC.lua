@@ -510,7 +510,6 @@ PlayerGui.DescendantAdded:Connect(function(descendant)
         end
     end
 end)
-
 -- // // // Exclusives // // // --
 local shadowCountLabel = Instance.new("TextLabel", screenGui)
 shadowCountLabel.Size = UDim2.new(0, 200, 0, 50)
