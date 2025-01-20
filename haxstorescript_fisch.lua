@@ -64,7 +64,7 @@ if DeviceType == "Pc" then
 end
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | Nome do seu HUB - Premium",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAXSTORE - Premium",
     SubTitle = " (discord.gg/hUZmYVUC)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -106,9 +106,9 @@ local WaitForSomeone = RenderStepped.Wait
 
 -- // // // Variables // // // --
 local CastMode = "Legit"
-local ShakeMode = "Navigation"
-local ReelMode = "Blatant"
-local CollectMode = "Teleports"
+local ShakeMode = "Navegação"
+local ReelMode = "Flagrante"
+local CollectMode = "Teleportes"
 local teleportSpots = {}
 local FreezeChar = false
 local DayOnlyLoop = nil
@@ -119,7 +119,7 @@ local RunCount = false
 -- // // // Functions // // // --
 function ShowNotification(String)
     Fluent:Notify({
-        Title = "HAXSTORE",
+        Title = "HAXSTORE - welcome"
         Content = String,
         Duration = 5
     })
@@ -176,7 +176,7 @@ local function autoCast()
                             end)
                         end
                     end)
-                elseif CastMode == "Blatant" then
+                elseif CastMode == "Flagrante"
                     local rod = LocalCharacter and LocalCharacter:FindFirstChildOfClass("Tool")
                     if rod and rod:FindFirstChild("values") and string.find(rod.Name, "Rod") then
                         task.wait(0.5)
@@ -194,7 +194,7 @@ end
 local autoShakeEnabled = false
 local autoShakeConnection
 local function autoShake()
-    if ShakeMode == "Navigation" then
+    if ShakeMode == "Navegação"
         task.wait()
         xpcall(function()
             local shakeui = PlayerGui:FindFirstChild("shakeui")
@@ -1070,7 +1070,7 @@ do
         end
     })
 
-    local section = Tabs.Trade:AddSection("Em breve...")
+    local section = Tabs.Trade:AddSection("Coming Soon...")
 end
 
 Window:SelectTab(1)
