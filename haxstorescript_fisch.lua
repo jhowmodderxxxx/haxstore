@@ -194,7 +194,7 @@ end
 local autoShakeEnabled = false
 local autoShakeConnection
 local function autoShake()
-    if ShakeMode == "NAVEGAÇÃO" then
+    if ShakeMode == "Navigation" then
         task.wait()
         xpcall(function()
             local shakeui = PlayerGui:FindFirstChild("shakeui")
@@ -1068,7 +1068,7 @@ do
             loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
         end
     })
-    
+
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "HAX STORE",
