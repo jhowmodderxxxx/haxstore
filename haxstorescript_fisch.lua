@@ -58,8 +58,8 @@ if DeviceType == "Mobile" then
     TextButton.TextSize = 20
 
     TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftControl", false, game)
     end)
 end
 
