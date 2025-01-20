@@ -81,13 +81,6 @@ if DeviceType == "Mobile" then
     imageButton.MouseButton1Click:Connect(function() modMenu.Visible = not modMenu.Visible end)
 
 
-
-    local amplitude = 10 -- 
-    Amplitude da flutuação em pixels local frequency = 2 -- 
-   local originalPosition = imageButton.Position -- 
-    game:GetService("RunService").RenderStepped:Connect(function() local offset = UDim2.new(0, 0, 0, math.sin(tick() * frequency) * amplitude) imageButton.Position = originalPosition + offset end)
-
-
     
     TextButton.MouseButton1Click:Connect(function()
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
