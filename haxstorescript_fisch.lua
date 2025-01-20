@@ -1,18 +1,3 @@
-local Options = Fluent.Options
-do
-OrionLib:MakeNotification(
-        {
-            Name = "Notificação",
-            Content = "Bem Vindo!! HAX STORE FISCH 2025",
-            Image = "rbxassetid://115939816657500",
-            Time = 7
-        }
-    )
-
-    if getgenv().ED_AntiKick then
-        return
-    end
-
 if getgenv().hub then warn("HAXSTORE : Already executed!") return end
 getgenv().hub = true
 
@@ -1068,6 +1053,23 @@ do
             task.wait(0.01)
         end
     end)
+
+
+    local Options = Fluent.Options
+do
+OrionLib:MakeNotification(
+        {
+            Name = "Notificação",
+            Content = "Bem Vindo!! HAX STORE FISCH 2025",
+            Image = "rbxassetid://115939816657500",
+            Time = 7
+        }
+    )
+
+    if getgenv().ED_AntiKick then
+        return
+    end
+
 
     -- // Load Tab // --
     local section = Tabs.Misc:AddSection("Load Scripts")
