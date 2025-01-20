@@ -64,7 +64,7 @@ if DeviceType == "Pc" then
 end
 
 llocal Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
+     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
     SubTitle = " (https://discord.gg/MbqyhEJ3)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
