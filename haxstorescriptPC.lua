@@ -65,7 +65,7 @@ end
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
-    SubTitle = " (discord.gg/J37PW97j6a)", -- discord link
+    SubTitle = "FEITO POR JHOWMODDERX", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
@@ -556,7 +556,7 @@ do
         Title = "DISCORD DA HAX SOTRE",
         Description = "CONTAS E SCRIPTS SO LA!!",
         Callback = function()
-            setclipboard("https://discord.gg/J37PW97j6a") -- discord link
+            setclipboard("https://discord.gg/MbqyhEJ3") -- discord link
         end
     })
 
