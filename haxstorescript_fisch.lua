@@ -55,7 +55,7 @@ if DeviceType == "Pc" then
     TextButton.Font = Enum.Font.SourceSans
     TextButton.Text = "Open"
     TextButton.TextColor3 = Color3.new(220, 125, 255)
-    TextButton.TextSize = 20
+    TextButton.TextSize = 25
 
     TextButton.MouseButton1Click:Connect(function()
         game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
@@ -64,12 +64,12 @@ if DeviceType == "Pc" then
 end
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE PREMIUM",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE PREMIUM V1",
     SubTitle = " (discord.gg/hUZmYVUC)", -- discord link
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
-    Theme = "WHITE",
+    Theme = "White",
     MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
 })
 
@@ -106,9 +106,9 @@ local WaitForSomeone = RenderStepped.Wait
 
 -- // // // Variables // // // --
 local CastMode = "Legit"
-local ShakeMode = "Navigation"
+local ShakeMode = "Navegação"
 local ReelMode = "Blatant"
-local CollectMode = "Teleports"
+local CollectMode = "Teleportes"
 local teleportSpots = {}
 local FreezeChar = false
 local DayOnlyLoop = nil
