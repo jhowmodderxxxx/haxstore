@@ -57,6 +57,15 @@ if DeviceType == "Pc" then
     TextButton.TextColor3 = Color3.new(220, 125, 255)
     TextButton.TextSize = 20
 
+
+    TextButton.MouseButton1Click:Connect(function()
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
+    end)
+end
+
+
+
     local Window = Fluent:CreateWindow({
         Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
         SubTitle = " (discord.gg)", -- discord link
@@ -67,12 +76,6 @@ if DeviceType == "Pc" then
         MinimizeKey = Enum.KeyCode.LeftAlt 
     })
 
-    
-    TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
-    end)
-end
 
 
 -- // // // Services // // // --
