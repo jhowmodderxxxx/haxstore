@@ -519,14 +519,14 @@ shadowCountLabel.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 shadowCountLabel.TextColor3 = Color3.new(220, 125, 255)
 shadowCountLabel.Font = Enum.Font.SourceSans
 shadowCountLabel.TextSize = 24
-shadowCountLabel.Text = "Shadow Count: 0"
+shadowCountLabel.Text = "Contagem de Sombras: 0"
 
 local corner = Instance.new("UICorner", shadowCountLabel)
 corner.CornerRadius = UDim.new(0, 10)
 
 local function updateShadowCount()
     local count = #workspace.Shadows:GetChildren()
-    shadowCountLabel.Text = "Shadow Count: " .. count
+    shadowCountLabel.Text = "Contagem de Sombras: " .. count
 end
 
 spawn(function()
@@ -1068,8 +1068,7 @@ do
             loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
         end
     })
-end
-
+    
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "HAX STORE",
