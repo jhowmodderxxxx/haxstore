@@ -1041,7 +1041,7 @@ do
         end
     end)
 
-    local IdentityHiderUI = Tabs.Misc:AddToggle("IdentityHiderUI", {Title = "DESATIVAR LEVEL E ETC (SUPER SAFE)", Default = false })    
+    local IdentityHiderUI = Tabs.Misc:AddToggle("IdentityHiderUI", {Title = "Protect Identity", Default = false })    
     IdentityHiderUI:OnChanged(function()
         while Options.IdentityHiderUI.Value == true do
             if UserPlayer:FindFirstChild("streak") then UserPlayer.streak.Text = "HIDDEN" end
@@ -1049,7 +1049,7 @@ do
             if UserPlayer:FindFirstChild("level") then UserPlayer.user.Text = "HIDDEN" end
             local hud = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("hud"):WaitForChild("safezone")
             if hud:FindFirstChild("coins") then hud.coins.Text = "HIDDEN$" end
-            if hud:FindFirstChild("lvl") then hud.lvl.Text = "HIDDEN" end
+            if hud:FindFirstChild("lvl") then hud.lvl.Text = "HIDDEN LVL" end
             task.wait(0.01)
         end
     end)
@@ -1057,21 +1057,24 @@ do
     -- // Load Tab // --
     local section = Tabs.Misc:AddSection("Load Scripts")
     Tabs.Misc:AddButton({
-        Title = "CARREGAR Infinite-Yield FE",
+        Title = "Load Infinite-Yield FE",
         Callback = function()
             loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
         end
     })
     Tabs.Misc:AddButton({
-        Title = "CARREGAR RemoteSpy",
+        Title = "Load RemoteSpy",
         Callback = function()
             loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
         end
     })
 
+    local section = Tabs.Trade:AddSection("Coming Soon...")
+end
+
 Window:SelectTab(1)
 Fluent:Notify({
-    Title = "HAX STORE",
-    Content = "BEM VINDO!",
+    Title = "HAXSTORE",
+    Content = "Executed!",
     Duration = 8
 })
