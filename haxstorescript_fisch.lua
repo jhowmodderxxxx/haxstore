@@ -58,8 +58,8 @@ if DeviceType == "Pc" then
     TextButton.TextSize = 25
 
     TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftControl", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftAlt", false, game)
+        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftAlt", false, game)
     end)
 end
 
@@ -70,7 +70,7 @@ local Window = Fluent:CreateWindow({
     Size = UDim2.fromOffset(580, 460),
     Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
     Theme = "White",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftAlt -- Used when theres no MinimizeKeybind
 })
 
 -- // // // Services // // // --
