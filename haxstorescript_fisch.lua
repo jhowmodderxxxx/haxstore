@@ -1,3 +1,33 @@
+local exploit = getexecutorname or identifyexecutor
+local support = {
+    ["Fluxus"] = true,
+    ["Trigon"] = true,
+    ["Codex"] = true,
+    ["Delta"] = true,
+    ["Vega X"] = true,
+    ["Hydrogen"] = false,
+    ["alysse"] = false,
+    ["ArceusX"] = true,
+    ["Electron"] = false,
+    ["Seliware"] = true,
+    ["Wave"] = true,
+}
+
+local Options = Fluent.Options
+do
+OrionLib:MakeNotification(
+        {
+            Name = "Notificação",
+            Content = "Bem Vindo!! HAX STORE FISCH 2025",
+            Image = "rbxassetid://115939816657500",
+            Time = 7
+        }
+    )
+
+    if getgenv().ED_AntiKick then
+        return
+    end
+
 if getgenv().hub then warn("HAXSTORE : Already executed!") return end
 getgenv().hub = true
 
@@ -7,7 +37,7 @@ end
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 if DeviceType == "Pc" then
@@ -23,7 +53,7 @@ if DeviceType == "Pc" then
     ClickButton.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
     MainFrame.Name = "MainFrame"
-    MainFrame.Parent = ClickButton
+    ImageLabel.Image = "rbxassetid://115939816657500"
     MainFrame.AnchorPoint = Vector2.new(1, 0)
     MainFrame.BackgroundTransparency = 0.8
     MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38) 
@@ -53,7 +83,7 @@ if DeviceType == "Pc" then
     TextButton.Size = UDim2.new(0, 45, 0, 45)
     TextButton.AutoButtonColor = false
     TextButton.Font = Enum.Font.SourceSans
-    TextButton.Text = "Open"
+    TextButton.Text = "HAXSTORE"
     TextButton.TextColor3 = Color3.new(220, 125, 255)
     TextButton.TextSize = 25
 
