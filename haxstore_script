@@ -1,21 +1,43 @@
--- Carregar a biblioteca Orion
-local OrionLib = require(game:GetService("ReplicatedStorage"):WaitForChild("OrionLib"))
+-- Carregar a Orion Library (caso o executor tenha suporte a ela)
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/Library.lua"))()
 
--- Variáveis
+-- Definir algumas variáveis essenciais
 local Player = game.Players.LocalPlayer
 local character = Player.Character or Player.CharacterAdded:Wait()
 local autoFarmEnabled = false
-local meleeWeapon = "Katana"  -- Troque para o nome da sua arma de melee
+local meleeWeapon = "Katana"  -- Troque pelo nome da sua arma de melee
 
--- Configuração da janela Orion GUI
-local Window = OrionLib:MakeWindow({
-    Name = "Meme Sea Melee AutoFarm",
-    HidePremium = true,
-    IntroEnabled = false
-})
+-- Função para verificar se o jogador está vivo
+local function isPlayerAlive()
+    return character and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0
+end
 
--- Função para iniciar o Auto-Farm
-function startAutoFarm()
+-- Função para encontrar alvos (inimigos) para o auto-farm
+local function findFarmableTarget()
+    for _, obj in pairs(workspace:GetChildren()) do
+        if obj:IsA("Model") and obj:FindFirstChild("Humanoid") and obj.Humanoid.Health > 0 then
+            return obj
+        end
+    end
+    return nil
+end
+
+-- Função para realizar ataque melee no alvo
+local function meleeAttack(target)
+    local weapon = character:FindFirstChild(meleeWeapon)
+    if weapon and isPlayerAlive() then
+        local humanoid = target:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid:TakeDamage(10)  -- Dano fixo de 10, ajuste conforme necessário
+            print("Atacando: " .. target.Name)
+        end
+    else
+        print("Arma de melee não encontrada ou jogador está morto!")
+    end
+end
+
+-- Função para iniciar o auto-farm
+local function startAutoFarm()
     while autoFarmEnabled do
         local target = findFarmableTarget()
         if target then
@@ -25,40 +47,16 @@ function startAutoFarm()
     end
 end
 
--- Função para parar o Auto-Farm
-function stopAutoFarm()
+-- Função para parar o auto-farm
+local function stopAutoFarm()
     autoFarmEnabled = false
     print("Auto-farm parado")
 end
 
--- Função para encontrar alvos farmáveis
-function findFarmableTarget()
-    for _, obj in pairs(workspace:GetChildren()) do
-        if obj:IsA("Model") and obj:FindFirstChild("Humanoid") and obj.Humanoid.Health > 0 then
-            return obj
-        end
-    end
-    return nil
-end
-
--- Função para realizar o ataque melee
-function meleeAttack(target)
-    local weapon = character:FindFirstChild(meleeWeapon)
-    if weapon then
-        local humanoid = target:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid:TakeDamage(10)  -- Dano fixo de 10 (ajuste conforme necessário)
-            print("Atacando: " .. target.Name)
-        end
-    else
-        print("Arma de melee não encontrada!")
-    end
-end
-
 -- Função para equipar a arma de melee
-function equipWeapon()
+local function equipWeapon()
     local weapon = character:FindFirstChild(meleeWeapon)
-    if weapon then
+    if weapon and isPlayerAlive() then
         local humanoid = character:FindFirstChild("Humanoid")
         if humanoid then
             humanoid:EquipTool(weapon)
@@ -69,7 +67,14 @@ function equipWeapon()
     end
 end
 
--- GUI: Botão para iniciar/pausar o Auto-Farm
+-- Criando a interface gráfica com Orion
+local Window = OrionLib:MakeWindow({
+    Name = "Meme Sea Melee AutoFarm",
+    HidePremium = true,
+    IntroEnabled = false
+})
+
+-- Botão para iniciar ou pausar o auto-farm
 Window:Button({
     Name = "Iniciar Auto-Farm",
     Callback = function()
@@ -82,7 +87,7 @@ Window:Button({
     end
 })
 
--- GUI: Botão para equipar a arma de melee
+-- Botão para equipar a arma de melee
 Window:Button({
     Name = "Equipar Arma Melee",
     Callback = function()
@@ -90,21 +95,23 @@ Window:Button({
     end
 })
 
--- GUI: Notificação quando o script é carregado
+-- Notificação quando o script é carregado
 OrionLib:MakeNotification({
     Name = "Script Carregado",
     Content = "Meme Sea Melee AutoFarm Script Carregado com sucesso!",
     Time = 5
 })
 
--- Funções adicionais
+-- Atualização do nível do jogador na interface
 local function updateLevelDisplay()
     local label = Player.PlayerGui.MainGui.PlayerName
     local Level = Player.PlayerData.Level.Value
-    local IsMax = Level >= 100  -- Defina o nível máximo conforme necessário
+    local IsMax = Level >= 100  -- Ajuste o nível máximo conforme necessário
     label.Text = ("%s • Lv. %i%s"):format("Anonymous", Level, IsMax and " (Max)" or "")
 end
 
 -- Conectar o evento de atualização do nível
 Player.PlayerData.Level:GetPropertyChangedSignal("Value"):Connect(updateLevelDisplay)
 updateLevelDisplay()
+
+-- A partir daqui, você pode personalizar mais a interface e funções conforme necessário.
