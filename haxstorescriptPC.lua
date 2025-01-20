@@ -539,12 +539,12 @@ end)
 -- // // // Tabs Gui // // // --
 
 local Tabs = { -- https://lucide.dev/icons/
-    Home = Window:AddTab({ Title = "Home", Icon = "home" }),
-    Exclusives = Window:AddTab({ Title = "Exclusives", Icon = "heart" }),
-    Main = Window:AddTab({ Title = "Main", Icon = "list" }),
-    Items = Window:AddTab({ Title = "Items", Icon = "box" }),
-    Teleports = Window:AddTab({ Title = "Teleports", Icon = "map-pin" }),
-    Misc = Window:AddTab({ Title = "Misc", Icon = "rotate-ccw" }),
+    Home = Window:AddTab({ Title = "DISCORD", Icon = "message-circle" }),
+    Exclusives = Window:AddTab({ Title = "PREMIUM", Icon = "hand-coins" }),
+    Main = Window:AddTab({ Title = "INICIO", Icon = "list" }),
+    Items = Window:AddTab({ Title = "ITENS", Icon = "fish" }),
+    Teleports = Window:AddTab({ Title = "TELEPORTAR", Icon = "rotate-ccw" }),
+    Misc = Window:AddTab({ Title = "OUTROS", Icon = "rotate-ccw" }),
 }
 
 local Options = Fluent.Options
@@ -794,7 +794,7 @@ do
     })
 
     -- // Teleports Tab // --
-    local section = Tabs.Teleports:AddSection("Select Teleport")
+    local section = Tabs.Teleports:AddSection("SELECIONE A ILHA")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
         Title = "AREAS PARA TELEPORTAR",
         Values = teleportSpots,
@@ -877,7 +877,7 @@ do
     end)
     Tabs.Teleports:AddButton({
         Title = "TELEPORTAR PARA O Traveler Merchant",
-        Description = "Teleports to the Traveler Merchant.",
+        Description = "TELEPORTAR PARA Traveler Merchant.",
         Callback = function()
             local Merchant = game.Workspace.active:FindFirstChild("Merchant Boat")
             if not Merchant then return ShowNotification("Not found Merchant") end
