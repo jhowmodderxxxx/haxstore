@@ -55,7 +55,7 @@ local Checkkey = Tabs.KeySys:AddButton({
         local response = KeyGuardLibrary.validateDefaultKey(key)
         if response == trueData then
             print("Key is valid")
-            -- Seu código aqui
+            -- Adicione seu código após validação da chave aqui
         else
             print("Key is invalid")
         end
@@ -94,7 +94,7 @@ UICorner.Parent = MainFrame
 
 local TextButton = Instance.new("TextButton")
 TextButton.Parent = MainFrame
-TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255) 
+TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.BackgroundTransparency = 1
 TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
@@ -109,10 +109,11 @@ ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.BackgroundTransparency = 1
 ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.Image = "https://i.imgur.com/octJpLt.png" -- Link direto do imgur com extensão .png
+ImageLabel.Image = "https://i.imgur.com/octJpLt.png"
 ImageLabel.ZIndex = 1
 
 TextButton.ZIndex = 2
+
 
 
 local ModMenu = Instance.new("Frame")
