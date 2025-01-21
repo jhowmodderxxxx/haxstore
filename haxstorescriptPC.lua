@@ -9,21 +9,21 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/j
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
-local trueData = "db918b03c9e74d77b0910a80680ec8b8"
-local falseData = "ae70b9db5fa34fe1b1a5ff942429c4cd"
+local trueData = "d14f837bb0af4707bdfea281b8ae8912"
+local falseData = "c5262905499a4590a241152cbca07707"
 
 KeyGuardLibrary.Set({
-  publicToken = "28be885d7e124572bc1980f892becb6d",
-  privateToken = "0a7a15979ac74b4cbea133ccdbbd81ff",
-  trueData = trueData,
-  falseData = falseData,
+    publicToken = "28be885d7e124572bc1980f892becb6d",
+    privateToken = "0a7a15979ac74b4cbea133ccdbbd81ff",
+    trueData = trueData,
+    falseData = falseData,
 })
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local key = ""
 
 local Window = Fluent:CreateWindow({
-    Title = "Sistema de key",
+    Title = "Key System",
     SubTitle = "HAXSTORE",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 340),
@@ -37,7 +37,7 @@ local Tabs = {
 }
 
 local Entkey = Tabs.KeySys:AddInput("Input", {
-    Title = "KEY AQUI",
+    Title = "Enter Key",
     Description = "Enter Key Here",
     Default = "",
     Placeholder = "Enter key…",
@@ -54,10 +54,10 @@ local Checkkey = Tabs.KeySys:AddButton({
     Callback = function()
         local response = KeyGuardLibrary.validateDefaultKey(key)
         if response == trueData then
-           print("Key is valid")
-           -- Your code here
+            print("Key is valid")
+            -- Your code here
         else
-           print("Key is invalid")
+            print("Key is invalid")
         end
     end
 })
@@ -66,9 +66,19 @@ local Getkey = Tabs.KeySys:AddButton({
     Title = "Get Key",
     Description = "Get Key here",
     Callback = function()
-       setclipboard(KeyGuardLibrary.getLink())
+        setclipboard(KeyGuardLibrary.getLink())
     end
 })
+
+
+
+Window:SelectTab(1)
+
+
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
+
+
 
 local UserInputService = game:GetService("UserInputService")
 local Player = game.Players.LocalPlayer
