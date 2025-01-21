@@ -1,3 +1,71 @@
+local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
+local trueData = "db918b03c9e74d77b0910a80680ec8b8"
+local falseData = "ae70b9db5fa34fe1b1a5ff942429c4cd"
+
+KeyGuardLibrary.Set({
+  publicToken = "28be885d7e124572bc1980f892becb6d",
+  privateToken = "0a7a15979ac74b4cbea133ccdbbd81ff",
+  trueData = trueData,
+  falseData = falseData,
+})
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local key = ""
+
+local Window = Fluent:CreateWindow({
+    Title = "Key System",
+    SubTitle = "HAXSTORE",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 340),
+    Acrylic = false,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local Tabs = {
+    KeySys = Window:AddTab({ Title = "Key System", Icon = "key" }),
+}
+
+local Entkey = Tabs.KeySys:AddInput("Input", {
+    Title = "Enter Key",
+    Description = "Enter Key Here",
+    Default = "",
+    Placeholder = "Enter key…",
+    Numeric = false,
+    Finished = false,
+    Callback = function(Value)
+        key = Value
+    end
+})
+
+local Checkkey = Tabs.KeySys:AddButton({
+    Title = "Check Key",
+    Description = "Enter Key before pressing this button",
+    Callback = function()
+        local response = KeyGuardLibrary.validateDefaultKey(key)
+        if response == trueData then
+           print("Key is valid")
+           -- Your code here
+        else
+           print("Key is invalid")
+        end
+    end
+})
+
+local Getkey = Tabs.KeySys:AddButton({
+    Title = "Get Key",
+    Description = "Get Key here",
+    Callback = function()
+       setclipboard(KeyGuardLibrary.getLink())
+    end
+})
+
+Window:SelectTab(1)
+
+
+
+
+
 if getgenv().hub then warn("HAXSTORE : Already executed!") return end
 getgenv().hub = true
 
@@ -1145,69 +1213,3 @@ Fluent:Notify({
     Content = "Executed!",
     Duration = 8
 })
-
-
-local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
-local trueData = "db918b03c9e74d77b0910a80680ec8b8"
-local falseData = "ae70b9db5fa34fe1b1a5ff942429c4cd"
-
-KeyGuardLibrary.Set({
-  publicToken = "28be885d7e124572bc1980f892becb6d",
-  privateToken = "0a7a15979ac74b4cbea133ccdbbd81ff",
-  trueData = trueData,
-  falseData = falseData,
-})
-
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local key = ""
-
-local Window = Fluent:CreateWindow({
-    Title = "Key System",
-    SubTitle = "HAXSTORE",
-    TabWidth = 160,
-    Size = UDim2.fromOffset(580, 340),
-    Acrylic = false,
-    Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl
-})
-
-local Tabs = {
-    KeySys = Window:AddTab({ Title = "Key System", Icon = "key" }),
-}
-
-local Entkey = Tabs.KeySys:AddInput("Input", {
-    Title = "Enter Key",
-    Description = "Enter Key Here",
-    Default = "",
-    Placeholder = "Enter key…",
-    Numeric = false,
-    Finished = false,
-    Callback = function(Value)
-        key = Value
-    end
-})
-
-local Checkkey = Tabs.KeySys:AddButton({
-    Title = "Check Key",
-    Description = "Enter Key before pressing this button",
-    Callback = function()
-        local response = KeyGuardLibrary.validateDefaultKey(key)
-        if response == trueData then
-           print("Key is valid")
-           -- Your code here
-        else
-           print("Key is invalid")
-        end
-    end
-})
-
-local Getkey = Tabs.KeySys:AddButton({
-    Title = "Get Key",
-    Description = "Get Key here",
-    Callback = function()
-       setclipboard(KeyGuardLibrary.getLink())
-    end
-})
-
-Window:SelectTab(1)
-
