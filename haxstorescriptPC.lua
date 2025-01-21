@@ -39,6 +39,7 @@ ImageLabel.Size = UDim2.new(1, 0, 1, 0)
 ImageLabel.Image = "rbxassetid://115939816657500"
 
 
+-- Criação do ImageButton
 local ImageButton = Instance.new("ImageButton")
 ImageButton.Parent = MainFrame
 ImageButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -47,7 +48,43 @@ ImageButton.BorderSizePixel = 0
 ImageButton.Position = UDim2.new(0, 0, 0, 0)
 ImageButton.Size = UDim2.new(0, 45, 0, 45)
 ImageButton.AutoButtonColor = false
-ImageButton.Image = "rbxassetid://<115939816657500>"
+ImageButton.Image = "rbxassetid://115939816657500"
+ImageButton.ZIndex = 2
+
+-- Verificação do carregamento da imagem
+ImageButton.Loaded:Connect(function()
+    print("Imagem carregada com sucesso!")
+end)
+
+-- Função para criar e destruir a janela flutuante
+local floatingWindow = nil
+
+local function toggleFloatingWindow()
+    if floatingWindow then
+        floatingWindow:Destroy()
+        floatingWindow = nil
+    else
+        floatingWindow = Instance.new("Frame")
+        floatingWindow.Size = UDim2.new(0, 200, 0, 100)
+        floatingWindow.Position = UDim2.new(0.5, -100, 0.5, -50)
+        floatingWindow.BackgroundColor3 = Color3.new(1, 1, 1)
+        floatingWindow.Parent = MainFrame
+
+        -- Adiciona um botão de fechar dentro do flutuante (opcional)
+        local CloseButton = Instance.new("TextButton")
+        CloseButton.Size = UDim2.new(0, 20, 0, 20)
+        CloseButton.Position = UDim2.new(1, -25, 0, 5)
+        CloseButton.Text = "X"
+        CloseButton.Parent = floatingWindow
+        CloseButton.MouseButton1Click:Connect(function()
+            toggleFloatingWindow()
+        end)
+    end
+end
+
+-- Conecta o clique do ImageButton para alternar a janela flutuante
+ImageButton.MouseButton1Click:Connect(toggleFloatingWindow)
+
 
 
 UICorner.Parent = MainFrame 
