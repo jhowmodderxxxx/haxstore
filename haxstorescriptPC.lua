@@ -46,6 +46,8 @@ TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
 TextButton.Text = ""
 TextButton.AutoButtonColor = false
+TextButton.Image = "rbxassetid://115939816657500" -- Insira o ID do asset aqui.
+
 
 local ModMenu = Instance.new("Frame")
 ModMenu.Name = "ModMenu"
