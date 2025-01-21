@@ -9,60 +9,64 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
+
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-     if DeviceType == "Mobile" then
-    local ClickButton = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local ImageLabel = Instance.new("ImageLabel")
-    local TextButton = Instance.new("TextButton")
-    local UICorner = Instance.new("UICorner")
-    local UICorner_2 = Instance.new("UICorner")
 
-    ClickButton.Name = "ClickButton"
-    ClickButton.Parent = game.CoreGui
-    ClickButton.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local ClickButton = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local ImageLabel = Instance.new("ImageLabel")
+local TextButton = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+local UICorner_2 = Instance.new("UICorner")
 
-    MainFrame.Name = "MainFrame"
-    MainFrame.Parent = ClickButton
-    MainFrame.AnchorPoint = Vector2.new(1, 0)
-    MainFrame.BackgroundTransparency = 0.8
-    MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38) 
-    MainFrame.BorderSizePixel = 0
+
+ClickButton.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ClickButton
+MainFrame.AnchorPoint = Vector2.new(1, 0)
+MainFrame.BackgroundTransparency = 0.8
+MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(1, -60, 0, 10)
+MainFrame.Size = UDim2.new(0, 45, 0, 45)
+
+
+ImageLabel.Parent = MainFrame
+ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+ImageLabel.Image = "rbxassetid://115939816657500"
+
+
+TextButton.Parent = MainFrame
+TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton.BackgroundTransparency = 1
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0, 0, 0, 0)
+TextButton.Size = UDim2.new(0, 45, 0, 45)
+TextButton.AutoButtonColor = false
+TextButton.Font = Enum.Font.Arial
+TextButton.Text = "HAXSTORE"
+TextButton.TextColor3 = Color3.new(0, 0, 255)
+TextButton.TextSize = 20
+
+
+UICorner.Parent = MainFrame 
+UICorner_2.Parent = TextButton
+
+if DeviceType == "Mobile" then
     MainFrame.Position = UDim2.new(1, -60, 0, 10)
-    MainFrame.Size = UDim2.new(0, 45, 0, 45)
+else
+    MainFrame.Position = UDim2.new(1, -120, 0, 10)
 
-    UICorner.CornerRadius = UDim.new(1, 0)
-    UICorner.Parent = MainFrame
-
-    UICorner_2.CornerRadius = UDim.new(0, 10)
-    UICorner_2.Parent = ImageLabel
-
-    ImageLabel.Parent = MainFrame
-    ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-    ImageLabel.BackgroundColor3 = Color3.new(0, 0, 0)
-    ImageLabel.BorderSizePixel = 0
-    ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-    ImageLabel.Size = UDim2.new(0, 45, 0, 45)
-    ImageLabel.Image = "rbxassetid://115939816657500"
-
-
-    TextButton.Parent = MainFrame
-    TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
-    TextButton.BackgroundTransparency = 1
-    TextButton.BorderSizePixel = 1
-    TextButton.Position = UDim2.new(0, 0, 0, 0)
-    TextButton.Size = UDim2.new(0, 45, 0, 45)
-    TextButton.AutoButtonColor = false
-    TextButton.Font = Enum.Font.Arial
-    TextButton.Text = "HAXSTORE"
-    TextButton.TextColor3 = Color3.new(0, 0, 255)
-    TextButton.TextSize = 20
-
-    TextButton.MouseButton1Click:Connect(function()
-        game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
-        game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftControl", false, game)
-    end)
 end
+
+
+TextButton.MouseButton1Click:Connect(function()
+    game:GetService("VirtualInputManager"):SendKeyEvent(true, "LeftControl", false, game)
+    game:GetService("VirtualInputManager"):SendKeyEvent(false, "LeftControl", false, game)
+end)
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
