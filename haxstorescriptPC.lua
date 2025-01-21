@@ -1,3 +1,6 @@
+local DataStoreService = game:GetService("DataStoreService")
+local KeyDataStore = DataStoreService:GetDataStore("KeyDataStore")
+
 local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
 local trueData = "3b3a486187d94877a0b19cb729b4e4f8"
 local falseData = "e980d435d0594895811af42243ce90b1"
@@ -11,12 +14,35 @@ KeyGuardLibrary.Set({
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local key = ""
+local saveKeyCheckbox = false
 
 -- Função para salvar a chave
 local function saveKey(newKey)
     key = newKey
-    -- Aqui você pode implementar a lógica para salvar a chave em algum armazenamento persistente
+    if saveKeyCheckbox then
+        KeyDataStore:SetAsync("UserKey", newKey)
+        print("Chave salva permanentemente.")
+    end
 end
+
+-- Função para carregar a chave salva
+local function loadSavedKey()
+    local savedKey
+    local success, err = pcall(function()
+        savedKey = KeyDataStore:GetAsync("UserKey")
+    end)
+    if success and savedKey then
+        key = savedKey
+    else
+        key = ""
+        if err then
+            warn("Erro ao carregar a chave salva: " .. tostring(err))
+        end
+    end
+end
+
+-- Carrega a chave salva antes de criar a janela
+loadSavedKey()
 
 local Window = Fluent:CreateWindow({
     Title = "Key System",
@@ -41,6 +67,16 @@ local Entkey = Tabs.KeySys:AddInput("Input", {
     Finished = false,
     Callback = function(Value)
         saveKey(Value)  -- Salva a chave ao digitar
+    end
+})
+
+-- Adiciona o botão de salvar chave
+local SaveKeyButton = Tabs.KeySys:AddButton({
+    Title = "Save Key",
+    Description = "Save the entered key",
+    Callback = function()
+        saveKeyCheckbox = not saveKeyCheckbox
+        print("Save Key: " .. tostring(saveKeyCheckbox))
     end
 })
 
