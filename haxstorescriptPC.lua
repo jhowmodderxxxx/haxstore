@@ -16,7 +16,6 @@ local ClickButton = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
 local CloseButton = Instance.new("ImageButton")
-local TextButton = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
 
