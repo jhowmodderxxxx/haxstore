@@ -11,7 +11,11 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 
 local HttpService = game:GetService("HttpService")
-local player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local robloxUsername = player.Name  -- Obtém o nome do jogador atual
+
+print("Nome do jogador Roblox: " .. robloxUsername) -- debug
 
 local function getPlayerId(username)
     local url = "https://users.roblox.com/v1/usernames/users"
@@ -41,12 +45,16 @@ local function getAvatarUrl(userId)
 end
 
 -- Obter ID e avatar do usuário Roblox
-local userId = getPlayerId(robloxUsername) 
-local avatarUrl 
-if userId then
- avatarUrl = getAvatarUrl(userId)
-end
+local userId = getPlayerId(robloxUsername)
+print("ID do jogador Roblox: " .. tostring(userId)) -- debug
+local avatarUrl
 
+if userId then
+    avatarUrl = getAvatarUrl(userId)
+    print("URL do avatar: " .. tostring(avatarUrl)) -- debug
+else
+    print("Usuário não encontrado ou erro ao obter o ID.") -- mensagem de erro
+end
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 
@@ -77,6 +85,7 @@ if avatarUrl then
     ImageLabel.Image = avatarUrl
 else
     ImageLabel.Image = "rbxassetid://115939816657500"  -- Placeholder image
+    print("Usando imagem placeholder.") -- debug
 end
 
 TextButton.Parent = MainFrame
