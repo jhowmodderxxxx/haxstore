@@ -49,11 +49,13 @@ local Checkkey = Tabs.KeySys:AddButton({
            -- Tenta carregar o script adicional
            local success, err = pcall(function()
                loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
+               wait(3) -- Espera por 3 segundos 
+               Window:Close() -- Fecha a janela do sistema de chaves
            end)
 
            if success then
                print("Novo script carregado com sucesso!")
-           Window:Hide()
+           Window:Close()
            else
                warn("Falha ao carregar o novo script: ".. tostring(err))
            end
