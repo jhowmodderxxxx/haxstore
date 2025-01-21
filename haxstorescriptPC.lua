@@ -30,14 +30,6 @@ MainFrame.Size = UDim2.new(0, 45, 0, 45)
 local UICorner = Instance.new("UICorner")
 UICorner.Parent = MainFrame
 
-local ImageLabel = Instance.new("ImageLabel")
-ImageLabel.Parent = MainFrame
-ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-ImageLabel.BackgroundTransparency = 1
-ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.Image = "rbxassetid://123456789"
-
 local TextButton = Instance.new("TextButton")
 TextButton.Parent = MainFrame
 TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -45,8 +37,19 @@ TextButton.BackgroundTransparency = 1
 TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
 TextButton.Text = ""
+TextButton.TextSize = 14
 TextButton.AutoButtonColor = false
-TextButton.Image = "rbxassetid://115939816657500" -- Insira o ID do asset aqui.
+
+local ImageLabel = Instance.new("ImageLabel")
+ImageLabel.Parent = TextButton
+ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+ImageLabel.Size = UDim2.new(1, 0, 1, 0)
+ImageLabel.Image = "https://i.imgur.com/octJpLt.png" -- Link direto do imgur com extensão .png
+ImageLabel.ZIndex = 1
+
+TextButton.ZIndex = 2
 
 
 local ModMenu = Instance.new("Frame")
