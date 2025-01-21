@@ -45,8 +45,17 @@ local Checkkey = Tabs.KeySys:AddButton({
         local response = KeyGuardLibrary.validateDefaultKey(key)
         if response == trueData then
            print("Key is valid")
-           -- Carrega o script do GitHub aqui
-           local newScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
+
+           -- Tenta carregar o script adicional
+           local success, err = pcall(function()
+               loadstring(game:HttpGet("https://caminho-para-seu-script-github"))()
+           end)
+
+           if success then
+               print("Novo script carregado com sucesso!")
+           else
+               warn("Falha ao carregar o novo script: ".. tostring(err))
+           end
         else
            print("Key is invalid")
         end
