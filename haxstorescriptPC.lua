@@ -10,7 +10,7 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-if DeviceType == "Mobile" then
+     if DeviceType == "Mobile" then
     local ClickButton = Instance.new("ScreenGui")
     local MainFrame = Instance.new("Frame")
     local ImageLabel = Instance.new("ImageLabel")
@@ -43,7 +43,7 @@ if DeviceType == "Mobile" then
     ImageLabel.BorderSizePixel = 0
     ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
-    ImageLabel.Image = "rbxassetid://" -- add image here
+    ImageLabel.Image = "rbxassetid://115939816657500"
 
     TextButton.Parent = MainFrame
     TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -65,12 +65,12 @@ end
 
 local Window = Fluent:CreateWindow({
     Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
-    SubTitle = "", -- discord link
+    SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
-    Acrylic = false, -- The blur may be detectable, setting this to false disables blur entirely
+    Acrylic = false,
     Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl -- Used when theres no MinimizeKeybind
+    MinimizeKey = Enum.KeyCode.LeftControl
 })
 
 -- // // // Services // // // --
@@ -461,7 +461,7 @@ NoclipConnection = RunService.Stepped:Connect(function()
     end
 end)
 
--- // // // Dupe // // // --
+-- auto dupe --
 local DupeEnabled = false
 local DupeConnection
 local function autoDupe()
@@ -540,10 +540,10 @@ end)
 
 local Tabs = { -- https://lucide.dev/icons/
     Home = Window:AddTab({ Title = "DISCORD", Icon = "message-circle" }),
-    Exclusives = Window:AddTab({ Title = "PREMIUM", Icon = "hand-coins" }),
+    Exclusives = Window:AddTab({ Title = "PREMIUM", Icon = "wallet" }),
     Main = Window:AddTab({ Title = "INICIO", Icon = "list" }),
-    Items = Window:AddTab({ Title = "ITENS", Icon = "fish" }),
-    Teleports = Window:AddTab({ Title = "TELEPORTAR", Icon = "rotate-ccw" }),
+    Items = Window:AddTab({ Title = "ITENS", Icon = "archive" }),
+    Teleports = Window:AddTab({ Title = "TELEPORTAR", Icon = "plane" }),
     Misc = Window:AddTab({ Title = "OUTROS", Icon = "rotate-ccw" }),
 }
 
@@ -690,7 +690,7 @@ do
             stopAutoReel()
         end
     end)
-    local FreezeCharacter = Tabs.Main:AddToggle("CONGELAR A SI MESMO", {Title = "CONGELAR A SI MESMO", Default = false })
+    local FreezeCharacter = Tabs.Main:AddToggle("FreezeCharacter", {Title = "CONGELAR A SI MESMO", Default = false })
     FreezeCharacter:OnChanged(function()
         local oldpos = HumanoidRootPart.CFrame
         FreezeChar = Options.FreezeCharacter.Value
@@ -794,7 +794,7 @@ do
     })
 
     -- // Teleports Tab // --
-    local section = Tabs.Teleports:AddSection("SELECIONE A ILHA")
+    local section = Tabs.Teleports:AddSection("Teleports")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
         Title = "AREAS PARA TELEPORTAR",
         Values = teleportSpots,
@@ -1069,7 +1069,6 @@ do
         end
     })
 
-    local section = Tabs.Trade:AddSection("Coming Soon...")
 end
 
 Window:SelectTab(1)
