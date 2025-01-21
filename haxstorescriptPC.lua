@@ -16,16 +16,20 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local key = ""
 local saveKeyCheckbox = false
 
--- Função para salvar a chave
 local function saveKey(newKey)
     key = newKey
     if saveKeyCheckbox then
-        KeyDataStore:SetAsync("UserKey", newKey)
-        print("Chave salva permanentemente.")
+        local success, err = pcall(function()
+            KeyDataStore:SetAsync("UserKey", newKey)
+        end)
+        if success then
+            print("Chave salva permanentemente.")
+        else
+            warn("Erro ao salvar a chave: " .. tostring(err))
+        end
     end
 end
 
--- Função para carregar a chave salva
 local function loadSavedKey()
     local savedKey
     local success, err = pcall(function()
@@ -41,7 +45,6 @@ local function loadSavedKey()
     end
 end
 
--- Carrega a chave salva antes de criar a janela
 loadSavedKey()
 
 local Window = Fluent:CreateWindow({
@@ -61,16 +64,15 @@ local Tabs = {
 local Entkey = Tabs.KeySys:AddInput("Input", {
     Title = "Enter Key",
     Description = "Enter Key Here",
-    Default = key, -- Preenche com a chave salva
+    Default = key,
     Placeholder = "Enter key…",
     Numeric = false,
     Finished = false,
     Callback = function(Value)
-        saveKey(Value)  -- Salva a chave ao digitar
+        saveKey(Value)
     end
 })
 
--- Adiciona o botão de salvar chave
 local SaveKeyButton = Tabs.KeySys:AddButton({
     Title = "Save Key",
     Description = "Save the entered key",
@@ -84,33 +86,28 @@ local Checkkey = Tabs.KeySys:AddButton({
     Title = "Check Key",
     Description = "Enter Key before pressing this button",
     Callback = function()
+        if not string.find(key, "HAXSTORE") then
+            print("Key must contain HAXSTORE")
+            return
+        end
+        
         local response = KeyGuardLibrary.validateDefaultKey(key)
         if response == trueData then
             print("Key is valid")
-
-            -- Tenta carregar o script adicional
             local success, err = pcall(function()
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
             end)
 
             if success then
                 print("Novo script carregado com sucesso!")
-
-                -- Esconde a janela da interface do usuário primeiro
                 for _, child in pairs(Window:GetChildren()) do
                     child.Visible = false
                 end
-
-                -- Adiciona um tempo de espera
                 wait(3)
-
-                -- Remove os elementos da interface do usuário
                 for _, child in pairs(Window:GetChildren()) do
                     child:Destroy()
                 end
-                
-                -- Remove a janela
-                Window:Destroy()
+                Window = nil
             else
                 warn("Falha ao carregar o novo script: " .. tostring(err))
             end
