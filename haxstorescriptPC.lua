@@ -36,7 +36,7 @@ ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.BackgroundTransparency = 1
 ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.Image = "rbxassetid://[115939816657500]"
+ImageLabel.Image = "rbxassetid://115939816657500"
 
 local TextButton = Instance.new("TextButton")
 TextButton.Parent = MainFrame
