@@ -1,3 +1,14 @@
+if getgenv().hub then warn("HAXSTORE : Already executed!") return end
+getgenv().hub = true
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
+
 local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
 local trueData = "db918b03c9e74d77b0910a80680ec8b8"
 local falseData = "ae70b9db5fa34fe1b1a5ff942429c4cd"
@@ -63,19 +74,6 @@ local Getkey = Tabs.KeySys:AddButton({
 Window:SelectTab(1)
 
 
-
-
-
-if getgenv().hub then warn("HAXSTORE : Already executed!") return end
-getgenv().hub = true
-
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
-
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 
 local UserInputService = game:GetService("UserInputService")
