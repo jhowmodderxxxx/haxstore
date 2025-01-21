@@ -12,6 +12,12 @@ KeyGuardLibrary.Set({
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local key = ""
 
+-- Função para salvar a chave
+local function saveKey(newKey)
+    key = newKey
+    -- Aqui você poderia salvar a chave em um arquivo ou outra forma de persistência, se desejado
+end
+
 local Window = Fluent:CreateWindow({
     Title = "Key System",
     SubTitle = "HAXSTORE",
@@ -29,12 +35,12 @@ local Tabs = {
 local Entkey = Tabs.KeySys:AddInput("Input", {
     Title = "Enter Key",
     Description = "Enter Key Here",
-    Default = "",
+    Default = key, -- Preenche com a chave salva
     Placeholder = "Enter key…",
     Numeric = false,
     Finished = false,
     Callback = function(Value)
-        key = Value
+        saveKey(Value)  -- Salva a chave ao digitar
     end
 })
 
@@ -49,13 +55,14 @@ local Checkkey = Tabs.KeySys:AddButton({
            -- Tenta carregar o script adicional
            local success, err = pcall(function()
                loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
-               wait(3) -- Espera por 3 segundos 
-               Window:Close() -- Fecha a janela do sistema de chaves
            end)
 
            if success then
                print("Novo script carregado com sucesso!")
-           Window:Close()
+               for _, child in pairs(Window:GetChildren()) do
+                   child:Destroy()  -- Remove todos os elementos da janela do sistema de chaves
+               end
+               Window:Destroy()  -- Remove a janela do sistema de chaves
            else
                warn("Falha ao carregar o novo script: ".. tostring(err))
            end
