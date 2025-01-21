@@ -48,7 +48,7 @@ local Checkkey = Tabs.KeySys:AddButton({
 
            -- Tenta carregar o script adicional
            local success, err = pcall(function()
-               loadstring(game:HttpGet("https://caminho-para-seu-script-github"))()
+               loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
            end)
 
            if success then
