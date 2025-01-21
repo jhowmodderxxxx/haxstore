@@ -54,11 +54,6 @@ UICorner.Parent = MainFrame
 UICorner_2.Parent = ImageButton
 
 
-CloseButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-end)
-
-
 if DeviceType == "Mobile" then
     MainFrame.Position = UDim2.new(1, -60, 0, 10)
 else
