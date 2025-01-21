@@ -45,19 +45,11 @@ local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile"
     ImageLabel.Size = UDim2.new(0, 45, 0, 45)
     ImageLabel.Image = "rbxassetid://115939816657500"
 
-    local ImageLabel = Instance.new("ImageLabel") -- Cria uma nova instância de ImageLabel
-    ImageLabel.Parent = MainFrame -- Define MainFrame como parent para a ImageLabel
-    ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5) -- Ajusta o ponto de ancoragem ao centro
-    ImageLabel.BackgroundTransparency = 1 -- Faz com que o fundo da imagem seja transparente
-    ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0) -- Centraliza a imagem no MainFrame
-    ImageLabel.Size = UDim2.new(1, 0, 1, 0) -- Ajusta o tamanho da imagem para preencher o MainFrame
-    ImageLabel.Image = "rbxassetid://115939816657500" -- Define o ID da imagem do adesivo do Roblox
-
 
     TextButton.Parent = MainFrame
     TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
     TextButton.BackgroundTransparency = 1
-    TextButton.BorderSizePixel = 0
+    TextButton.BorderSizePixel = 5
     TextButton.Position = UDim2.new(0, 0, 0, 0)
     TextButton.Size = UDim2.new(0, 45, 0, 45)
     TextButton.AutoButtonColor = false
