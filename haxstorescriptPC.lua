@@ -8,6 +8,16 @@ end
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
+if getgenv().hub then warn("HAXSTORE : Already executed!") return end
+getgenv().hub = true
+
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
+
 local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
 local trueData = "d14f837bb0af4707bdfea281b8ae8912"
 local falseData = "c5262905499a4590a241152cbca07707"
@@ -55,7 +65,7 @@ local Checkkey = Tabs.KeySys:AddButton({
         local response = KeyGuardLibrary.validateDefaultKey(key)
         if response == trueData then
             print("Key is valid")
-            -- Your code here
+            -- Seu código aqui
         else
             print("Key is invalid")
         end
@@ -70,15 +80,7 @@ local Getkey = Tabs.KeySys:AddButton({
     end
 })
 
-
-
 Window:SelectTab(1)
-
-
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
-
-
 
 local UserInputService = game:GetService("UserInputService")
 local Player = game.Players.LocalPlayer
@@ -102,15 +104,14 @@ UICorner.Parent = MainFrame
 
 local TextButton = Instance.new("TextButton")
 TextButton.Parent = MainFrame
-TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255) -- Cor ciano
+TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255) 
 TextButton.BackgroundTransparency = 1
 TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
 TextButton.Text = "HAXSTORE"
-TextButton.TextColor3 = Color3.fromRGB(0, 255, 255) -- Texto em ciano
+TextButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.TextSize = 14
 TextButton.AutoButtonColor = false
-
 
 local ImageLabel = Instance.new("ImageLabel")
 ImageLabel.Parent = TextButton
