@@ -15,6 +15,7 @@ local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile"
 local ClickButton = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
+local CloseButton = Instance.new("ImageButton")
 local TextButton = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
@@ -47,9 +48,6 @@ CloseButton.BorderSizePixel = 0
 CloseButton.Position = UDim2.new(0, 0, 0, 0)
 CloseButton.Size = UDim2.new(0, 45, 0, 45)
 CloseButton.Image = "rbxassetid://115939816657500"
-
-
-
 
 
 UICorner.Parent = MainFrame 
