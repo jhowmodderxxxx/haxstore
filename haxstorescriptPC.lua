@@ -53,7 +53,7 @@ local Checkkey = Tabs.KeySys:AddButton({
 
            if success then
                print("Novo script carregado com sucesso!")
-           Window:Close()
+           Window:Hide()
            else
                warn("Falha ao carregar o novo script: ".. tostring(err))
            end
