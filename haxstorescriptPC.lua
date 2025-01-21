@@ -28,7 +28,6 @@ MainFrame.AnchorPoint = Vector2.new(1, 0)
 MainFrame.BackgroundTransparency = 0.8
 MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(1, -60, 0, 10)
 MainFrame.Size = UDim2.new(0, 45, 0, 45)
 
 
