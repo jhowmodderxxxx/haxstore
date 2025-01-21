@@ -8,16 +8,6 @@ end
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
-if getgenv().hub then warn("HAXSTORE : Already executed!") return end
-getgenv().hub = true
-
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
-
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
-
 local KeyGuardLibrary = loadstring(game:HttpGet("https://cdn.keyguardian.org/library/v1.0.0.lua"))()
 local trueData = "d14f837bb0af4707bdfea281b8ae8912"
 local falseData = "c5262905499a4590a241152cbca07707"
