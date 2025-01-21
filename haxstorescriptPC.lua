@@ -20,26 +20,40 @@ print("Nome do jogador Roblox: " .. robloxUsername) -- debug
 local function getPlayerId(username)
     local url = "https://users.roblox.com/v1/usernames/users"
     local payload = HttpService:JSONEncode({usernames = {username}})
-    local response = HttpService:PostAsync(url, payload, Enum.HttpContentType.ApplicationJson)
-    local data = HttpService:JSONDecode(response)
+    local success, response = pcall(function()
+        return HttpService:PostAsync(url, payload, Enum.HttpContentType.ApplicationJson)
+    end)
 
-    if data.data[1] then
-        return data.data[1].id
+    if success then
+        local data = HttpService:JSONDecode(response)
+        if data.data[1] then
+            return data.data[1].id
+        else
+            warn("Usuário não encontrado.")
+            return nil
+        end
     else
-        warn("Usuário não encontrado.")
+        warn("Erro ao fazer a solicitação: " .. response)
         return nil
     end
 end
 
 local function getAvatarUrl(userId)
     local url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=420x420&format=Png&isCircular=false"
-    local response = HttpService:GetAsync(url)
-    local data = HttpService:JSONDecode(response)
+    local success, response = pcall(function()
+        return HttpService:GetAsync(url)
+    end)
 
-    if data.data[1] then
-        return data.data[1].imageUrl
+    if success then
+        local data = HttpService:JSONDecode(response)
+        if data.data[1] then
+            return data.data[1].imageUrl
+        else
+            warn("Erro ao obter o avatar.")
+            return nil
+        end
     else
-        warn("Erro ao obter o avatar.")
+        warn("Erro ao fazer a solicitação: " .. response)
         return nil
     end
 end
@@ -102,6 +116,7 @@ TextButton.TextSize = 20
 
 UICorner.Parent = MainFrame
 UICorner_2.Parent = TextButton
+
 
 
 
