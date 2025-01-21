@@ -900,7 +900,7 @@ do
 
     -- // Character Tab // --
     local section = Tabs.Misc:AddSection("Character")
-    local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "Walk On Water", Default = false })
+    local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR SOBRE A AGUA", Default = false })
     WalkOnWater:OnChanged(function()
         for i,v in pairs(workspace.zones.fishing:GetChildren()) do
 			if v.Name == WalkZone then
@@ -916,7 +916,7 @@ do
 		end
     end)
     local WalkOnWaterZone = Tabs.Misc:AddDropdown("WalkOnWaterZone", {
-        Title = "ANDAR NA ÁGUA",
+        Title = "ANDAR NA AGUA (ZONAS)",
         Values = {"Ocean", "Desolate Deep", "The Depths"},
         Multi = false,
         Default = "Ocean",
