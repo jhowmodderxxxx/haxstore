@@ -23,7 +23,7 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local key = ""
 
 local Window = Fluent:CreateWindow({
-    Title = "Key System",
+    Title = "Sistema de key",
     SubTitle = "HAXSTORE",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 340),
@@ -37,7 +37,7 @@ local Tabs = {
 }
 
 local Entkey = Tabs.KeySys:AddInput("Input", {
-    Title = "Enter Key",
+    Title = "KEY AQUI",
     Description = "Enter Key Here",
     Default = "",
     Placeholder = "Enter key…",
@@ -69,11 +69,6 @@ local Getkey = Tabs.KeySys:AddButton({
        setclipboard(KeyGuardLibrary.getLink())
     end
 })
-
-Window:SelectTab(1)
-
-
-
 
 local UserInputService = game:GetService("UserInputService")
 local Player = game.Players.LocalPlayer
