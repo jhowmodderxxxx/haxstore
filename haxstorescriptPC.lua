@@ -10,6 +10,44 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/j
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 
+local HttpService = game:GetService("HttpService")
+local player = game.Players.LocalPlayer
+
+local function getPlayerId(username)
+    local url = "https://users.roblox.com/v1/usernames/users"
+    local payload = HttpService:JSONEncode({usernames = {username}})
+    local response = HttpService:PostAsync(url, payload, Enum.HttpContentType.ApplicationJson)
+    local data = HttpService:JSONDecode(response)
+
+    if data.data[1] then
+        return data.data[1].id
+    else
+        warn("Usuário não encontrado.")
+        return nil
+    end
+end
+
+local function getAvatarUrl(userId)
+    local url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=420x420&format=Png&isCircular=false"
+    local response = HttpService:GetAsync(url)
+    local data = HttpService:JSONDecode(response)
+
+    if data.data[1] then
+        return data.data[1].imageUrl
+    else
+        warn("Erro ao obter o avatar.")
+        return nil
+    end
+end
+
+-- Obter ID e avatar do usuário Roblox
+local userId = getPlayerId(robloxUsername) 
+local avatarUrl 
+if userId then
+ avatarUrl = getAvatarUrl(userId)
+end
+
+
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 
 local ClickButton = Instance.new("ScreenGui")
@@ -19,8 +57,7 @@ local TextButton = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
 
-
-ClickButton.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ClickButton.Parent = player:WaitForChild("PlayerGui")
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ClickButton
 MainFrame.AnchorPoint = Vector2.new(1, 0)
@@ -30,14 +67,17 @@ MainFrame.BorderSizePixel = 0
 MainFrame.Position = UDim2.new(1, -60, 0, 10)
 MainFrame.Size = UDim2.new(0, 45, 0, 45)
 
-
 ImageLabel.Parent = MainFrame
 ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.BackgroundTransparency = 1
 ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.Image = "rbxassetid://115939816657500"
 
+if avatarUrl then
+    ImageLabel.Image = avatarUrl
+else
+    ImageLabel.Image = "rbxassetid://115939816657500"  -- Placeholder image
+end
 
 TextButton.Parent = MainFrame
 TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
@@ -51,75 +91,8 @@ TextButton.Text = "HAXSTORE"
 TextButton.TextColor3 = Color3.new(0, 0, 255)
 TextButton.TextSize = 20
 
-
-UICorner.Parent = MainFrame 
+UICorner.Parent = MainFrame
 UICorner_2.Parent = TextButton
-
-
-local http = require("socket.http")
-local ltn12 = require("ltn12")
-local json = require("dkjson")
-
-function getUserInfo(username)
-    local url = "https://users.roblox.com/v1/usernames/users"
-    local payload = '{"usernames": ["' .. username .. '"]}'
-    local response = {}
-    local res, code = http.request {
-        url = url,
-        method = "POST",
-        headers = {
-            ["Content-Type"] = "application/json",
-            ["Content-Length"] = string.len(payload)
-        },
-        source = ltn12.source.string(payload),
-        sink = ltn12.sink.table(response)
-    }
-
-    if code == 200 then
-        local data = json.decode(table.concat(response))
-        if data.data[1] then
-            return data.data[1].id
-        else
-            return nil, "Usuário não encontrado."
-        end
-    else
-        return nil, "Erro ao fazer a solicitação."
-    end
-end
-
-function getUserAvatar(userId)
-    local url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=420x420&format=Png&isCircular=false"
-    local response = {}
-    local _, code = http.request {
-        url = url,
-        sink = ltn12.sink.table(response)
-    }
-
-    if code == 200 then
-        local data = json.decode(table.concat(response))
-        return data.data[1].imageUrl
-    else
-        return nil, "Erro ao obter o avatar."
-    end
-end
-
--- Obter informações e Avatar do usuário Roblox
-local username = 'seu_nome_de_usuario'
-local userId, err = getUserInfo(username)
-if userId then
-    local avatarUrl, avatarErr = getUserAvatar(userId)
-    if avatarUrl then
-        print("Script sendo executado por: " .. (os.getenv("USERNAME") or os.getenv("USER")))
-        print("Avatar URL: " .. avatarUrl)
-    else
-        print(avatarErr)
-    end
-else
-    print(err)
-end
-
-
-
 
 
 
