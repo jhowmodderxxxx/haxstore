@@ -16,6 +16,7 @@ local ClickButton = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
 local CloseButton = Instance.new("ImageButton")
+local OpenButton = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
 
@@ -48,8 +49,27 @@ CloseButton.Size = UDim2.new(0, 45, 0, 45)
 CloseButton.Image = "rbxassetid://115939816657500"
 
 
+ OpenButton.Name = "OpenButton"
+ OpenButton.Parent = ClickButton
+ CloseButton.BackgroundColor3 = Color3.new(1, 1, 1)
+ CloseButton.BackgroundTransparency = 1
+ OpenButton.Size = UDim2.new(0, 100, 0, 50) 
+ OpenButton.Position = UDim2.new(0, 10, 0, 10) -- Ajuste conforme necessário 
+ OpenButton.Size = UDim2.new(0, 45, 0, 45)
+ OpenButton.Image = "rbxassetid://115939816657500"
+
+
+
+
 UICorner.Parent = MainFrame 
 UICorner_2.Parent = CloseButton
+
+
+
+CloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+end)
+
 
 if DeviceType == "Mobile" then
     MainFrame.Position = UDim2.new(1, -60, 0, 10)
