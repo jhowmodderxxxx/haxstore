@@ -46,7 +46,7 @@ local Checkkey = Tabs.KeySys:AddButton({
         if response == trueData then
            print("Key is valid")
            -- Carrega o script do GitHub aqui
-           local newScript = loadstring(game:HttpGet("https://caminho-para-seu-script-github"))()
+           local newScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/SCRIPTFISCH"))()
         else
            print("Key is invalid")
         end
