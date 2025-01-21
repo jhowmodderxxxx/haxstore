@@ -39,21 +39,21 @@ ImageLabel.Size = UDim2.new(1, 0, 1, 0)
 ImageLabel.Image = "rbxassetid://115939816657500"
 
 
-TextButton.Parent = MainFrame
-TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
-TextButton.BackgroundTransparency = 1
-TextButton.BorderSizePixel = 0
-TextButton.Position = UDim2.new(0, 0, 0, 0)
-TextButton.Size = UDim2.new(0, 45, 0, 45)
-TextButton.AutoButtonColor = false
-TextButton.Font = Enum.Font.Arial
-TextButton.Text = "HAXSTORE"
-TextButton.TextColor3 = Color3.new(0, 0, 255)
-TextButton.TextSize = 20
+CloseButton.Name = "CloseButton"
+CloseButton.Parent = MainFrame
+CloseButton.BackgroundColor3 = Color3.new(1, 1, 1)
+CloseButton.BackgroundTransparency = 1
+CloseButton.BorderSizePixel = 0
+CloseButton.Position = UDim2.new(0, 0, 0, 0)
+CloseButton.Size = UDim2.new(0, 45, 0, 45)
+CloseButton.Image = "rbxassetid://115939816657500"
+
+
+
 
 
 UICorner.Parent = MainFrame 
-UICorner_2.Parent = TextButton
+UICorner_2.Parent = CloseButton
 
 if DeviceType == "Mobile" then
     MainFrame.Position = UDim2.new(1, -60, 0, 10)
