@@ -15,8 +15,7 @@ local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile"
 local ClickButton = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
-local CloseButton = Instance.new("ImageButton")
-local OpenButton = Instance.new("TextButton")
+local TextButton = Instance.new("ImageButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
 
@@ -28,6 +27,7 @@ MainFrame.AnchorPoint = Vector2.new(1, 0)
 MainFrame.BackgroundTransparency = 0.8
 MainFrame.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
 MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(1, -60, 0, 10)
 MainFrame.Size = UDim2.new(0, 45, 0, 45)
 
 
@@ -36,34 +36,22 @@ ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 ImageLabel.BackgroundTransparency = 1
 ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-ImageLabel.Image = "rbxassetid://"
+ImageLabel.Image = "rbxassetid://115939816657500"
 
 
-CloseButton.Name = "CloseButton"
-CloseButton.Parent = MainFrame
-CloseButton.BackgroundColor3 = Color3.new(1, 1, 1)
-CloseButton.BackgroundTransparency = 1
-CloseButton.BorderSizePixel = 0
-CloseButton.Position = UDim2.new(0, 0, 0, 0)
-CloseButton.Size = UDim2.new(0, 45, 0, 45)
-CloseButton.Image = "rbxassetid://115939816657500"
-
-
- OpenButton.Name = "OpenButton"
- OpenButton.Parent = ClickButton
- CloseButton.BackgroundColor3 = Color3.new(1, 1, 1)
- CloseButton.BackgroundTransparency = 1
- OpenButton.Size = UDim2.new(0, 100, 0, 50) 
- OpenButton.Position = UDim2.new(0, 10, 0, 10) -- Ajuste conforme necessário 
- OpenButton.Size = UDim2.new(0, 45, 0, 45)
- OpenButton.Image = "rbxassetid://115939816657500"
-
-
+local ImageButton = Instance.new("ImageButton")
+ImageButton.Parent = MainFrame
+ImageButton.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageButton.BackgroundTransparency = 1
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0, 0, 0, 0)
+ImageButton.Size = UDim2.new(0, 45, 0, 45)
+ImageButton.AutoButtonColor = false
+ImageButton.Image = "rbxassetid://<115939816657500>"
 
 
 UICorner.Parent = MainFrame 
-UICorner_2.Parent = CloseButton
-
+UICorner_2.Parent = ImageButton
 
 
 CloseButton.MouseButton1Click:Connect(function()
