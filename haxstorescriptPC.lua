@@ -52,9 +52,9 @@ local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile"
     TextButton.Position = UDim2.new(0, 0, 0, 0)
     TextButton.Size = UDim2.new(0, 45, 0, 45)
     TextButton.AutoButtonColor = false
-    TextButton.Font = Enum.Font.SourceSans
-    TextButton.Image = "rbxassetid://115939816657500"
-    TextButton.TextColor3 = Color3.new(220, 125, 255)
+    TextButton.Font = Enum.Font.Arial
+    TextButton.Text = "HAXSTORE"
+    TextButton.TextColor3 = Color3.new(0, 0, 255)
     TextButton.TextSize = 20
 
     TextButton.MouseButton1Click:Connect(function()
@@ -572,10 +572,10 @@ do
             shadowCountLabel.Visible = false
         end
     end)
-    local RodDupe = Tabs.Exclusives:AddToggle("RodDupe", {Title = "Rod Of The Depths Spam", Default = false })
+    local RodDupe = Tabs.Exclusives:AddToggle("RodDupe", {Title = "SPAMMAR ROD OF THE DEPTHS", Default = false })
     RodDupe:OnChanged(function()
         local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-        if not RequireRod then return ShowNotification("PRECISA DO Rod Of The Depths") end
+        if not RequireRod then return ShowNotification("PRECISA DO ROD OF THE DEPTHS") end
         while Options.RodDupe.Value do
             local args1 = {[1] = "Flimsy Rod"}
             game:GetService("ReplicatedStorage").events.equiprod:FireServer(unpack(args1))
@@ -586,7 +586,7 @@ do
         end
     end)
     local RodDupe_Delay = Tabs.Exclusives:AddSlider("RodDupe_Delay", {
-        Title = "Rod Of The Depths Spam Delay",
+        Title = "SPAMMAR (DELAY) ROD OF THE DEPTHS",
         Description = "",
         Default = 0.2,
         Min = 0,
@@ -601,7 +601,7 @@ do
         Description = "",
         Callback = function()
             local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-            if not RequireRod then return ShowNotification("Requirement Rod Of The Depths") end
+            if not RequireRod then return ShowNotification("PRECISA DO ROD OF THE DEPTHS") end
             for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do 
                 if v:FindFirstChild("offer") then
                     v.Parent = LocalPlayer.Character
@@ -628,7 +628,7 @@ do
 
     -- // Main Tab // --
     local section = Tabs.Main:AddSection("FARM HAX STORE")
-    local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "Auto Cast", Default = false })
+    local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "AUTO CAST", Default = false })
     autoCast:OnChanged(function()
         local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
         if Options.autoCast.Value == true then
@@ -670,7 +670,7 @@ do
             autoCastEnabled = false
         end
     end)
-    local autoShake = Tabs.Main:AddToggle("autoShake", {Title = "Auto Shake", Default = false })
+    local autoShake = Tabs.Main:AddToggle("autoShake", {Title = "AUTO SHAKE", Default = false })
     autoShake:OnChanged(function()
         if Options.autoShake.Value == true then
             autoShakeEnabled = true
@@ -680,7 +680,7 @@ do
             stopAutoShake()
         end
     end)
-    local autoReel = Tabs.Main:AddToggle("autoReel", {Title = "Auto Reel", Default = false })
+    local autoReel = Tabs.Main:AddToggle("autoReel", {Title = "AUTO REEL", Default = false })
     autoReel:OnChanged(function()
         if Options.autoReel.Value == true then
             autoReelEnabled = true
@@ -706,7 +706,7 @@ do
     end)
 
     -- // Mode Tab // --
-    local section = Tabs.Main:AddSection("Mode Fishing")
+    local section = Tabs.Main:AddSection("MODO DE PESCA")
     local autoCastMode = Tabs.Main:AddDropdown("autoCastMode", {
         Title = "MODO Auto Cast",
         Values = {"Legit", "Blatant"},
