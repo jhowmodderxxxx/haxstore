@@ -15,7 +15,7 @@ local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile"
 local ClickButton = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ImageLabel = Instance.new("ImageLabel")
-local TextButton = Instance.new("ImageButton")
+local TextButton = Instance.new("TextButton")
 local UICorner = Instance.new("UICorner")
 local UICorner_2 = Instance.new("UICorner")
 
@@ -39,56 +39,88 @@ ImageLabel.Size = UDim2.new(1, 0, 1, 0)
 ImageLabel.Image = "rbxassetid://115939816657500"
 
 
--- Criação do ImageButton
-local ImageButton = Instance.new("ImageButton")
-ImageButton.Parent = MainFrame
-ImageButton.BackgroundColor3 = Color3.new(1, 1, 1)
-ImageButton.BackgroundTransparency = 1
-ImageButton.BorderSizePixel = 0
-ImageButton.Position = UDim2.new(0, 0, 0, 0)
-ImageButton.Size = UDim2.new(0, 45, 0, 45)
-ImageButton.AutoButtonColor = false
-ImageButton.Image = "rbxassetid://115939816657500"
-ImageButton.ZIndex = 2
-
--- Verificação do carregamento da imagem
-ImageButton.Loaded:Connect(function()
-    print("Imagem carregada com sucesso!")
-end)
-
--- Função para criar e destruir a janela flutuante
-local floatingWindow = nil
-
-local function toggleFloatingWindow()
-    if floatingWindow then
-        floatingWindow:Destroy()
-        floatingWindow = nil
-    else
-        floatingWindow = Instance.new("Frame")
-        floatingWindow.Size = UDim2.new(0, 200, 0, 100)
-        floatingWindow.Position = UDim2.new(0.5, -100, 0.5, -50)
-        floatingWindow.BackgroundColor3 = Color3.new(1, 1, 1)
-        floatingWindow.Parent = MainFrame
-
-        -- Adiciona um botão de fechar dentro do flutuante (opcional)
-        local CloseButton = Instance.new("TextButton")
-        CloseButton.Size = UDim2.new(0, 20, 0, 20)
-        CloseButton.Position = UDim2.new(1, -25, 0, 5)
-        CloseButton.Text = "X"
-        CloseButton.Parent = floatingWindow
-        CloseButton.MouseButton1Click:Connect(function()
-            toggleFloatingWindow()
-        end)
-    end
-end
-
--- Conecta o clique do ImageButton para alternar a janela flutuante
-ImageButton.MouseButton1Click:Connect(toggleFloatingWindow)
-
+TextButton.Parent = MainFrame
+TextButton.BackgroundColor3 = Color3.new(1, 1, 1)
+TextButton.BackgroundTransparency = 1
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0, 0, 0, 0)
+TextButton.Size = UDim2.new(0, 45, 0, 45)
+TextButton.AutoButtonColor = false
+TextButton.Font = Enum.Font.Arial
+TextButton.Text = "HAXSTORE"
+TextButton.TextColor3 = Color3.new(0, 0, 255)
+TextButton.TextSize = 20
 
 
 UICorner.Parent = MainFrame 
-UICorner_2.Parent = ImageButton
+UICorner_2.Parent = TextButton
+
+
+local http = require("socket.http")
+local ltn12 = require("ltn12")
+local json = require("dkjson")
+
+function getUserInfo(username)
+    local url = "https://users.roblox.com/v1/usernames/users"
+    local payload = '{"usernames": ["' .. username .. '"]}'
+    local response = {}
+    local res, code = http.request {
+        url = url,
+        method = "POST",
+        headers = {
+            ["Content-Type"] = "application/json",
+            ["Content-Length"] = string.len(payload)
+        },
+        source = ltn12.source.string(payload),
+        sink = ltn12.sink.table(response)
+    }
+
+    if code == 200 then
+        local data = json.decode(table.concat(response))
+        if data.data[1] then
+            return data.data[1].id
+        else
+            return nil, "Usuário não encontrado."
+        end
+    else
+        return nil, "Erro ao fazer a solicitação."
+    end
+end
+
+function getUserAvatar(userId)
+    local url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=" .. userId .. "&size=420x420&format=Png&isCircular=false"
+    local response = {}
+    local _, code = http.request {
+        url = url,
+        sink = ltn12.sink.table(response)
+    }
+
+    if code == 200 then
+        local data = json.decode(table.concat(response))
+        return data.data[1].imageUrl
+    else
+        return nil, "Erro ao obter o avatar."
+    end
+end
+
+-- Obter informações e Avatar do usuário Roblox
+local username = 'seu_nome_de_usuario'
+local userId, err = getUserInfo(username)
+if userId then
+    local avatarUrl, avatarErr = getUserAvatar(userId)
+    if avatarUrl then
+        print("Script sendo executado por: " .. (os.getenv("USERNAME") or os.getenv("USER")))
+        print("Avatar URL: " .. avatarUrl)
+    else
+        print(avatarErr)
+    end
+else
+    print(err)
+end
+
+
+
+
 
 
 if DeviceType == "Mobile" then
