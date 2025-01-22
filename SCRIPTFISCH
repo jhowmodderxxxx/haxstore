@@ -663,7 +663,7 @@ do
         end
     })
     Tabs.Exclusives:AddButton({
-        Title = "Dupe Shadow",
+        Title = "DUPE SHADOW",
         Description = "",
         Callback = function()
             local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
@@ -958,7 +958,7 @@ do
     })
 
     -- // Character Tab // --
-    local section = Tabs.Misc:AddSection("Character")
+    local section = Tabs.Misc:AddSection("JOGADOR"),
     local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR SOBRE A AGUA", Default = false })
     WalkOnWater:OnChanged(function()
         for i,v in pairs(workspace.zones.fishing:GetChildren()) do
@@ -1009,63 +1009,50 @@ do
         Noclip = Options.ToggleNoclip.Value
     end)
 
-    -- // Misc Tab // --
-    local section = Tabs.Misc:AddSection("OUTROS")
-    local BypassRadar = Tabs.Misc:AddToggle("BypassRadar", {Title = "Bypass Fish Radar", Default = false })
-    BypassRadar:OnChanged(function()
-        for _, v in pairs(game:GetService("CollectionService"):GetTagged("radarTag")) do
-			if v:IsA("BillboardGui") or v:IsA("SurfaceGui") then
-				v.Enabled = Options.BypassRadar.Value
-			end
-		end
-    end)
-    local BypassGPS = Tabs.Misc:AddToggle("BypassGPS", {Title = "Bypass GPS", Default = false })
-    BypassGPS:OnChanged(function()
-        if Options.BypassGPS.Value == true then
-            local XyzClone = game:GetService("ReplicatedStorage").resources.items.items.GPS.GPS.gpsMain.xyz:Clone()
-			XyzClone.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild("hud"):WaitForChild("safezone"):WaitForChild("backpack")
-			local Pos = GetPosition()
-			local StringInput = string.format("%s, %s, %s", ExportValue(Pos[1]), ExportValue(Pos[2]), ExportValue(Pos[3]))
-			XyzClone.Text = "<font color='#ff4949'>X</font><font color = '#a3ff81'>Y</font><font color = '#626aff'>Z</font>: "..StringInput
-			BypassGpsLoop = game:GetService("RunService").Heartbeat:Connect(function()
-				local Pos = GetPosition()
-				StringInput = string.format("%s, %s, %s", ExportValue(Pos[1]), ExportValue(Pos[2]), ExportValue(Pos[3]))
-				XyzClone.Text = "<font color='#ff4949'>X</font><font color = '#a3ff81'>Y</font><font color = '#626aff'>Z</font> : "..StringInput
-			end)
-		else
-			if PlayerGui.hud.safezone.backpack:FindFirstChild("xyz") then
-				PlayerGui.hud.safezone.backpack:FindFirstChild("xyz"):Destroy()
-			end
-			if BypassGpsLoop then
-				BypassGpsLoop:Disconnect()
-				BypassGpsLoop = nil
-			end
-        end
-    end)
-    local HoldDuration = Tabs.Misc:AddToggle("HoldDuration", {Title = "Hold Duration 0 sec", Default = false })
-    HoldDuration:OnChanged(function()
-        if Options.HoldDuration.Value == true then
-            for i,v in ipairs(game:GetService("Workspace"):GetDescendants()) do
-                if v.ClassName == "ProximityPrompt" then
-                    v.HoldDuration = 0
-                end
-            end
-        end
-    end)
-    local DisableOxygen = Tabs.Misc:AddToggle("DisableOxygen", {Title = "Disable Oxygen", Default = true })
-    DisableOxygen:OnChanged(function()
-        LocalPlayer.Character.client.oxygen.Disabled = Options.DisableOxygen.Value
-    end)
+  -- // Misc Tab // --
+  local section = Tabs.Misc:AddSection("Misc")
+  local BypassRadar = Tabs.Misc:AddToggle("BypassRadar", {Title = "RADAR DE PEIXES", Default = false })
+  BypassRadar:OnChanged(function()
+      for _, v in pairs(game:GetService("CollectionService"):GetTagged("radarTag")) do
+          if v:IsA("BillboardGui") or v:IsA("SurfaceGui") then
+              v.Enabled = Options.BypassRadar.Value
+          end
+      end
+  end)
+  local BypassGPS = Tabs.Misc:AddToggle("BypassGPS", {Title = "GPS GAMEPASS", Default = false })
+  BypassGPS:OnChanged(function()
+      if Options.BypassGPS.Value == true then
+          local XyzClone = game:GetService("ReplicatedStorage").resources.items.items.GPS.GPS.gpsMain.xyz:Clone()
+          XyzClone.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild("hud"):WaitForChild("safezone"):WaitForChild("backpack")
+          local Pos = GetPosition()
+          local StringInput = string.format("%s, %s, %s", ExportValue(Pos[1]), ExportValue(Pos[2]), ExportValue(Pos[3]))
+          XyzClone.Text = "<font color='#ff4949'>X</font><font color = '#a3ff81'>Y</font><font color = '#626aff'>Z</font>: "..StringInput
+          BypassGpsLoop = game:GetService("RunService").Heartbeat:Connect(function()
+              local Pos = GetPosition()
+              StringInput = string.format("%s, %s, %s", ExportValue(Pos[1]), ExportValue(Pos[2]), ExportValue(Pos[3]))
+              XyzClone.Text = "<font color='#ff4949'>X</font><font color = '#a3ff81'>Y</font><font color = '#626aff'>Z</font> : "..StringInput
+          end)
+      else
+          if PlayerGui.hud.safezone.backpack:FindFirstChild("xyz") then
+              PlayerGui.hud.safezone.backpack:FindFirstChild("xyz"):Destroy()
+          end
+          if BypassGpsLoop then
+              BypassGpsLoop:Disconnect()
+              BypassGpsLoop = nil
+          end
+      end
+  end)
+
     Tabs.Misc:AddButton({
         Title = "COPIAR LOCALIZAÇAO XYZ",
-        Description = "Copy Clipboard",
+        Description = "COPIADO",
         Callback = function()
             local XYZ = tostring(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
             setclipboard("game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(" .. XYZ .. ")")
         end
     })
 
-    local JustUI = Tabs.Misc:AddToggle("JustUI", {Title = "Show/Hide UIs", Default = true })
+    local JustUI = Tabs.Misc:AddToggle("JustUI", {Title = "OCULTAR HUD", Default = true })
     JustUI:OnChanged(function()
         local BlackShow = JustUI.Value
         if BlackShow then
@@ -1074,20 +1061,6 @@ do
             PlayerGui.hud.safezone.Visible = false
         end
     end)
-
-    local IdentityHiderUI = Tabs.Misc:AddToggle("IdentityHiderUI", {Title = "Protect Identity", Default = false })    
-    IdentityHiderUI:OnChanged(function()
-        while Options.IdentityHiderUI.Value == true do
-            if UserPlayer:FindFirstChild("streak") then UserPlayer.streak.Text = "HIDDEN" end
-            if UserPlayer:FindFirstChild("level") then UserPlayer.level.Text = "Level: HIDDEN" end
-            if UserPlayer:FindFirstChild("level") then UserPlayer.user.Text = "HIDDEN" end
-            local hud = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("hud"):WaitForChild("safezone")
-            if hud:FindFirstChild("coins") then hud.coins.Text = "HIDDEN$" end
-            if hud:FindFirstChild("lvl") then hud.lvl.Text = "HIDDEN LVL" end
-            task.wait(0.01)
-        end
-    end)
-end
 
 Window:SelectTab(1)
 Fluent:Notify({
