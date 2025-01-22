@@ -134,7 +134,7 @@ TextButton.MouseButton1Click:Connect(function()
 end)
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - Premium",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - PREMIUM",
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -143,7 +143,6 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl
 })
 
--- // // // Services // // // --
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VirtualUser = game:GetService("VirtualUser")
@@ -156,7 +155,7 @@ local CoreGui = game:GetService('StarterGui')
 local ContextActionService = game:GetService('ContextActionService')
 local UserInputService = game:GetService('UserInputService')
 
--- // // // Locals // // // --
+
 local LocalPlayer = Players.LocalPlayer
 local LocalCharacter = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local HumanoidRootPart = LocalCharacter:FindFirstChild("HumanoidRootPart")
@@ -171,10 +170,8 @@ local shadowCountLabel = Instance.new("TextLabel", screenGui)
 local RenderStepped = RunService.RenderStepped
 local WaitForSomeone = RenderStepped.Wait
 
--- // // // Features List // // // --
 
-
--- // // // Variables // // // --
+-- // // // Variáveis/ // --
 local CastMode = "Legit"
 local ShakeMode = "Navigation"
 local ReelMode = "Blatant"
@@ -606,9 +603,8 @@ spawn(function()
     end
 end)
 
--- // // // Tabs Gui // // // --
 
-local Tabs = { -- https://lucide.dev/icons/
+local Tabs = {
     Home = Window:AddTab({ Title = "DISCORD", Icon = "message-circle" }),
     Exclusives = Window:AddTab({ Title = "PREMIUM", Icon = "wallet" }),
     Main = Window:AddTab({ Title = "INICIO", Icon = "list" }),
@@ -808,24 +804,17 @@ do
     -- // Sell Tab // --
     local section = Tabs.Items:AddSection("Sell Items")
     Tabs.Items:AddButton({
-        Title = "VENDER ITENS DA MÃO",
+        Title = "TELEPORTAR PARA O VENDEDOR DE PEIXES",
         Description = "",
         Callback = function()
             SellHand()
-        end
-    })
-    Tabs.Items:AddButton({
-        Title = "VENDER TUDO",
-        Description = "",
-        Callback = function()
-            SellAll()
         end
     })
 
     -- // Treasure Tab // --
     local section = Tabs.Items:AddSection("Treasure")
     Tabs.Items:AddButton({
-        Title = "TELEPORTAR PARA O Jack Marrow",
+        Title = "TELEPORTAR PARA O JACK MARROW",
         Callback = function()
             HumanoidRootPart.CFrame = CFrame.new(-2824.359, 214.311, 1518.130)
         end
@@ -881,7 +870,7 @@ do
         end
     end)
     local TotemTPDropdownUI = Tabs.Teleports:AddDropdown("TotemTPDropdownUI", {
-        Title = "SELECIONE O Totem",
+        Title = "SELECIONE O TOTEM",
         Values = {"Aurora", "Sundial", "Windset", "Smokescreen", "Tempest"},
         Multi = false,
         Default = nil,
@@ -1053,31 +1042,6 @@ do
 			end
         end
     end)
-    local RemoveFog = Tabs.Misc:AddToggle("REMOVER NEBLINA", {Title = "Remove Fog", Default = false })
-    RemoveFog:OnChanged(function()
-        if Options.RemoveFog.Value == true then
-            if game:GetService("Lighting"):FindFirstChild("Sky") then
-                game:GetService("Lighting"):FindFirstChild("Sky").Parent = game:GetService("Lighting").bloom
-            end
-        else
-            if game:GetService("Lighting").bloom:FindFirstChild("Sky") then
-                game:GetService("Lighting").bloom:FindFirstChild("Sky").Parent = game:GetService("Lighting")
-            end
-        end
-    end)
-    local DayOnly = Tabs.Misc:AddToggle("DayOnly", {Title = "Day Only", Default = false })
-    DayOnly:OnChanged(function()
-        if Options.DayOnly.Value == true then
-            DayOnlyLoop = RunService.Heartbeat:Connect(function()
-				game:GetService("Lighting").TimeOfDay = "12:00:00"
-			end)
-		else
-			if DayOnlyLoop then
-				DayOnlyLoop:Disconnect()
-				DayOnlyLoop = nil
-			end
-        end
-    end)
     local HoldDuration = Tabs.Misc:AddToggle("HoldDuration", {Title = "Hold Duration 0 sec", Default = false })
     HoldDuration:OnChanged(function()
         if Options.HoldDuration.Value == true then
@@ -1123,22 +1087,6 @@ do
             task.wait(0.01)
         end
     end)
-
-    -- // Load Tab // --
-    local section = Tabs.Misc:AddSection("Load Scripts")
-    Tabs.Misc:AddButton({
-        Title = "Load Infinite-Yield FE",
-        Callback = function()
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-        end
-    })
-    Tabs.Misc:AddButton({
-        Title = "Load RemoteSpy",
-        Callback = function()
-            loadstring(game:HttpGetAsync("https://github.com/richie0866/remote-spy/releases/latest/download/RemoteSpy.lua"))()
-        end
-    })
-
 end
 
 Window:SelectTab(1)
