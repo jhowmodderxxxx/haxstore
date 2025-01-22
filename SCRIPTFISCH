@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-value
 if getgenv().hub then warn("HAXSTORE : Already executed!") return end
 getgenv().hub = true
 
@@ -954,12 +955,13 @@ do
             SafeZone.Material = Enum.Material.ForceField
             SafeZone.Parent = game.Workspace
             HumanoidRootPart.CFrame = SafeZone.CFrame + Vector3.new(0, 5, 0)
-        end
-    })
+
+    end
+})
 
     -- // Character Tab // --
-    local section = Tabs.Misc:AddSection("JOGADOR"),
-    local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR SOBRE A AGUA", Default = false })
+    local section = Tabs.Misc:AddSection("Character")
+    local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR NA ÁGUA", Default = false })
     WalkOnWater:OnChanged(function()
         for i,v in pairs(workspace.zones.fishing:GetChildren()) do
 			if v.Name == WalkZone then
@@ -1061,7 +1063,6 @@ do
             PlayerGui.hud.safezone.Visible = false
         end
     end)
-
 end
 
 Window:SelectTab(1)
