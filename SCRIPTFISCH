@@ -1,6 +1,6 @@
 ---@diagnostic disable: redundant-value
 if getgenv().hub then warn("HAXSTORE : Already executed!") return end
-getgenv().hub = true
+getgenv().hub = true    
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -988,7 +988,7 @@ do
     local WalkSpeedSliderUI = Tabs.Misc:AddSlider("WalkSpeedSliderUI", {
         Title = "VELOCIDADE DE MOVIMENTO",
         Min = 16,
-        Max = 200,
+        Max = 300,
         Default = 16,
         Rounding = 1,
     })
@@ -998,7 +998,7 @@ do
     local JumpHeightSliderUI = Tabs.Misc:AddSlider("JumpHeightSliderUI", {
         Title = "ALTURA DO PULO",
         Min = 50,
-        Max = 200,
+        Max = 300,
         Default = 50,
         Rounding = 1,
     })
