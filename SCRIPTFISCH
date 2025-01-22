@@ -803,7 +803,7 @@ do
     end)
 
     -- // Sell Tab // --
-    local section = Tabs.Items:AddSection("Sell Items")
+    local section = Tabs.Items:AddSection("VENDER PEIXES")
     Tabs.Items:AddButton({
         Title = "TELEPORTAR PARA O VENDEDOR DE PEIXES",
         Description = "",
@@ -813,7 +813,7 @@ do
     })
 
     -- // Treasure Tab // --
-    local section = Tabs.Items:AddSection("Treasure")
+    local section = Tabs.Items:AddSection("TESOURO")
     Tabs.Items:AddButton({
         Title = "TELEPORTAR PARA O JACK MARROW",
         Callback = function()
