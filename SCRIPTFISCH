@@ -1062,6 +1062,8 @@ do
         end
     end)
 
+end
+
 Window:SelectTab(1)
 Fluent:Notify({
     Title = "HAX STORE",
