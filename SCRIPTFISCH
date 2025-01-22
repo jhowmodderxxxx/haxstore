@@ -757,7 +757,7 @@ do
             stopAutoReel()
         end
     end)
-    local FreezeCharacter = Tabs.Main:AddToggle("FreezeCharacter", {Title = "CONGELAR A SI MESMO", Default = false })
+    local FreezeCharacter = Tabs.Main:AddToggle("FreezeCharacter", {Title = "CONGELAR JOGADOR (VOCE)", Default = false })
     FreezeCharacter:OnChanged(function()
         local oldpos = HumanoidRootPart.CFrame
         FreezeChar = Options.FreezeCharacter.Value
@@ -854,7 +854,7 @@ do
     })
 
     -- // Teleports Tab // --
-    local section = Tabs.Teleports:AddSection("Teleports")
+    local section = Tabs.Teleports:AddSection("ABA DE TELEPORTE")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
         Title = "AREAS PARA TELEPORTAR",
         Values = teleportSpots,
@@ -960,7 +960,7 @@ do
 })
 
     -- // Character Tab // --
-    local section = Tabs.Misc:AddSection("Character")
+    local section = Tabs.Misc:AddSection("JOGADOR")
     local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR NA ÁGUA", Default = false })
     WalkOnWater:OnChanged(function()
         for i,v in pairs(workspace.zones.fishing:GetChildren()) do
@@ -1006,13 +1006,13 @@ do
         LocalPlayer.Character.Humanoid.JumpPower = value
     end)
 
-    local ToggleNoclip = Tabs.Misc:AddToggle("ToggleNoclip", {Title = "Noclip", Default = false })
+    local ToggleNoclip = Tabs.Misc:AddToggle("ToggleNoclip", {Title = "WALLHACK ALL", Default = false })
     ToggleNoclip:OnChanged(function()
         Noclip = Options.ToggleNoclip.Value
     end)
 
   -- // Misc Tab // --
-  local section = Tabs.Misc:AddSection("Misc")
+  local section = Tabs.Misc:AddSection("NOVAS FUNÇÕES PREMIUM")
   local BypassRadar = Tabs.Misc:AddToggle("BypassRadar", {Title = "RADAR DE PEIXES", Default = false })
   BypassRadar:OnChanged(function()
       for _, v in pairs(game:GetService("CollectionService"):GetTagged("radarTag")) do
@@ -1054,7 +1054,7 @@ do
         end
     })
 
-    local JustUI = Tabs.Misc:AddToggle("JustUI", {Title = "OCULTAR HUD", Default = true })
+    local JustUI = Tabs.Misc:AddToggle("JustUI", {Title = "OCULTAR HUD/NAO OCULTAR", Default = true })
     JustUI:OnChanged(function()
         local BlackShow = JustUI.Value
         if BlackShow then
