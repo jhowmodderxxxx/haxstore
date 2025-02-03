@@ -1,17 +1,17 @@
 ---@diagnostic disable: redundant-value
-if getgenv().hub then warn("HAXSTORE : Already executed!") return end
+if getgenv().hub then warn("HAXSTORE : ta executado meu patrao!") return end
 getgenv().hub = true    
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
-
 
 local UserInputService = game:GetService("UserInputService")
 local Player = game.Players.LocalPlayer
@@ -43,6 +43,7 @@ TextButton.Text = "HAXSTORE"
 TextButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.TextSize = 14
 TextButton.AutoButtonColor = false
+
 
 local ImageLabel = Instance.new("ImageLabel")
 ImageLabel.Parent = TextButton
@@ -171,6 +172,9 @@ local shadowCountLabel = Instance.new("TextLabel", screenGui)
 local RenderStepped = RunService.RenderStepped
 local WaitForSomeone = RenderStepped.Wait
 
+local sellHook
+local merchantNPC = "Fish Merchant" -- nome do npc no workspace
+
 
 -- // // // Variáveis/ // --
 local CastMode = "Legit"
@@ -193,7 +197,39 @@ function ShowNotification(String)
     })
 end
 
--- // Sending Execution To Discord // --
+
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+local post = printconsole or warn
+local remote = game:GetService("ReplicatedStorage").Resources.Remotes.ClientRequest
+ 
+do
+local write = (setreadonly or make_writeable or fullaccess or function() return end)
+write(mt, false)
+end
+ 
+mt.__namecall = function(self, ...)
+local packed = {...}
+ 
+if self == remote then
+if packed[1] == "kickPlayer" or string.lower(tostring(packed[#packed])) == "kick" then
+local msg =(packed[1] == "kickPlayer" and packed[2] or packed[#packed -1 ])
+post(string.format("[TNF] Attempted kick: (%s)", tostring(msg)))
+ 
+return wait(9e9)
+end
+end
+ 
+return old(self, ...)
+end
+
+
+
+
+
+
+
+-- // Sending Execution To Discord
 local function GetPlayerStats()
     local hud = LocalPlayer:FindFirstChild("PlayerGui") and LocalPlayer.PlayerGui:FindFirstChild("hud")
     if hud and hud.safezone then
@@ -211,6 +247,7 @@ local function GetPlayerStats()
     return nil
 end
 
+
 game.Players.LocalPlayer.Idled:Connect(function()
     VirtualUser:CaptureController()
     VirtualUser:ClickButton2(Vector2.new())
@@ -222,6 +259,89 @@ spawn(function()
         task.wait(0.01)
     end
 end)
+
+--//ANTI KICK
+
+if getrawmetatable then
+	function formatargs(getArgs,v)
+		if #getArgs == 0 then 
+			return "" 
+		end
+		
+		local collectArgs = {}
+		for k,v in next,getArgs do
+			local argument = ""
+			if type(v) == "string" then
+				argument = "\""..v.."\""
+			elseif type(v) == "table" then
+				argument = "{" .. formatargs(v,true) .. "}"
+			else
+				argument = tostring(v)
+			end
+			if v and type(k) ~= "number" then
+				table.insert(collectArgs,k.."="..argument)
+			else
+				table.insert(collectArgs,argument)
+			end
+		end
+		return table.concat(collectArgs, ", ")
+	end
+	
+	kicknum = 0
+	local game_meta = getrawmetatable(game)
+	local game_namecall = game_meta.__namecall
+	local game_index = game_meta.__index
+	local w = (setreadonly or fullaccess or make_writeable)
+	pcall(w, game_meta, false)
+	game_meta.__namecall = function(out, ...)
+		local args = {...}
+		local Method = args[#args]
+		args[#args] = nil
+		
+		if Method == "Kick" and out == LP then
+			kicknum = kicknum + 1
+			warn("Blocked client-kick attempt "..kicknum)
+			return
+		end
+		
+		if antiremotes then
+			if Method == "FireServer" or Method == "InvokeServer" then
+				if out.Name ~= "CharacterSoundEvent" and out.Name ~= "SayMessageRequest" and out.Name ~= "AddCharacterLoadedEvent" and out.Name ~= "RemoveCharacterEvent" and out.Name ~= "DefaultServerSoundEvent" and out.Parent ~= "DefaultChatSystemChatEvents" then
+					warn("Blocked remote: "..out.Name.." // Method: "..Method)
+					return
+				end
+			end
+		else
+			if Method == "FireServer" or Method == "InvokeServer" then
+				for i,noremote in pairs(blockedremotes) do
+					if out.Name == noremote and out.Name ~= "SayMessageRequest" then
+						warn("Blocked remote: "..out.Name.." // Method: "..Method)
+						return
+					end
+				end
+			end
+		end
+		
+		if spyingremotes then
+			if Method == "FireServer" or Method == "InvokeServer" then
+				if out.Name ~= "CharacterSoundEvent" and out.Name ~= "AddCharacterLoadedEvent" and out.Name ~= "RemoveCharacterEvent" and out.Name ~= "DefaultServerSoundEvent" and out.Name ~= "SayMessageRequest" then
+					local arguments = {}
+					for i = 1,#args do
+						arguments[i] = args[i]
+					end
+					local getScript = getfenv(2).script
+					if getScript == nil then
+						getScript = "??? (Not Found) ???"
+					end
+					warn("<> <> <> A "..out.ClassName.." has been fired! How to fire:\ngame."..out:GetFullName()..":"..Method.."("..formatargs(arguments)..")\n\nFired from script: ".. tostring(getScript:GetFullName()))
+				end
+			end
+		end
+		
+		return game_namecall(out, ...)
+	end
+end
+
 
 -- // // // Auto Cast // // // --
 local autoCastEnabled = false
@@ -450,7 +570,7 @@ function ExportValue(arg1, arg2)
 	return tonumber(string.format("%."..(arg2 or 1)..'f', arg1))
 end
 
--- // // // Sell Item // // // --
+-- // // // vender itens // // // --
 function rememberPosition()
     spawn(function()
         local initialCFrame = HumanoidRootPart.CFrame
@@ -479,42 +599,7 @@ function rememberPosition()
         end
     end)
 end
-function SellHand()
-    local currentPosition = HumanoidRootPart.CFrame
-    local sellPosition = CFrame.new(464, 151, 232)
-    local wasAutoFreezeActive = false
-    if AutoFreeze then
-        wasAutoFreezeActive = true
-        AutoFreeze = false
-    end
-    HumanoidRootPart.CFrame = sellPosition
-    task.wait(0.5)
-    workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marc Merchant"):WaitForChild("merchant"):WaitForChild("sell"):InvokeServer()
-    task.wait(1)
-    HumanoidRootPart.CFrame = currentPosition
-    if wasAutoFreezeActive then
-        AutoFreeze = true
-        rememberPosition()
-    end
-end
-function SellAll()
-    local currentPosition = HumanoidRootPart.CFrame
-    local sellPosition = CFrame.new(464, 151, 232)
-    local wasAutoFreezeActive = false
-    if AutoFreeze then
-        wasAutoFreezeActive = true
-        AutoFreeze = false
-    end
-    HumanoidRootPart.CFrame = sellPosition
-    task.wait(0.5)
-    workspace:WaitForChild("world"):WaitForChild("npcs"):WaitForChild("Marc Merchant"):WaitForChild("merchant"):WaitForChild("sellall"):InvokeServer()
-    task.wait(1)
-    HumanoidRootPart.CFrame = currentPosition
-    if wasAutoFreezeActive then
-        AutoFreeze = true
-        rememberPosition()
-    end
-end
+
 
 -- // // // Noclip Stepped // // // --
 NoclipConnection = RunService.Stepped:Connect(function()
@@ -528,6 +613,8 @@ NoclipConnection = RunService.Stepped:Connect(function()
         end
     end
 end)
+
+    
 
 -- auto dupe --
 local DupeEnabled = false
@@ -578,24 +665,8 @@ PlayerGui.DescendantAdded:Connect(function(descendant)
     end
 end)
 
--- // // // Exclusives // // // --
-local shadowCountLabel = Instance.new("TextLabel", screenGui)
-shadowCountLabel.Size = UDim2.new(0, 200, 0, 50)
-shadowCountLabel.Position = UDim2.new(0, 30, 0, 260)
-shadowCountLabel.BackgroundTransparency = 0.5
-shadowCountLabel.BackgroundColor3 = Color3.fromRGB(38, 38, 38) 
-shadowCountLabel.TextColor3 = Color3.new(220, 125, 255)
-shadowCountLabel.Font = Enum.Font.SourceSans
-shadowCountLabel.TextSize = 24
-shadowCountLabel.Text = "CONTADOR DE SOMBRAS: 0"
-
 local corner = Instance.new("UICorner", shadowCountLabel)
 corner.CornerRadius = UDim.new(0, 10)
-
-local function updateShadowCount()
-    local count = #workspace.Shadows:GetChildren()
-    shadowCountLabel.Text = "CONTADOR DE SOMBRAS: " .. count
-end
 
 spawn(function()
     while true do
@@ -607,7 +678,6 @@ end)
 
 local Tabs = {
     Home = Window:AddTab({ Title = "DISCORD", Icon = "message-circle" }),
-    Exclusives = Window:AddTab({ Title = "PREMIUM", Icon = "wallet" }),
     Main = Window:AddTab({ Title = "INICIO", Icon = "list" }),
     Items = Window:AddTab({ Title = "ITENS", Icon = "archive" }),
     Teleports = Window:AddTab({ Title = "TELEPORTAR", Icon = "plane" }),
@@ -620,76 +690,10 @@ Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
-        Title = "DISCORD DA HAX SOTRE",
+        Title = "DISCORD DA HAX STORE",
         Description = "CONTAS E SCRIPTS SO LA!!",
         Callback = function()
             setclipboard("https://discord.gg/MbqyhEJ3") -- discord link
-        end
-    })
-
-    -- // Exclusives Tab // --
-    local sectionExclus = Tabs.Exclusives:AddSection("FUNÇÕES PREMIUM")
-    local CountShadows = Tabs.Exclusives:AddToggle("CountShadows", {Title = "ABRIR O CONTADOR DE SOMBRAS", Default = false })
-    CountShadows:OnChanged(function()
-        local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-        if not RequireRod then return ShowNotification("PRECISA DO Rod Of The Depths") end
-        if Options.CountShadows.Value == true then
-            shadowCountLabel.Visible = true
-        else
-            shadowCountLabel.Visible = false
-        end
-    end)
-    local RodDupe = Tabs.Exclusives:AddToggle("RodDupe", {Title = "SPAMMAR ROD OF THE DEPTHS", Default = false })
-    RodDupe:OnChanged(function()
-        local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-        if not RequireRod then return ShowNotification("PRECISA DO ROD OF THE DEPTHS") end
-        while Options.RodDupe.Value do
-            local args1 = {[1] = "Flimsy Rod"}
-            game:GetService("ReplicatedStorage").events.equiprod:FireServer(unpack(args1))
-
-            local args2 = {[1] = "Rod Of The Depths"}
-            game:GetService("ReplicatedStorage").events.equiprod:FireServer(unpack(args2))
-            task.wait(RodDupeDelay)
-        end
-    end)
-    local RodDupe_Delay = Tabs.Exclusives:AddSlider("RodDupe_Delay", {
-        Title = "SPAMMAR (DELAY) ROD OF THE DEPTHS",
-        Description = "",
-        Default = 0.2,
-        Min = 0,
-        Max = 1,
-        Rounding = 1,
-        Callback = function(Value)
-            RodDupeDelay = Value
-        end
-    })
-    Tabs.Exclusives:AddButton({
-        Title = "DUPE SHADOW",
-        Description = "",
-        Callback = function()
-            local RequireRod = PlayerGui.hud.safezone.equipment.rods.scroll.safezone:FindFirstChild("Rod Of The Depths")
-            if not RequireRod then return ShowNotification("PRECISA DO ROD OF THE DEPTHS") end
-            for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do 
-                if v:FindFirstChild("offer") then
-                    v.Parent = LocalPlayer.Character
-                end
-            end
-            task.wait(2)
-            for i,v in pairs(LocalPlayer.Character:GetChildren()) do 
-                if v:FindFirstChild("offer") then
-                    v.Parent = LocalPlayer.Backpack
-                end
-            end
-        end
-    })
-
-    Tabs.Exclusives:AddButton({
-        Title = "DESTRUIR SOMBRAS",
-        Description = "",
-        Callback = function()
-            for _,shadow in pairs(workspace.Shadows:GetChildren()) do
-    		    shadow:Destroy()
-		    end
         end
     })
 
@@ -802,15 +806,35 @@ do
         ReelMode = Value
     end)
 
-    -- // Sell Tab // --
-    local section = Tabs.Items:AddSection("VENDER PEIXES")
-    Tabs.Items:AddButton({
-        Title = "TELEPORTAR PARA O VENDEDOR DE PEIXES",
-        Description = "",
-        Callback = function()
-            SellHand()
-        end
-    })
+    local player = game.Players.LocalPlayer
+
+    local player = game.Players.LocalPlayer
+    
+
+
+
+ --  //vender inventario
+ local section = Tabs.Items:AddSection("VENDAS")
+ Tabs.Items:AddButton({
+     Title = "VENDER INVENTARIO",
+     Callback = function()
+        game:GetService("ReplicatedStorage").events.SellAll:InvokeServer()
+     end
+ })
+
+
+ --  //vender TUDO DA MAO
+ Tabs.Items:AddButton({
+     Title = "VENDER PEIXES (MÃO)",
+     Callback = function()
+        game:GetService("ReplicatedStorage").events.Sell:InvokeServer()
+     end
+ })
+
+
+
+
+
 
     -- // Treasure Tab // --
     local section = Tabs.Items:AddSection("TESOURO")
@@ -820,6 +844,8 @@ do
             HumanoidRootPart.CFrame = CFrame.new(-2824.359, 214.311, 1518.130)
         end
     })
+
+
     Tabs.Items:AddButton({
         Title = "REPARA MAPA",
         Callback = function()
@@ -839,6 +865,7 @@ do
                     v.HoldDuration = 0
                 end
             end
+            
             for i, v in pairs(workspace.world.chests:GetDescendants()) do
                 if v:IsA("Part") and v:FindFirstChild("ChestSetup") then 
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame
@@ -853,7 +880,90 @@ do
         end
     })
 
-    -- // Teleports Tab // --
+   --  //locais de farm bons 1
+    local section = Tabs.Items:AddSection("LOCAL DE FARM #1")
+    Tabs.Items:AddButton({
+        Title = "TELEPORTAR LOCAL DE FARM (ÓTIMO)",
+        Callback = function()
+            HumanoidRootPart.CFrame = CFrame.new(5802.1435546875, 135.30149841308594, 403.3463134765625)
+        end
+    })
+
+    --  //locais de farm bons 2
+    local section = Tabs.Items:AddSection("LOCAL DE FARM #2")
+    Tabs.Items:AddButton({
+        Title = "TELEPORTAR LOCAL DE FARM (ÓTIMO) #2",
+        Callback = function()
+            HumanoidRootPart.CFrame = CFrame.new(-3842.6982421875, 133.25169372558594, 340.5608825683594)
+        end
+    })
+
+    --  //locais de farm bons 2
+    local section = Tabs.Items:AddSection("LOCAL DE FARM #3")
+    Tabs.Items:AddButton({
+        Title = "TELEPORTAR LOCAL DE FARM (ÓTIMO) #3",
+        Callback = function()
+            HumanoidRootPart.CFrame = CFrame.new(-2024.927734375, 130.18348693847656, 557.9729614257812)
+        end
+    })
+
+
+     --  //locais de farm bons 2
+     local section = Tabs.Items:AddSection("LOCAL DE FARM #4")
+     Tabs.Items:AddButton({
+         Title = "TELEPORTAR LOCAL DE FARM (ÓTIMO) #4",
+         Callback = function()
+             HumanoidRootPart.CFrame = CFrame.new(-3844.1220703125, -563.3394775390625, 1068.3109130859375)
+         end
+     })
+
+
+local section = Tabs.Teleports:AddSection("PLAYERS")
+
+
+local function getPlayers()
+    local players = {}
+    for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+        table.insert(players, player.Name)
+    end
+    return players
+end
+
+
+local function teleportToPlayer(playerName)
+    local player = game:GetService("Players"):FindFirstChild(playerName)
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local playerPosition = player.Character.HumanoidRootPart.Position
+        game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(playerPosition)
+    end
+end
+
+
+local teleportPlayers = getPlayers()
+
+-- Teleportar em um jogador
+local PlayerTPDropdownUI = Tabs.Teleports:AddDropdown("PlayerTPDropdownUI", {
+    Title = "JOGADORES PARA TELEPORTAR",
+    Values = teleportPlayers,
+    Multi = false,
+    Default = nil,
+    Callback = function(selected)
+        teleportToPlayer(selected)
+    end
+})
+
+-- botao de atualizar a lista de players 
+section:AddButton({
+    Title = "ATUALIZAR A LISTA DE JOGADORES",
+    Callback = function()
+        -- Update Players List
+        teleportPlayers = getPlayers()
+        PlayerTPDropdownUI:SetValues(teleportPlayers)
+    end,
+})
+
+
+     -- //teleporte
     local section = Tabs.Teleports:AddSection("ABA DE TELEPORTE")
     local IslandTPDropdownUI = Tabs.Teleports:AddDropdown("IslandTPDropdownUI", {
         Title = "AREAS PARA TELEPORTAR",
@@ -959,7 +1069,7 @@ do
     end
 })
 
-    -- // Character Tab // --
+    -- // ANDAR NA AGUA // --
     local section = Tabs.Misc:AddSection("JOGADOR")
     local WalkOnWater = Tabs.Misc:AddToggle("WalkOnWater", {Title = "ANDAR NA ÁGUA", Default = false })
     WalkOnWater:OnChanged(function()
@@ -986,7 +1096,7 @@ do
         WalkZone = Value
     end)
     local WalkSpeedSliderUI = Tabs.Misc:AddSlider("WalkSpeedSliderUI", {
-        Title = "VELOCIDADE DE MOVIMENTO",
+        Title = "VELOCIDADE DE MOVIMENTO (PODE DAR KICK)",
         Min = 16,
         Max = 300,
         Default = 16,
@@ -996,7 +1106,7 @@ do
         LocalPlayer.Character.Humanoid.WalkSpeed = value
     end)
     local JumpHeightSliderUI = Tabs.Misc:AddSlider("JumpHeightSliderUI", {
-        Title = "ALTURA DO PULO",
+        Title = "ALTURA DO PULO (PODE DAR KICK)",
         Min = 50,
         Max = 300,
         Default = 50,
