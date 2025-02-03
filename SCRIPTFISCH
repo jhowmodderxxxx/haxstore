@@ -198,36 +198,6 @@ function ShowNotification(String)
 end
 
 
-local mt = getrawmetatable(game)
-local old = mt.__namecall
-local post = printconsole or warn
-local remote = game:GetService("ReplicatedStorage").Resources.Remotes.ClientRequest
- 
-do
-local write = (setreadonly or make_writeable or fullaccess or function() return end)
-write(mt, false)
-end
- 
-mt.__namecall = function(self, ...)
-local packed = {...}
- 
-if self == remote then
-if packed[1] == "kickPlayer" or string.lower(tostring(packed[#packed])) == "kick" then
-local msg =(packed[1] == "kickPlayer" and packed[2] or packed[#packed -1 ])
-post(string.format("[TNF] Attempted kick: (%s)", tostring(msg)))
- 
-return wait(9e9)
-end
-end
- 
-return old(self, ...)
-end
-
-
-
-
-
-
 
 -- // Sending Execution To Discord
 local function GetPlayerStats()
@@ -1174,6 +1144,34 @@ section:AddButton({
         end
     end)
 end
+
+
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+local post = printconsole or warn
+local remote = game:GetService("ReplicatedStorage").Resources.Remotes.ClientRequest
+ 
+do
+local write = (setreadonly or make_writeable or fullaccess or function() return end)
+write(mt, false)
+end
+ 
+mt.__namecall = function(self, ...)
+local packed = {...}
+ 
+if self == remote then
+if packed[1] == "kickPlayer" or string.lower(tostring(packed[#packed])) == "kick" then
+local msg =(packed[1] == "kickPlayer" and packed[2] or packed[#packed -1 ])
+post(string.format("[TNF] Attempted kick: (%s)", tostring(msg)))
+ 
+return wait(9e9)
+end
+end
+ 
+return old(self, ...)
+end
+ 
+
 
 Window:SelectTab(1)
 Fluent:Notify({
