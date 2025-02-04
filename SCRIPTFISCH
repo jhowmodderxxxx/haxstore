@@ -230,87 +230,6 @@ spawn(function()
     end
 end)
 
---//ANTI KICK
-
-if getrawmetatable then
-	function formatargs(getArgs,v)
-		if #getArgs == 0 then 
-			return "" 
-		end
-		
-		local collectArgs = {}
-		for k,v in next,getArgs do
-			local argument = ""
-			if type(v) == "string" then
-				argument = "\""..v.."\""
-			elseif type(v) == "table" then
-				argument = "{" .. formatargs(v,true) .. "}"
-			else
-				argument = tostring(v)
-			end
-			if v and type(k) ~= "number" then
-				table.insert(collectArgs,k.."="..argument)
-			else
-				table.insert(collectArgs,argument)
-			end
-		end
-		return table.concat(collectArgs, ", ")
-	end
-	
-	kicknum = 0
-	local game_meta = getrawmetatable(game)
-	local game_namecall = game_meta.__namecall
-	local game_index = game_meta.__index
-	local w = (setreadonly or fullaccess or make_writeable)
-	pcall(w, game_meta, false)
-	game_meta.__namecall = function(out, ...)
-		local args = {...}
-		local Method = args[#args]
-		args[#args] = nil
-		
-		if Method == "Kick" and out == LP then
-			kicknum = kicknum + 1
-			warn("Blocked client-kick attempt "..kicknum)
-			return
-		end
-		
-		if antiremotes then
-			if Method == "FireServer" or Method == "InvokeServer" then
-				if out.Name ~= "CharacterSoundEvent" and out.Name ~= "SayMessageRequest" and out.Name ~= "AddCharacterLoadedEvent" and out.Name ~= "RemoveCharacterEvent" and out.Name ~= "DefaultServerSoundEvent" and out.Parent ~= "DefaultChatSystemChatEvents" then
-					warn("Blocked remote: "..out.Name.." // Method: "..Method)
-					return
-				end
-			end
-		else
-			if Method == "FireServer" or Method == "InvokeServer" then
-				for i,noremote in pairs(blockedremotes) do
-					if out.Name == noremote and out.Name ~= "SayMessageRequest" then
-						warn("Blocked remote: "..out.Name.." // Method: "..Method)
-						return
-					end
-				end
-			end
-		end
-		
-		if spyingremotes then
-			if Method == "FireServer" or Method == "InvokeServer" then
-				if out.Name ~= "CharacterSoundEvent" and out.Name ~= "AddCharacterLoadedEvent" and out.Name ~= "RemoveCharacterEvent" and out.Name ~= "DefaultServerSoundEvent" and out.Name ~= "SayMessageRequest" then
-					local arguments = {}
-					for i = 1,#args do
-						arguments[i] = args[i]
-					end
-					local getScript = getfenv(2).script
-					if getScript == nil then
-						getScript = "??? (Not Found) ???"
-					end
-					warn("<> <> <> A "..out.ClassName.." has been fired! How to fire:\ngame."..out:GetFullName()..":"..Method.."("..formatargs(arguments)..")\n\nFired from script: ".. tostring(getScript:GetFullName()))
-				end
-			end
-		end
-		
-		return game_namecall(out, ...)
-	end
-end
 
 
 -- // // // Auto Cast // // // --
@@ -645,7 +564,7 @@ spawn(function()
     end
 end)
 
-
+-- tab de funçoes
 local Tabs = {
     Home = Window:AddTab({ Title = "DISCORD", Icon = "message-circle" }),
     Main = Window:AddTab({ Title = "INICIO", Icon = "list" }),
@@ -1145,25 +1064,7 @@ section:AddButton({
     end)
 end
 
-ait(0.5)local ba=Instance.new("ScreenGui")
-local ca=Instance.new("TextLabel")local da=Instance.new("Frame")
-local _b=Instance.new("TextLabel")local ab=Instance.new("TextLabel")ba.Parent=game.CoreGui
-ba.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;ca.Parent=ba;ca.Active=true
-ca.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ca.Draggable=true
-ca.Position=UDim2.new(0.698610067,0,0.098096624,0)ca.Size=UDim2.new(0,304,0,52)
-ca.Font=Enum.Font.SourceSansSemibold;ca.Text="Anti Afk Kick Script"ca.TextColor3=Color3.new(0,1,1)
-ca.TextSize=22;da.Parent=ca
-da.BackgroundColor3=Color3.new(0.196078,0.196078,0.196078)da.Position=UDim2.new(0,0,1.0192306,0)
-da.Size=UDim2.new(0,304,0,107)_b.Parent=da
-_b.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)_b.Position=UDim2.new(0,0,0.800455689,0)
-_b.Size=UDim2.new(0,304,0,21)_b.Font=Enum.Font.Arial;_b.Text="Made by Warn"
-_b.TextColor3=Color3.new(1,1,1)_b.TextSize=20;ab.Parent=da
-ab.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ab.Position=UDim2.new(0,0,0.158377379,0)
-ab.Size=UDim2.new(0,304,0,44)ab.Font=Enum.Font.ArialBold;ab.Text="Status: Script Started"
-ab.TextColor3=Color3.new(1,1,1)ab.TextSize=20;local bb=game:service'VirtualUser'
-game:service'Players'.LocalPlayer.Idled:connect(function()
-bb:CaptureController()bb:ClickButton2(Vector2.new())
-ab.Text="You went idle and ROBLOX tried to kick you but we reflected it!"wait(2)ab.Text="Script Re-Enabled"end)
+
 
 
 Window:SelectTab(1)
