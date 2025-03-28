@@ -79,7 +79,13 @@ elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
     expirationMinute = 10
     usuario = loginInfo[1]
 
-
+elseif loginInfo and loginInfo[1] == "Gabriel" and loginInfo[2] == "122113145" then
+    expirationYear = 2026
+    expirationMonth = 5
+    expirationDay = 28
+    expirationHour = 8
+    expirationMinute = 10
+    usuario = loginInfo[1]
    
 else
     gg.alert("Usuário ou senha incorretos!")
