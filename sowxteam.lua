@@ -63,7 +63,7 @@ elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
     expirationMinute = 10
     usuario = loginInfo[1]
 
-elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
+elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
     expirationYear = 2025
     expirationMonth = 4
     expirationDay = 4
