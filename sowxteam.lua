@@ -61,12 +61,14 @@ elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
     expirationDay = 28
     expirationHour = 8
     expirationMinute = 10
+    usuario = loginInfo[1]
 
-    expirationYearFARM = 2026
-    expirationMonthFARM = 5
-    expirationDayFARM = 28
-    expirationHourFARM = 8
-    expirationMinuteFARM = 10
+elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
+    expirationYear = 2025
+    expirationMonth = 4
+    expirationDay = 4
+    expirationHour = 8
+    expirationMinute = 10
     usuario = loginInfo[1]
 
 elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
@@ -75,12 +77,6 @@ elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
     expirationDay = 28
     expirationHour = 8
     expirationMinute = 10
-
-    expirationYearFARM = 2026
-    expirationMonthFARM = 5
-    expirationDayFARM = 28
-    expirationHourFARM = 8
-    expirationMinuteFARM = 10
     usuario = loginInfo[1]
 
 
