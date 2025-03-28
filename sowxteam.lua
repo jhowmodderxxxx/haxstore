@@ -204,7 +204,7 @@ end
 
 -- Aim Kill Carro
 function aimkillcarro()
-    local aimkillcarroonoff = gg.choice({"🟢ON🟢", "⚪OFF⚪", "◀️Voltar"}, nil, versao)
+    local aimkillcarroonoff = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "◀️Voltar"}, nil, versao)
     if aimkillcarroonoff == nil then
         gg.toast("Nenhuma opção selecionada")
         verificarAutenticacao()
