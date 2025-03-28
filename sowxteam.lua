@@ -189,13 +189,15 @@ function outros()
         "🔫Munição infinita (PRECISA SER LV2)🔫",
         "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
         "🏠WALL HACK PAREDES🏠",
+        "🖥TELA ESTICADA (NOVO)🖥",
         "↩️Voltar↩️"
       }, nil, titulo)
 
     if xoutros == 1 then cheatarmas() end
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
-    if xoutros == 4 then teleport() end
+    if xoutros == 4 then esticada() end
+    if xoutros == 5 then teleport() end
 end
 
 
@@ -305,6 +307,31 @@ function wallhack()
         gg.clearResults()
     end
 
+    -- Tela esticada
+function esticada()
+    esticadat = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "↩️Voltar↩️"}, nil, versao)
+    
+        if esticadat == 1 then esticadaon() end
+        if esticadat == 2 then esticadaoff() end
+        if esticadat == 3 then menupremium() end
+    end
+    
+    function esticadaon()
+        gg.searchNumber("70", gg.TYPE_FLOAT)
+        gg.getResults(99999)
+        gg.editAll("120", gg.TYPE_FLOAT)
+        gg.toast("🟢Tela esticada ON🟢")
+        gg.clearResults()
+    end
+    
+    function esticadaoff()
+        gg.searchNumber("120", gg.TYPE_FLOAT)
+        gg.getResults(99999)
+        gg.editAll("70", gg.TYPE_FLOAT)
+        gg.toast("⚪Tela esticada OFF⚪")
+        gg.clearResults()
+    end
+
 -- LOCAIS PÚBLICOS
 
 function tppref()
@@ -334,7 +361,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
     
 end
@@ -366,7 +393,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -398,7 +425,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -430,7 +457,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 
 end
@@ -462,7 +489,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -493,7 +520,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -524,7 +551,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 
 end
@@ -556,7 +583,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -587,7 +614,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -618,7 +645,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -649,7 +676,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -680,7 +707,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -711,7 +738,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -762,7 +789,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
@@ -805,7 +832,7 @@ function tpobra()
     })
 
     -- Notifica o usuário e limpa os resultados
-    gg.toast("HAX STORE - TELEPORTADO!")
+    gg.toast("SOWxTEAM - TELEPORTADO!")
     gg.clearResults()
 end
 
@@ -836,7 +863,7 @@ y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
         {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
     })
-    gg.toast("HAX STORE-!")
+    gg.toast("SOWxTEAM-!")
 gg.clearResults()
 end
 
