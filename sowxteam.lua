@@ -125,13 +125,15 @@ function teleport()
         "↪SOWxTEAM TEAM AUTO FARM",
         "↪SOWxTEAM TEAM TELEPORTES",
         "↪SOWxTEAM TEAM OUTROS",
+        "↪SOWxTEAM TEAM CRIADORES",
         "↩️Voltar↩️"
     }, nil, titulo)
 
     if teleporth == 2 then teleportes() end
     if teleporth == 1 then farms() end
     if teleporth == 3 then outros() end
-    if teleporth == 4 then menufarm() end
+    if teleporth == 4 then criadores() end
+    if teleporth == 5 then menufarm() end
 end
 
 function teleportes()
