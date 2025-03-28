@@ -98,6 +98,9 @@ else
 end
 
 
+gg.alert("VERSAO V2 CORRIGIDA \n Bug de script terminado \n nova funçao (tela esticada) \n mais otimizacaono script \n bypass ant kick colocado")
+
+
 versao = "SCRIPT SOWxTEAM V2 PREMIUM"
 
 
