@@ -66,10 +66,20 @@ elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
 elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
     expirationYear = 2025
     expirationMonth = 4
-    expirationDay = 4
+    expirationDay = 6
     expirationHour = 8
     expirationMinute = 10
     usuario = loginInfo[1]
+
+
+elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
+    expirationYear = 2025
+    expirationMonth = 4
+    expirationDay = 2
+    expirationHour = 8
+    expirationMinute = 10
+    usuario = loginInfo[1]
+
 
 elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
     expirationYear = 2026
@@ -104,15 +114,15 @@ else
 end
 
 
-gg.alert("VERSAO V2 CORRIGIDA \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado")
+gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n novas funções (tela esticada), (teleporte player por id), (reparar veiculo) \n mais otimização no script \n bypass ant kick implementado\n Auto farm de 1 segundo para 0,5 (foi para 0,5 pq estou tomando kick dps de um tempo com 0,4 seg)")
 
 
-versao = "SCRIPT SOWxTEAM V2 PREMIUM"
+versao = "SCRIPT SOWxTEAM V3 PREMIUM"
 
 
 function menufarm()
     local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V2 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        "🎇SCRIPT SOWxTEAM V3 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
         usuario,expirationDay, expirationMonth, expirationYear, expirationHour, expirationMinute 
     )
 
@@ -199,6 +209,7 @@ function outros()
         "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
         "🏠WALL HACK PAREDES🏠",
         "🖥TELA ESTICADA (NOVO)🖥",
+        "test",
         "↩️Voltar↩️"
       }, nil, titulo)
 
@@ -206,10 +217,110 @@ function outros()
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
     if xoutros == 4 then esticada() end
-    if xoutros == 5 then teleport() end
+    if xoutros == 5 then teleportPlayerOn() end
+    if xoutros == 6 then teleport() end
 end
 
 
+function teleportPlayerOn()
+    -- Verifica se o GG está aberto
+    if not gg then
+        gg.alert("Game Guardian não está disponível!")
+        return
+    end
+    
+    -- Obtém informações do processo atual do GG
+    local info = gg.getTargetInfo()
+    if not info then
+        gg.alert("Nenhum processo selecionado no Game Guardian!")
+        return
+    end
+    
+    gg.toast("Processo atual: "..(info.name or "Desconhecido"))
+    
+    -- Pede o ID do jogador
+    local input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
+    
+    if not input or not input[1] then
+        gg.toast("Teleporte cancelado")
+        return
+    end
+    
+    local idJogador = tonumber(input[1])
+    if not idJogador then
+        gg.toast("ID inválido!")
+        return
+    end
+    
+    -- Buscar coordenadas do jogador alvo
+    gg.clearResults()
+    gg.searchNumber(idJogador, gg.TYPE_DWORD)
+    
+    local playerResults = gg.getResults(100)
+    if not playerResults or #playerResults == 0 then
+        gg.alert("Jogador não encontrado!")
+        return
+    end
+    
+    -- Tentar encontrar o jogador local (com proteção contra crash)
+    local pointerResults
+    for _, value in ipairs({999.765625, 1000.0, 999.0, 999.5}) do
+        gg.clearResults()
+        gg.searchNumber(value, gg.TYPE_FLOAT)
+        pointerResults = gg.getResults(1)
+        if pointerResults and #pointerResults > 0 then
+            break
+        end
+    end
+    
+    if not pointerResults or #pointerResults == 0 then
+        gg.alert("Não foi possível encontrar o pointer do jogador local!")
+        return
+    end
+    
+    local base = pointerResults[1].address
+    local teleported = false
+    
+    -- Procurar pelas coordenadas do alvo com verificações de segurança
+    for i, v in ipairs(playerResults) do
+        if v.address and v.address > 0 then
+            local yAddr = v.address - 0x60
+            local xAddr = v.address - 0x5C
+            local zAddr = v.address - 0x58
+            
+            -- Verificação adicional de endereços
+            if yAddr > 0 and xAddr > 0 and zAddr > 0 then
+                local success, coords = pcall(gg.getValues, {
+                    {address = yAddr, flags = gg.TYPE_FLOAT},
+                    {address = xAddr, flags = gg.TYPE_FLOAT},
+                    {address = zAddr, flags = gg.TYPE_FLOAT}
+                })
+                
+                if success and coords and #coords == 3 then
+                    -- Tentativa segura de escrita
+                    local successWrite = pcall(gg.setValues, {
+                        {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
+                        {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
+                        {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
+                    })
+                    
+                    if successWrite then
+                        gg.toast(string.format("🟢 Teleportado para ID: %d 🟢\nJogo: %s", idJogador, info.name or "Desconhecido"))
+                        teleported = true
+                        break
+                    end
+                end
+            end
+        end
+    end
+    
+    if not teleported then
+        gg.alert(string.format("Falha ao teleportar!\nJogo: %s", info.name or "Desconhecido"))
+    end
+    
+    -- Limpar resultados
+    gg.clearResults()
+ends
 
 -- Aim Kill Carro
 function aimkillcarro()
@@ -1011,8 +1122,8 @@ function construtorcivil()
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-            -- Adicionar um delay de 4 segundos
-            gg.sleep(400)
+       
+            gg.sleep(500)
         end
         gg.toast("Farm BySOWxTEAM")
     end
