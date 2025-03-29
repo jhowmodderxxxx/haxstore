@@ -209,6 +209,8 @@ function outros()
         "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
         "🏠WALL HACK PAREDES🏠",
         "🖥TELA ESTICADA (NOVO)🖥",
+        "👤TELEPORTAR EM JOGADORES(teste)👤"
+        "🚗REPARAR VEICULO(teste)🚗"
         "↩️Voltar↩️"
       }, nil, titulo)
 
@@ -216,7 +218,91 @@ function outros()
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
     if xoutros == 4 then esticada() end
-    if xoutros == 5 then teleport() end
+    if xoutros == 5 then teleportParaJogador() end
+    if xoutros == 6 then repairVehicle() end
+    if xoutros == 7 then teleport() end
+end
+
+
+
+function teleportParaJogador()
+    -- Solicitar o ID do jogador
+    local idJogador = gg.prompt({"Digite o ID do jogador para teleportar:"}, {""}, {"number"})
+    
+    if not idJogador or not idJogador[1] then
+        gg.toast("Teleporte cancelado")
+        return
+    end
+    
+    idJogador = tonumber(idJogador[1])
+    
+    -- Primeiro, encontrar o endereço base das coordenadas do jogador
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local results = gg.getResults(1)
+    
+    if #results == 0 then
+        gg.alert("Pointer não encontrado!")
+        return
+    end
+    
+    local base = results[1].address
+    local offset_Y = base + 0x60
+    local offset_X = base + 0x64
+    local offset_Z = base + 0x68
+    
+    -- Agora, buscar o jogador pelo ID
+    gg.clearResults()
+    gg.searchNumber(idJogador, gg.TYPE_DWORD)
+    local playerResults = gg.getResults(100)
+    
+    if #playerResults == 0 then
+        gg.alert("Jogador com ID "..idJogador.." não encontrado!")
+        return
+    end
+    
+    -- Supondo que o ID do jogador está próximo às coordenadas (ajuste conforme necessário)
+    for i, v in ipairs(playerResults) do
+        -- Verificar se há valores de coordenadas próximos
+        local possibleY = v.address - 0x60 
+        local possibleX = v.address - 0x5C
+        local possibleZ = v.address - 0x58
+        
+        -- Pegar os valores das possíveis coordenadas
+        local coordValues = gg.getValues({
+            {address = possibleY, flags = gg.TYPE_FLOAT},
+            {address = possibleX, flags = gg.TYPE_FLOAT},
+            {address = possibleZ, flags = gg.TYPE_FLOAT}
+        })
+        
+        -- Verificar se os valores parecem coordenadas válidas
+        if math.abs(coordValues[1].value) > 10 and math.abs(coordValues[2].value) > 10 then
+            -- Teleportar para as coordenadas do jogador
+            gg.setValues({
+                {address = offset_Y, flags = gg.TYPE_FLOAT, value = coordValues[1].value},
+                {address = offset_X, flags = gg.TYPE_FLOAT, value = coordValues[2].value},
+                {address = offset_Z, flags = gg.TYPE_FLOAT, value = coordValues[3].value}
+            })
+            
+            gg.toast("Teleportado para o jogador ID: "..idJogador)
+            return
+        end
+    end
+    
+    gg.alert("Não foi possível encontrar as coordenadas do jogador ID: "..idJogador)
+end
+
+function repairVehicle()
+    gg.clearResults()
+    gg.searchNumber("300", gg.TYPE_FLOAT)
+    local results = gg.getResults(100)
+    if #results > 0 then
+        gg.editAll("1000", gg.TYPE_FLOAT)
+        gg.toast("🟢 Veículo reparado com sucesso! 🟢")
+    else
+        gg.toast("⚠️ Nenhum valor encontrado para reparar ⚠️")
+    end
+    gg.clearResults()
 end
 
 
