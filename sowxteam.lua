@@ -222,77 +222,84 @@ function outros()
 end
 
 
-function teleportToPlayer()
-    -- Menu principal
-    local choice = gg.choice({
-        '🔵 TELEPORTAR PARA JOGADOR',
-        '🔙 VOLTAR'
-    }, nil, 'TELEPORTE PARA JOGADORES')
-    
-    if choice == nil or choice == 2 then return end
-    
-    -- Solicitar ID do jogador
-    local input = gg.prompt({'Digite o ID do jogador:'}, {[1]='0'}, {'number'})
-    if not input then return end
-    
-    local targetId = tonumber(input[1])
-    if not targetId or targetId < 1 then
-        gg.alert('ID inválido!')
+function teleportPlayerOn()
+    -- Verifica se o GG está aberto
+    if not gg then
+        gg.alert("Game Guardian não está disponível!")
         return
     end
-
-    -- Buscar o ID na memória
+    
+    -- Pede o ID do jogador
+    local input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
+    
+    if not input or not input[1] then
+        gg.toast("Teleporte cancelado")
+        return
+    end
+    
+    local idJogador = tonumber(input[1])
+    if not idJogador then
+        gg.toast("ID inválido!")
+        return
+    end
+    
+    -- Buscar coordenadas do jogador alvo
     gg.clearResults()
-    gg.searchNumber(targetId, gg.TYPE_DWORD)
-    local results = gg.getResults(100)
+    gg.searchNumber(idJogador, gg.TYPE_DWORD)
     
-    if #results == 0 then
-        gg.alert('Jogador não encontrado!')
+    local playerResults = gg.getResults(100)
+    if not playerResults or #playerResults == 0 then
+        gg.alert("Jogador não encontrado!")
         return
     end
-
-    -- Tentar encontrar as coordenadas
-    local found = false
-    for i, v in ipairs(results) do
-        local coordY = v.address - 0x60
-        local coordX = v.address - 0x5C
-        local coordZ = v.address - 0x58
+    
+    -- Tentar encontrar o jogador local (pelo pointer)
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local pointerResults = gg.getResults(1)
+    
+    if not pointerResults or #pointerResults == 0 then
+        gg.alert("Pointer do jogador local não encontrado!")
+        return
+    end
+    
+    local base = pointerResults[1].address
+    local teleported = false
+    
+    -- Procurar pelas coordenadas do alvo
+    for i, v in ipairs(playerResults) do
+        local yAddr = v.address - 0x60
+        local xAddr = v.address - 0x5C
+        local zAddr = v.address - 0x58
         
-        -- Pegar valores das coordenadas
-        local coords = gg.getValues({
-            {address = coordY, flags = gg.TYPE_FLOAT},
-            {address = coordX, flags = gg.TYPE_FLOAT},
-            {address = coordZ, flags = gg.TYPE_FLOAT}
-        })
-        
-        -- Verificar se são coordenadas válidas
-        if math.abs(coords[1].value) < 10000 and 
-           math.abs(coords[2].value) < 10000 and 
-           coords[3].value > -100 and coords[3].value < 1000 then
-           
-            -- Encontrar nosso próprio pointer
-            gg.clearResults()
-            gg.searchNumber('999.765625', gg.TYPE_FLOAT)
-            local selfPointer = gg.getResults(1)
+        -- Verificar se os endereços são válidos
+        if yAddr > 0 and xAddr > 0 and zAddr > 0 then
+            local coords = gg.getValues({
+                {address = yAddr, flags = gg.TYPE_FLOAT},
+                {address = xAddr, flags = gg.TYPE_FLOAT},
+                {address = zAddr, flags = gg.TYPE_FLOAT}
+            })
             
-            if #selfPointer > 0 then
-                local base = selfPointer[1].address
-                -- Aplicar novas coordenadas
+            if coords and #coords == 3 then
+                -- Aplicar coordenadas ao jogador local
                 gg.setValues({
                     {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
                     {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
                     {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
                 })
-                gg.toast('Teleportado para o jogador!')
-                found = true
+                
+                gg.toast("🟢 Teleportado para ID: "..idJogador.." 🟢")
+                teleported = true
                 break
             end
         end
     end
     
-    if not found then
-        gg.alert('Não foi possível completar o teleporte')
+    if not teleported then
+        gg.alert("Falha ao teleportar! Coordenadas inválidas.")
     end
+    
+    -- Limpar resultados para evitar problemas
     gg.clearResults()
 end
 
