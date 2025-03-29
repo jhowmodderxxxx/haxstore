@@ -1,219 +1,231 @@
+-- Configurações globais
 local velocidadefarm = 700
---By MrJhowTeamRX
+local version = "🔥 RIO RISE V2 🔥"
+local developer = "SOWxTEAM"
+local expiration = "04-07-26"
+local titulon = "_____________________________________________\n\n 😁CRIADO POR "..developer.."😁 \n\n ⛔"..version.."⛔  \n\n _____________________________________________"
 
--- Função para salvar o login em um arquivo
-function saveLogin(login, password)
-    local file = io.open("/sdcard/loginsalvo.txt", "w") -- Caminho do arquivo
-    if file then
-        file:write(login .. "\n") -- Salva o login
-        file:write(password)      -- Salva a senha
-        file:close()
-        gg.toast("Login salvo com sucesso!")
-    else
-        gg.toast("Erro ao salvar o login!")
-    end
-end
+-- Constantes para o sistema de armas
+local ENABLED = "✔️ "
+local DISABLED = "❌ "
+local weaponStatus = {
+    desert = DISABLED,
+    shotgun = DISABLED,
+    mp5 = DISABLED,
+    ak47 = DISABLED,
+    m4 = DISABLED,
+    bazooka = DISABLED
+}
 
--- Função para carregar o login de um arquivo
-function loadLogin()
-    local file = io.open("/sdcard/loginsalvo.txt", "r") -- Caminho do arquivo
-    if file then
-        local login = file:read("*line") -- Lê a primeira linha (login)
-        local password = file:read("*line") -- Lê a segunda linha (senha)
-        file:close()
-        return login, password
-    else
-        return nil, nil
-    end
-end
+-- Offsets para cada arma (ajuste conforme necessário)
+local weaponOffsets = {
+    desert = {id = 196, fires = 204, slots = 208},
+    shotgun = {id = 228, fires = 236, slots = 240},
+    mp5 = {id = 260, fires = 268, slots = 272},
+    ak47 = {id = 292, fires = 300, slots = 304},
+    m4 = {id = 292, fires = 300, slots = 304},  -- Nota: mesmo offset do AK47
+    bazooka = {id = 0, fires = 0, slots = 0}    -- Ajustar quando implementado
+}
 
--- Carregar o login salvo, se existir
-local savedLogin, savedPassword = loadLogin()
+-- Configurações de munição para cada arma
+local weaponAmmo = {
+    desert = {id = 24, fires = 7, slots = 35},
+    shotgun = {id = 25, fires = 1, slots = 30},
+    mp5 = {id = 29, fires = 30, slots = 60},
+    ak47 = {id = 30, fires = 30, slots = 90},
+    m4 = {id = 31, fires = 30, slots = 90},
+    bazooka = {id = 0, fires = 0, slots = 0}
+}
 
--- Solicitar login, senha e opção de salvar login
-local loginInfo = gg.prompt(
-    {"Digite seu login:", "Digite sua senha:", "Salvar login"}, -- Campos
-    {savedLogin or "", savedPassword or "", false}, -- Valores padrão
-    {"text", "text", "checkbox"} -- Tipos de entrada
-)
-
-
-if loginInfo then
-    local login = loginInfo[1]
-    local password = loginInfo[2]
-    local saveLoginOption = loginInfo[3] -- true se o checkbox estiver marcado
-
-
- 
-if loginInfo and loginInfo[1] == "chines" and loginInfo[2] == "cria13" then
-    expirationYear = 2026
-    expirationMonth = 9
-    expirationDay = 21
-    expirationHour = 21
-    expirationMinute = 20
-    usuario = loginInfo[1]
-
-
-
-elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
-    expirationYear = 2025
-    expirationMonth = 4
-    expirationDay = 6
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-
-elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
-    expirationYear = 2025
-    expirationMonth = 4
-    expirationDay = 2
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-
-elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-elseif loginInfo and loginInfo[1] == "Gabriel" and loginInfo[2] == "122113145" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-   
-else
-    gg.alert("Usuário ou senha incorretos!")
+-- Mostrar banner inicial
+if gg.alert("✌️SCRIPT BY "..developer.." ✌️\n\n🔥EXPIRA "..expiration.."🔥\n\n 🇧🇷 "..version.." 🇧🇷") ~= 1 then
     os.exit()
 end
 
-if saveLoginOption then
-    saveLogin(login, password)
-end
- 
-
-gg.alert("Bem-vindo, " .. usuario .. "!")
-else
-    gg.alert("Nenhum login fornecido!")
-    os.exit()
-end
-
-
-gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n novas funções (tela esticada), (teleporte player por id), (reparar veiculo) \n mais otimização no script \n bypass ant kick implementado\n Auto farm de 1 segundo para 0,5 (foi para 0,5 pq estou tomando kick dps de um tempo com 0,4 seg)")
-
-
-versao = "SCRIPT SOWxTEAM V3 PREMIUM"
-
-
--- Weapon Functions
-function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
-    if statusVar == ENABLED then
-        addWeaponItems(weaponName, 0, 0, 0, addressOffset)
-        return DISABLED
-    else
-        addWeaponItems(weaponName, weaponId, ammoCount, slotsCount, addressOffset)
-        return ENABLED
-    end
-end
-
-function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
+function activateWeapon(weaponName, weaponId, firesCount, slotsCount)
+    local offsets = weaponOffsets[weaponName]
+    if not offsets then return false end
+    
+    -- Primeiro desativa qualquer arma que use o mesmo offset
+    deactivateWeapon(weaponName)
+    
+    -- Ativa a nova arma
     gg.addListItems({
         {
-            address = BASE_ADDRESS + baseOffset,
+            address = offsets.id,
             flags = gg.TYPE_DWORD,
-            value = tostring(idValue),
-            name = weaponName .. " ID",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
+            value = tostring(weaponId),
+            name = weaponName:upper().." ID",
+            freeze = true
         },
         {
-            address = BASE_ADDRESS + baseOffset + 8,
+            address = offsets.fires,
             flags = gg.TYPE_DWORD,
-            value = tostring(firesValue),
-            name = weaponName .. " FIRES COUNT",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
+            value = tostring(firesCount),
+            name = weaponName:upper().." FIRES",
+            freeze = true
         },
         {
-            address = BASE_ADDRESS + baseOffset + 12,
+            address = offsets.slots,
             flags = gg.TYPE_DWORD,
-            value = tostring(slotsValue),
-            name = weaponName .. " SLOTS COUNT",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
+            value = tostring(slotsCount),
+            name = weaponName:upper().." SLOTS",
+            freeze = true
         }
     })
-    gg.setVisible(false)
+    
+    weaponStatus[weaponName] = ENABLED
+    return true
+end
+
+function deactivateWeapon(weaponName)
+    local offsets = weaponOffsets[weaponName]
+    if not offsets then return false end
+    
+    gg.addListItems({
+        {
+            address = offsets.id,
+            flags = gg.TYPE_DWORD,
+            value = "0",
+            name = weaponName:upper().." ID OFF",
+            freeze = false
+        },
+        {
+            address = offsets.fires,
+            flags = gg.TYPE_DWORD,
+            value = "0",
+            name = weaponName:upper().." FIRES OFF",
+            freeze = false
+        },
+        {
+            address = offsets.slots,
+            flags = gg.TYPE_DWORD,
+            value = "0",
+            name = weaponName:upper().." SLOTS OFF",
+            freeze = false
+        }
+    })
+    
+    weaponStatus[weaponName] = DISABLED
+    return true
 end
 
 
 
 
-function menufarm()
-    local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V3 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
-        usuario,expirationDay, expirationMonth, expirationYear, expirationHour, expirationMinute 
-    )
-
-    menu = gg.choice({
-    "SOWxTEAM - FUNCTION ▶",
-    "🎮 Fechar Script 🎮"
-}, nil, titulo)
-
--- Executando as opções do menu
-if menu == 1 then teleport() end
-if menu == 2 then exit() end
+-- Animação de toast
+local Bar = "🔥Script Rio Rise By "..developer.."🔥"
+for i = 1, 8 do
+    gg.sleep(500)
+    Bar = Bar:gsub("", "", 1)
+    gg.toast(Bar)
 end
 
------ teleports farm
+-- Funções utilitárias
+function splitCoords(coords)
+    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
+    return tonumber(y), tonumber(x), tonumber(z)
+end
 
+function teleportPlayer(coords)
+    local y, x, z = splitCoords(coords)
+    if not y or not x or not z then
+        gg.alert("Coordenadas inválidas!")
+        return false
+    end
 
-function teleport()
-    teleporth = gg.choice({
-        "↪SOWxTEAM TEAM AUTO FARM",
-        "↪SOWxTEAM TEAM TELEPORTES",
-        "↪SOWxTEAM TEAM OUTROS",
-        "↪SOWxTEAM TEAM CRIADORES",
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local results = gg.getResults(1)
+    
+    if #results == 0 then
+        gg.alert("Pointer não encontrado!")
+        return false
+    end
+    
+    local base = results[1].address
+    gg.setValues({
+        {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
+        {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
+        {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
+    })
+    
+    gg.clearResults()
+    gg.toast("Teleportado com sucesso!")
+    return true
+end
+
+function autoFarm(coordsList, delay)
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local results = gg.getResults(1)
+    
+    if #results == 0 then
+        gg.alert("Pointer não encontrado!")
+        return
+    end
+    
+    local base = results[1].address
+    local offset_Y = base + 0x60
+    local offset_X = base + 0x64
+    local offset_Z = base + 0x68
+    
+    while true do
+        for _, coords in ipairs(coordsList) do
+            local y, x, z = splitCoords(coords)
+            if y and x and z then
+                gg.setValues({
+                    {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
+                    {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
+                    {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
+                })
+                gg.sleep(delay or 7000)
+            end
+        end
+        gg.toast("Farm By "..developer)
+    end
+end
+
+-- Menus principais
+function mainMenu()
+    local menu = gg.choice({
+        "HAX STORE- FUNCTION ▶",
+        "🎮 Fechar Script 🎮"
+    }, nil, titulon)
+
+    if menu == 1 then teleportMenu() end
+    if menu == 2 then exit() end
+end
+
+function teleportMenu()
+    local choice = gg.choice({
+        "↪"..developer.." TEAM AUTO FARM",
+        "↪"..developer.." TEAM TELEPORTES",
+        "↪"..developer.." TEAM OUTROS",
         "↩️Voltar↩️"
-    }, nil, titulo)
+    }, nil, titulon)
 
-    if teleporth == 2 then teleportes() end
-    if teleporth == 1 then farms() end
-    if teleporth == 3 then outros() end
-    if teleporth == 4 then criadores() end
-    if teleporth == 5 then menufarm() end
+    if choice == 1 then farmsMenu() end
+    if choice == 2 then teleportesMenu() end
+    if choice == 3 then outrosMenu() end
+    if choice == 4 then mainMenu() end
 end
 
-function teleportes()
-    teleports = gg.choice({
+function teleportesMenu()
+    local choice = gg.choice({
         "🧑‍💼EMPREGOS PARA INICIANTES🧑‍💼",
         "🌎OUTROS LOCAIS🌎",
         "↩️Voltar↩️"
-    }, nil, titulo)
+    }, nil, titulon)
 
-    if teleports == 1 then tpempregosiniciais() end
-    if teleports == 2 then tplocaispublicos() end
-    if teleports == 3 then teleport() end
+    if choice == 1 then empregosIniciaisMenu() end
+    if choice == 2 then locaisPublicosMenu() end
+    if choice == 3 then teleportMenu() end
 end
 
-
-function tplocaispublicos()
-    tppublicos = gg.choice({
+-- Menus de teleportes
+function locaisPublicosMenu()
+    local locais = {
         "🏢PREFEITURA🏢",
         "🚙ESCOLA DE CONDUÇÃO🚙",
         "🪒MERCADO DE ACESSORIOS🪒",
@@ -229,117 +241,139 @@ function tplocaispublicos()
         "🚗MERCADO DE VEICULOS🚗",
         "🔫LOJA DE ARMAS🔫",
         "↩️ Voltar ↩️"
-    }, nil, titulo)
+    }
 
-    if tppublicos == 1 then tppref() end
-    if tppublicos == 2 then tpescolacdc() end
-    if tppublicos == 3 then tpmercadoacc() end
-    if tppublicos == 4 then tpigreja() end
-    if tppublicos == 5 then tpce() end
-    if tppublicos == 6 then tpccm() end
-    if tppublicos == 7 then tpcp() end
-    if tppublicos == 8 then tplojamb() end
-    if tppublicos == 9 then tpcs() end
-    if tppublicos == 10 then tpce() end
-    if tppublicos == 11 then tpcmp() end
-    if tppublicos == 12 then tpcl() end
-    if tppublicos == 13 then tpmv() end
-    if tppublicos == 14 then teleportes() end
+    local coordenadas = {
+        "624.03594970703;-1836.7177734375;1.90315747261",      -- Prefeitura
+        "-1276.47875976562;-2579.33666992188;32.66515731812",  -- Escola de condução
+        "-1124.16625976562;-1727.64794921875;54.33406066895",  -- Mercado de acessórios
+        "-1382.31628417969;-2776.79150390625;32.67558288574",  -- Igreja
+        "-1325.89147949219;-2727.76196289062;32.67558288574",  -- Concessionaria economica
+        "738.46606445312;-1053.29809570312;2.43835258484",     -- Concessionaria classe media
+        "551.91986083984;-1967.55102539062;1.94436502457",     -- Concessionaria premium
+        "1073.56848144531;-1908.31091308594;1.71507740021",    -- Loja de motos/bicicleta
+        "738.68981933594;-1049.78930664062;2.43835258484",     -- Centro de serviços
+        "1040.67517089844;-1479.70666503906;1.74624991417",    -- Centro de estilização
+        "966.01129150391;-1841.40051269531;2.00436973572",     -- Centro de montagens de pneus
+        "708.20947265625;-1461.50708007812;3.03739500046",     -- Casa de leilões
+        "-1496.09301757812;-1320.88623046875;54.33312606812",  -- Mercado de veiculos
+        "↩️ Voltar ↩️"
+    }
+
+    local choice = gg.choice(locais, nil, titulon)
+    
+    if choice and choice <= #coordenadas then
+        teleportPlayer(coordenadas[choice])
+    elseif choice == #locais then
+        teleportesMenu()
+    end
 end
 
-function outros()
-    xoutros = gg.choice({
+function empregosIniciaisMenu()
+    local empregos = {
+        "🏗️OBRA🏗️ (CONTRUÇÃO)",
+        "⛏️MINA⛏️",
+        "🚜FAZENDA🚜",
+        "↩️ Voltar ↩️"
+    }
+
+    local coordenadas = {
+        "-365.93130493164;-2170.88891601562;32.85216140747",  -- Obra
+        "-91.88101959229;-1574.79077148438;63.44041442871",   -- Mina
+        "-60.00552368164;83.19628143311;3.1171875",           -- Fazenda
+        "↩️ Voltar ↩️"
+    }
+
+    local choice = gg.choice(empregos, nil, titulon)
+    
+    if choice and choice <= #coordenadas then
+        teleportPlayer(coordenadas[choice])
+    elseif choice == #empregos then
+        teleportesMenu()
+    end
+end
+
+-- Menu de farms automáticos
+function farmsMenu()
+    local choice = gg.choice({
+        "🟢TRABALHO NA MINERADORA(EM TESTE)🟢",
+        "🟢TRABALHO NA OBRA🟢",
+        "↩️Voltar↩️"
+    }, nil, titulon)
+
+    if choice == 1 then mineradoraMenu() end
+    if choice == 2 then obraMenu() end
+    if choice == 3 then teleportMenu() end
+end
+
+function mineradoraMenu()
+    local choice = gg.choice({
+        "🟢AUTO FARM MINERAÇÃO🟢",
+        "↩️Voltar↩️"
+    }, nil, "🏆AUTO FARM MINERAÇÃO🏆")
+
+    if choice == 1 then 
+        local pontos = {
+            "831.698303;43.119785;1014.812012",  -- Checkpoint 1
+            "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 1
+            "808.595154;21.552530;1009.467468",  -- Checkpoint 2
+            "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 2
+            "858.003296;19.574184;1012.041199",  -- Checkpoint 3
+            "833.932190;22.043259;1012.000000"   -- Entregar Carrinho 3
+        }
+        autoFarm(pontos, velocidadefarm)
+    elseif choice == 2 then 
+        farmsMenu()
+    end
+end
+
+function obraMenu()
+    local choice = gg.choice({
+        "🟢AUTO FARM CONSTRUÇÃO🟢",
+        "↩️Voltar↩️"
+    }, nil, "🏆AUTO FARM CONSTRUÇÃO🏆")
+
+    if choice == 1 then 
+        local pontos = {
+            "-305.936035;-2264.125000;33.306194",
+            "-320.685028;-2256.816650;38.829632",
+            "-289.364014;-2230.501465;38.829632"
+        }
+        autoFarm(pontos, velocidadefarm)
+    elseif choice == 2 then 
+        farmsMenu()
+    end
+end
+
+-- Atualize o menu outros para incluir as novas funções
+function outrosMenu()
+    local choice = gg.choice({
         "🔫Munição infinita (PRECISA SER LV2)🔫",
         "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
         "🏠WALL HACK PAREDES🏠",
-        "🖥TELA ESTICADA (NOVO)🖥",
-        "test",
+        "🔫MENU DE ARMAS🔫",
+        "🔧REPARAR VEÍCULO🔧",
         "↩️Voltar↩️"
-      }, nil, titulo)
+    }, nil, titulon)
 
-    if xoutros == 1 then cheatarmas() end
-    if xoutros == 2 then aimkillcarro() end
-    if xoutros  == 3 then wallhack() end
-    if xoutros == 4 then esticada() end
-    if xoutros == 5 then weaponsMenu() end
-    if xoutros == 6 then teleport() end
+    if choice == 1 then cheatArmas() end
+    if choice == 2 then homemBombaMenu() end
+    if choice == 3 then wallHackMenu() end
+    if choice == 4 then weaponsMenu() end
+    if choice == 5 then repairVehicle() end
+    if choice == 6 then teleportMenu() end
 end
 
 
-
-local weaponStatus = {
-    desert = DISABLED,
-    shotgun = DISABLED,
-    mp5 = DISABLED,
-    ak47 = DISABLED,
-    m4 = DISABLED,
-    bazooka = DISABLED
-}
-
--- Função para encontrar o endereço base
-function findBaseAddress()
-    gg.clearResults()
-    gg.searchNumber("1D;1D;1D;1D::9", gg.TYPE_DWORD)
-    gg.refineNumber("1", gg.TYPE_DWORD)
-    local results = gg.getResults(1)
-    if #results > 0 then
-        BASE_ADDRESS = results[1].address
-        gg.toast("Endereço base encontrado: " .. string.format("%X", BASE_ADDRESS))
-    else
-        gg.alert("Não foi possível encontrar o endereço base!")
-        os.exit()
-    end
-    gg.clearResults()
-end
-
-
--- Weapons Menu atualizado
-function weaponsMenu()
-    local choice = gg.choice({
-        weaponStatus.desert .. " DESERT",
-        weaponStatus.shotgun .. " SHOTGUN",
-        weaponStatus.mp5 .. " MP5",
-        weaponStatus.ak47 .. " AK47",
-        weaponStatus.m4 .. " M4",
-        weaponStatus.bazooka .. " BAZUCA"
-    }, nil, "Selecione uma arma:")
+function homemBombaMenu()
+    local choice = gg.choice({"🟢ON🟢", "⚪OFF⚪", "◀️Voltar"}, nil, version)
     
-    if not choice then return end
-    
-    if choice == 1 then
-        weaponStatus.desert = toggleWeapon("DESERT", 24, 9999, 9999, 196, weaponStatus.desert)
-    elseif choice == 2 then
-        weaponStatus.shotgun = toggleWeapon("SHOTGUN", 25, 9999, 9999, 228, weaponStatus.shotgun)
-    elseif choice == 3 then
-        weaponStatus.mp5 = toggleWeapon("MP5", 29, 9999, 9999, 260, weaponStatus.mp5)
-    elseif choice == 4 then
-        weaponStatus.ak47 = toggleWeapon("AK47", 30, 9999, 9999, 292, weaponStatus.ak47)
-        weaponStatus.m4 = DISABLED
-    elseif choice == 5 then
-        weaponStatus.m4 = toggleWeapon("M4", 31, 9999, 9999, 292, weaponStatus.m4)
-        weaponStatus.ak47 = DISABLED
-    elseif choice == 6 then
-        gg.toast("Em breve...")
-    end
+    if choice == 1 then homemBombaOn() end
+    if choice == 2 then homemBombaOff() end
+    if choice == 3 then outrosMenu() end
 end
 
-
--- Aim Kill Carro
-function aimkillcarro()
-    local aimkillcarroonoff = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "◀️Voltar"}, nil, versao)
-    if aimkillcarroonoff == nil then
-        gg.toast("Nenhuma opção selecionada")
-        verificarAutenticacao()
-        verificarExpiracao()
-        return
-    end
-
-    if aimkillcarroonoff == 1 then aimkillcarroon() end
-    if aimkillcarroonoff == 2 then aimkillcarrooff() end
-    if aimkillcarroonoff == 3 then menupremium() end
-end
-
-function aimkillcarroon()
+function homemBombaOn()
     gg.setRanges(gg.REGION_C_ALLOC)
     gg.searchNumber("1000", gg.TYPE_FLOAT)
     gg.alert("bata o veiculo na parede, você tem alguns segundos para isso")
@@ -357,7 +391,7 @@ function aimkillcarroon()
     gg.toast("🟢 HOMEM BOMBA ON 🚗 🟢")
 end
 
-function aimkillcarrooff()
+function homemBombaOff()
     gg.setRanges(gg.REGION_C_ALLOC)
     gg.searchNumber("10000000000000000000000000", gg.TYPE_FLOAT)
     local results = gg.getResults(100000)
@@ -372,10 +406,9 @@ function aimkillcarrooff()
     gg.toast("HOMEM BOMBA OFF 🚗 ⚪!")
 end
 
--- Cheat das armas
-function cheatarmas()
+function cheatArmas()
     local weapon = gg.prompt({"Digite a quantidade de munição da arma\nEx: 100-50\nVocê digita 150"}, {"0"}, {"number"})
-    if weapon == nil then
+    if not weapon then
         gg.toast("Cancelado")
         return
     end
@@ -386,7 +419,7 @@ function cheatarmas()
     gg.sleep(5000)
 
     local weapon2 = gg.prompt({"Agora digite a quantidade de munição que está após 1 tiro\nEx: 99-50\nVocê digita 149"}, {"0"}, {"number"})
-    if weapon2 == nil then
+    if not weapon2 then
         gg.toast("Cancelado")
         return
     end
@@ -404,750 +437,91 @@ function cheatarmas()
     gg.toast("Ativo")
 end
 
--- Wallhack
-function wallhack()
-    wallhack1 = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "↩️Voltar↩️"}, nil, versao)
+function wallHackMenu()
+    local choice = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "↩️Voltar↩️"}, nil, version)
     
-        if wallhack1 == 1 then wallon() end
-        if wallhack1 == 2 then walloff() end
-        if wallhack1 == 3 then menupremium() end
-    end
-    
-    function wallon()
-        gg.searchNumber("60", gg.TYPE_FLOAT)
-        gg.getResults(99999)
-        gg.editAll("60.7", gg.TYPE_FLOAT)
-        gg.toast("🟢Wall hack ON🟢")
-        gg.clearResults()
-    end
-    
-    function walloff()
-        gg.searchNumber("60.7", gg.TYPE_FLOAT)
-        gg.getResults(99999)
-        gg.editAll("60", gg.TYPE_FLOAT)
-        gg.toast("⚪Wall hack OFF⚪")
-        gg.clearResults()
-    end
-
-    -- Tela esticada
-function esticada()
-    esticadat = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "↩️Voltar↩️"}, nil, versao)
-    
-        if esticadat == 1 then esticadaon() end
-        if esticadat == 2 then esticadaoff() end
-        if esticadat == 3 then menupremium() end
-    end
-    
-    function esticadaon()
-        gg.searchNumber("70", gg.TYPE_FLOAT)
-        gg.getResults(99999)
-        gg.editAll("120", gg.TYPE_FLOAT)
-        gg.toast("🟢Tela esticada ON🟢")
-        gg.clearResults()
-    end
-    
-    function esticadaoff()
-        gg.searchNumber("120", gg.TYPE_FLOAT)
-        gg.getResults(99999)
-        gg.editAll("70", gg.TYPE_FLOAT)
-        gg.toast("⚪Tela esticada OFF⚪")
-        gg.clearResults()
-    end
-
--- LOCAIS PÚBLICOS
-
-function tppref()
-    local coords = "624.03594970703;-1836.7177734375;1.90315747261"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-    
+    if choice == 1 then wallHackOn() end
+    if choice == 2 then wallHackOff() end
+    if choice == 3 then outrosMenu() end
 end
 
-function tpescolacdc()
-    local coords = "-1276.47875976562;-2579.33666992188;32.66515731812"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
+function wallHackOn()
+    gg.searchNumber("60", gg.TYPE_FLOAT)
+    gg.getResults(99999)
+    gg.editAll("60.7", gg.TYPE_FLOAT)
+    gg.toast("🟢Wall hack ON🟢")
     gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
 end
 
-function tpmercadoacc()
-
-    local coords = "-1124.16625976562;-1727.64794921875;54.33406066895"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
+function wallHackOff()
+    gg.searchNumber("60.7", gg.TYPE_FLOAT)
+    gg.getResults(99999)
+    gg.editAll("60", gg.TYPE_FLOAT)
+    gg.toast("⚪Wall hack OFF⚪")
     gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpigreja()
-    
-    local coords = "-1382.31628417969;-2776.79150390625;32.67558288574"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-
-end
-
-function tpce()
-    local coords = "-1325.89147949219;-2727.76196289062;32.67558288574"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpccm()
-    local coords = "738.46606445312;-1053.29809570312;2.43835258484"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpcp()
-    local coords = "551.91986083984;-1967.55102539062;1.94436502457"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-
-end
-
-function tplojamb()
-    local coords = "1073.56848144531;-1908.31091308594;1.71507740021"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpcs()
-    local coords = "738.68981933594;-1049.78930664062;2.43835258484"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpce()
-    local coords = "1040.67517089844;-1479.70666503906;1.74624991417"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpcmp()
-    local coords = "966.01129150391;-1841.40051269531;2.00436973572"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpcl()
-    local coords = "708.20947265625;-1461.50708007812;3.03739500046"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-function tpmv()
-    local coords = "-1496.09301757812;-1320.88623046875;54.33312606812"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
 end
 
 
--- EMPREGOS INICIAIS
-
-function tpempregosiniciais()
-    tpempregosiniciais = gg.choice({
-        "🏗️OBRA🏗️ (CONTRUÇÃO)",
-        "⛏️MINA⛏️",
-        "🚜FAZENDA🚜",
+-- Menu de armas
+function weaponsMenu()
+    local choice = gg.choice({
+        weaponStatus.desert .. "DESERT",
+        weaponStatus.shotgun .. "SHOTGUN",
+        weaponStatus.mp5 .. "MP5",
+        weaponStatus.ak47 .. "AK47",
+        weaponStatus.m4 .. "M4",
+        weaponStatus.bazooka .. "BAZUCA",
         "↩️ Voltar ↩️"
-       }, nil, titulo)
+    }, nil, "MENU DE ARMAS\nSelecione uma arma para ativar/desativar:")
 
-    if tpempregosiniciais == 2 then tpmina() end
-    if tpempregosiniciais == 1 then tpobra() end
-    if tpempregosiniciais == 3 then tpfazenda() end
-    if tpempregosiniciais == 4 then teleportes() end
-end
-
-
--- LOCAIS PÚBLICOS
-
-function tpmina()
-    local coords = "-91.88101959229;-1574.79077148438;63.44041442871"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
+    if not choice or choice == 7 then return end  -- Voltar
     
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
+    local weapons = {"desert", "shotgun", "mp5", "ak47", "m4", "bazooka"}
+    local selectedWeapon = weapons[choice]
     
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
+    if selectedWeapon == "bazooka" then
+        gg.toast("Em breve...")
         return
     end
     
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
+    -- Desativa outras armas do mesmo slot (AK47/M4 compartilham offset)
+    if selectedWeapon == "ak47" then weaponStatus.m4 = DISABLED end
+    if selectedWeapon == "m4" then weaponStatus.ak47 = DISABLED end
     
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
+    if weaponStatus[selectedWeapon] == ENABLED then
+        -- Desativar arma
+        addWeaponItems(selectedWeapon, 0, 0, 0)
+        weaponStatus[selectedWeapon] = DISABLED
+    else
+        -- Ativar arma
+        local ammo = weaponAmmo[selectedWeapon]
+        addWeaponItems(selectedWeapon, ammo.id, ammo.fires, ammo.slots)
+        weaponStatus[selectedWeapon] = ENABLED
+    end
+    
+    gg.toast(selectedWeapon:upper() .. (weaponStatus[selectedWeapon] == ENABLED and " ATIVADA" or " DESATIVADA"))
 end
 
-
-function tpobra()
-    local coords = "-365.93130493164;-2170.88891601562;32.85216140747"  -- Coordenadas no formato "y;x;z"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")  -- Extrai os valores de y, x e z
-
-    -- Converte as coordenadas para números
-    y, x, z = tonumber(y), tonumber(x), tonumber(z)
-
-    -- Verifica se a conversão foi bem-sucedida
-    if y == nil or x == nil or z == nil then
-        gg.alert("Erro ao converter coordenadas!")
-        return
-    end
-
-    -- Limpa resultados anteriores e busca pelo número específico
+-- Função para reparar veículo (substitui a L29_44)
+function repairVehicle()
     gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-
-    -- Verifica se o pointer foi encontrado
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-
-    -- Define os offsets para Y, X e Z
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-
-    -- Aplica as novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-
-    -- Notifica o usuário e limpa os resultados
-    gg.toast("SOWxTEAM - TELEPORTADO!")
+    gg.searchNumber("300", gg.TYPE_FLOAT)
+    gg.getResults(100)
+    gg.editAll("1000", gg.TYPE_FLOAT)
     gg.clearResults()
+    gg.toast("🔧 VEÍCULO REPARADO! 🔧")
 end
-
-function tpfazenda()
-    local coords = "-60.00552368164;83.19628143311;3.1171875"
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-
-y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-
-    
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("SOWxTEAM-!")
-gg.clearResults()
-end
-
-
-function farms()
-    farmsss = gg.choice({
-        "🟢TRABALHO NA MINERADORA(EM TESTE)🟢",
-        "🟢TRABALHO NA OBRA🟢",
-        "↩️Voltar↩️"
-      }, nil, titulo)
-
-    if farmsss == 1 then mineradora() end
-    if farmsss == 2 then construtorcivill() end
-    if farmsss == 3 then teleport() end
-end
-
-function mineradora()
-    mineradoraops = gg.choice({
-        "🟢AUTO FARM MINERAÇÃO🟢",
-        "↩️Voltar↩️"
-    }, nil, "🏆AUTO FARM MINERAÇÃO🏆")
-
-    if mineradoraops == 1 then mineracao() end
-    if mineradoraops == 2 then farms() end
-end
-
-
-function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("Teletransportado com sucesso!")
-end
-
--- Função para calcular a distância entre duas coordenadas
-function calcularDistancia(x1, y1, z1, x2, y2, z2)
-    return math.sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)
-end
-
--- Função para obter a posição atual do jogador
-function obterPosicaoAtual(offset_Y, offset_X, offset_Z)
-    local posicao = gg.getValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT},
-        {address = offset_X, flags = gg.TYPE_FLOAT},
-        {address = offset_Z, flags = gg.TYPE_FLOAT}
-    })
-    return posicao[1].value, posicao[2].value, posicao[3].value
-end
-
-function mineracao()
-    local pontos = {
-        "831.698303;43.119785;1014.812012",  -- Checkpoint 1
-        "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 1
-        "808.595154;21.552530;1009.467468",  -- Checkpoint 2
-        "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 2
-        "858.003296;19.574184;1012.041199",  -- Checkpoint 3
-        "833.932190;22.043259;1012.000000"   -- Entregar Carrinho 3
-    }
-   -- Buscar o endereço uma única vez
-   gg.clearResults()
-   gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-   local results = gg.getResults(1)
-
-   if #results == 0 then
-       gg.alert("Pointer não encontrado!")
-       return
-   end
-
-   local base = results[1].address
-   local offset_Y = base + 0x60
-   local offset_X = base + 0x64
-   local offset_Z = base + 0x68
-
-   -- Loop para teleportar entre os pontos
-   while true do
-       for _, coords in ipairs(pontos) do
-           local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-           y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-           teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-           -- Adicionar um delay de 4 segundos
-           gg.sleep(7000)
-       end
-       gg.toast("Farm By SOWxTEAM")
-   end
-end
-    
-
-function construtorcivill()
-    construtorcivillops = gg.choice({
-        "🟢AUTO FARM CONSTRUÇÃO🟢",
-        "↩️Voltar↩️"
-    }, nil, "🏆AUTO FARM CONSTRUÇÃO🏆")
-
-    if construtorcivillops == 1 then construtorcivil() end
-    if construtorcivillops == 2 then farms() end
-end
-
-function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("Teletransportado com sucesso!")
-end
-
-function construtorcivil()
-    local pontos = {
-        "-305.936035;-2264.125000;33.306194",
-        "-320.685028;-2256.816650;38.829632",
-        "-289.364014;-2230.501465;38.829632"
-    }
-    
-    -- Buscar o endereço uma única vez
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-
-    -- Loop para teleportar entre os pontos
-    while true do
-        for _, coords in ipairs(pontos) do
-            local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-            y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
-            teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-       
-            gg.sleep(500)
-        end
-        gg.toast("Farm BySOWxTEAM")
-    end
-end
-
--- Criadores
-function criadores()
-    gg.alert("SCRIPT FEITO POR RodrigoGTyx , Chines Mods e Detroid")
-end
-
-
-
-
 
 function exit()
-    os.exit(gg.alert("Script finalizada com sucesso!"))
+    os.exit(gg.alert("Script finalizado com sucesso!"))
 end
 
+-- Loop principal
 while true do
     if gg.isVisible() then
         gg.setVisible(false)
-        gg.toast("SOWxTEAM-")
-        menufarm()
+        gg.toast("HAX STORE-")
+        mainMenu()
     end
+    gg.sleep(100)
 end
