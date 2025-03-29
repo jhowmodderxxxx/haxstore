@@ -209,8 +209,7 @@ function outros()
         "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
         "🏠WALL HACK PAREDES🏠",
         "🖥TELA ESTICADA (NOVO)🖥",
-        "👤TELEPORTAR EM JOGADORES(teste)👤",
-        "🚗REPARAR VEICULO(teste)🚗",
+        "test",
         "↩️Voltar↩️"
       }, nil, titulo)
 
@@ -218,18 +217,57 @@ function outros()
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
     if xoutros == 4 then esticada() end
-    if xoutros == 5 then repairVehicle() end
+    if xoutros == 5 then teleportPlayerOn() end
     if xoutros == 6 then teleport() end
 end
 
 
-
-function repairVehicle()
+function teleportPlayerOn()
+    local idJogador = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
+    
+    if not idJogador or not idJogador[1] then
+        gg.toast("Teleporte cancelado")
+        return
+    end
+    
+    idJogador = tonumber(idJogador[1])
+    
+    -- Buscar coordenadas do jogador alvo
     gg.clearResults()
-    gg.searchNumber("300", gg.TYPE_FLOAT)
-    gg.getResults(100)
-    gg.editAll("1000", gg.TYPE_FLOAT)
-    gg.clearResults()
+    gg.searchNumber(idJogador, gg.TYPE_DWORD)
+    local playerResults = gg.getResults(100)
+    
+    if #playerResults == 0 then
+        gg.alert("Jogador não encontrado!")
+        return
+    end
+    
+    -- Encontrar e aplicar coordenadas
+    for i, v in ipairs(playerResults) do
+        local y = gg.getValues({{address = v.address - 0x60, flags = gg.TYPE_FLOAT}})[1].value
+        local x = gg.getValues({{address = v.address - 0x5C, flags = gg.TYPE_FLOAT}})[1].value
+        local z = gg.getValues({{address = v.address - 0x58, flags = gg.TYPE_FLOAT}})[1].value
+        
+        if y and x and z then
+            -- Buscar pointer do jogador
+            gg.clearResults()
+            gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+            local pointer = gg.getResults(1)
+            
+            if #pointer > 0 then
+                local base = pointer[1].address
+                gg.setValues({
+                    {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
+                    {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
+                    {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
+                })
+                gg.toast("🟢Teleportado para ID: "..idJogador.."🟢")
+                return
+            end
+        end
+    end
+    
+    gg.alert("Falha ao teleportar!")
 end
 
 
