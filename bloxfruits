@@ -217,140 +217,124 @@ function outros()
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
     if xoutros == 4 then esticada() end
-    if xoutros == 5 then teleportPlayerOn() end
+    if xoutros == 5 then weaponsMenu() end
     if xoutros == 6 then teleport() end
 end
 
 
-function teleportPlayerOn()
-    -- Verificação inicial do ambiente
-    if not gg or not gg.alert or not gg.prompt then
-        print("Erro: Game Guardian não está disponível ou API incompleta")
+function weaponsMenu()
+    -- Verificação inicial do ambiente GG
+    if not gg or not gg.choice or not gg.toast then
+        print("Erro: Game Guardian API não disponível")
         return false
     end
 
-    -- Obtém informações do processo com tratamento de erro
-    local targetInfo = {}
-    local success, err = pcall(function()
-        targetInfo = gg.getTargetInfo() or {}
+    -- Status inicial das armas (se não existir)
+    weaponStatus = weaponStatus or {
+        desert = DISABLED,
+        shotgun = DISABLED,
+        mp5 = DISABLED,
+        ak47 = DISABLED,
+        m4 = DISABLED,
+        bazooka = DISABLED
+    }
+
+    -- Criação do menu com verificação de status
+    local menuOptions = {}
+    local weapons = {
+        {name = "DESERT",   key = "desert",  status = weaponStatus.desert},
+        {name = "SHOTGUN",  key = "shotgun", status = weaponStatus.shotgun},
+        {name = "MP5",      key = "mp5",     status = weaponStatus.mp5},
+        {name = "AK47",     key = "ak47",    status = weaponStatus.ak47},
+        {name = "M4",       key = "m4",      status = weaponStatus.m4},
+        {name = "BAZUCA",  key = "bazooka", status = weaponStatus.bazooka}
+    }
+
+    -- Construindo opções do menu com emojis de status
+    for i, weapon in ipairs(weapons) do
+        local statusIcon = (weapon.status == ENABLED) and "🟢" or "🔴"
+        menuOptions[i] = string.format("%s %s", statusIcon, weapon.name)
+    end
+
+    -- Exibe o menu com tratamento de erro
+    local choice, err
+    local success, result = pcall(function()
+        return gg.choice(menuOptions, nil, "🔫 MENU DE ARMAS 🔫")
     end)
-    
+
     if not success then
-        gg.alert("Erro ao obter informações do processo: " .. tostring(err))
+        gg.alert("Erro ao exibir menu: " .. tostring(result))
+        return false
+    elseif not result then
+        gg.toast("Menu cancelado")
         return false
     end
 
-    gg.toast("Processo atual: " .. (targetInfo.name or "Desconhecido"))
+    choice = result
 
-    -- Entrada do ID do jogador com validação
-    local input
-    success, err = pcall(function()
-        input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"}) or {}
-    end)
+    -- Função para alternar armas com tratamento de erro
+    local function safeToggleWeapon(weapon, ...)
+        local params = {...}
+        local success, result = pcall(toggleWeapon, weapon, unpack(params))
+        if not success then
+            gg.alert(string.format("Erro ao modificar %s:\n%s", weapon, tostring(result)))
+            return nil
+        end
+        return result
+    end
+
+    -- Processa a escolha do usuário
+    local weaponChanged = false
     
-    if not success or not input[1] then
-        gg.toast("Teleporte cancelado ou erro na entrada")
-        return false
-    end
-
-    local playerId = tonumber(input[1])
-    if not playerId then
-        gg.alert("ID inválido! Digite apenas números.")
-        return false
-    end
-
-    -- Função auxiliar para busca segura
-    local function safeSearch(value, type, maxResults)
-        local results = {}
-        success, err = pcall(function()
-            gg.clearResults()
-            gg.searchNumber(value, type)
-            results = gg.getResults(maxResults or 100) or {}
-        end)
-        return success, results, err
-    end
-
-    -- Busca pelo ID do jogador
-    local found, playerResults, searchErr = safeSearch(playerId, gg.TYPE_DWORD)
-    if not found or #playerResults == 0 then
-        gg.alert("Jogador não encontrado!\nErro: " .. tostring(searchErr))
-        return false
-    end
-
-    -- Busca pelo ponteiro do jogador local com múltiplos padrões
-    local pointerFound = false
-    local pointerAddress = 0
-    local pointerPatterns = {999.765625, 1000.0, 999.0, 998.5, 1001.0}
-
-    for _, pattern in ipairs(pointerPatterns) do
-        found, localPointer, _ = safeSearch(pattern, gg.TYPE_FLOAT, 1)
-        if found and #localPointer > 0 then
-            pointerAddress = localPointer[1].address
-            pointerFound = true
-            break
+    if choice == 1 then
+        weaponStatus.desert = safeToggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
+        weaponChanged = true
+    elseif choice == 2 then
+        weaponStatus.shotgun = safeToggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
+        weaponChanged = true
+    elseif choice == 3 then
+        weaponStatus.mp5 = safeToggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
+        weaponChanged = true
+    elseif choice == 4 then
+        weaponStatus.ak47 = safeToggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
+        if weaponStatus.ak47 == ENABLED then
+            weaponStatus.m4 = DISABLED
+            gg.toast("AK47 ativado - M4 desativado automaticamente")
         end
-    end
-
-    if not pointerFound then
-        gg.alert("Pointer do jogador local não encontrado!")
-        return false
-    end
-
-    -- Coleta coordenadas do alvo
-    local function getCoordinates(targetAddr)
-        local offsets = {
-            y = {offset = -0x60, type = gg.TYPE_FLOAT},
-            x = {offset = -0x5C, type = gg.TYPE_FLOAT},
-            z = {offset = -0x58, type = gg.TYPE_FLOAT}
-        }
-        
-        local coords = {}
-        for coord, info in pairs(offsets) do
-            local addr = targetAddr + info.offset
-            local values = {}
-            success, err = pcall(function()
-                values = gg.getValues({{address = addr, flags = info.type}}) or {}
-            end)
-            
-            if not success or #values == 0 then
-                return nil, "Erro ao ler coordenada "..coord..": "..tostring(err)
-            end
-            coords[coord] = values[1].value
+        weaponChanged = true
+    elseif choice == 5 then
+        weaponStatus.m4 = safeToggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
+        if weaponStatus.m4 == ENABLED then
+            weaponStatus.ak47 = DISABLED
+            gg.toast("M4 ativado - AK47 desativado automaticamente")
         end
-        return coords
+        weaponChanged = true
+    elseif choice == 6 then
+        gg.alert("🚧 Bazuca em desenvolvimento! 🚧\nEsta arma estará disponível na próxima atualização")
     end
 
-    -- Processa cada resultado encontrado
-    for _, result in ipairs(playerResults) do
-        local coords, err = getCoordinates(result.address)
-        if coords then
-            -- Aplica as coordenadas ao jogador local
-            success, err = pcall(function()
-                gg.setValues({
-                    {address = pointerAddress + 0x60, flags = gg.TYPE_FLOAT, value = coords.y},
-                    {address = pointerAddress + 0x64, flags = gg.TYPE_FLOAT, value = coords.x},
-                    {address = pointerAddress + 0x68, flags = gg.TYPE_FLOAT, value = coords.z}
-                })
-            end)
-            
-            if success then
-                gg.toast(string.format(
-                    "✅ Teleportado para ID: %d\nX: %.2f Y: %.2f Z: %.2f\nJogo: %s",
-                    playerId, coords.x, coords.y, coords.z,
-                    targetInfo.name or "Desconhecido"
-                ))
-                gg.clearResults()
-                return true
-            else
-                gg.toast("Erro ao aplicar teleporte: "..tostring(err))
-            end
-        end
+    -- Atualiza visualização se alguma arma foi modificada
+    if weaponChanged then
+        gg.toast("Status das armas atualizado!")
+        -- Mostra menu novamente após alteração
+        return weaponsMenu()
     end
 
-    gg.alert("Falha ao teleportar: não foi possível obter coordenadas válidas")
-    gg.clearResults()
-    return false
+    return true
 end
+
+-- Exemplo de como chamar a função com tratamento de erro
+local function safeWeaponsMenu()
+    local status, err = pcall(weaponsMenu)
+    if not status then
+        gg.alert("ERRO CRÍTICO no menu de armas:\n" .. tostring(err))
+        return false
+    end
+    return true
+end
+
+-- Chamada segura do menu
+safeWeaponsMenu()
 
 -- Chamada segura da função principal
 local status, result = pcall(teleportPlayerOn)
