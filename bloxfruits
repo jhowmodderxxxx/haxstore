@@ -222,125 +222,86 @@ function outros()
 end
 
 
-function weaponsMenu()
-    -- Verificação inicial do ambiente GG
-    if not gg or not gg.choice or not gg.toast then
-        print("Erro: Game Guardian API não disponível")
-        return false
-    end
 
-    -- Status inicial das armas (se não existir)
-    weaponStatus = weaponStatus or {
-        desert = DISABLED,
-        shotgun = DISABLED,
-        mp5 = DISABLED,
-        ak47 = DISABLED,
-        m4 = DISABLED,
-        bazooka = DISABLED
-    }
 
-    -- Criação do menu com verificação de status
-    local menuOptions = {}
-    local weapons = {
-        {name = "DESERT",   key = "desert",  status = weaponStatus.desert},
-        {name = "SHOTGUN",  key = "shotgun", status = weaponStatus.shotgun},
-        {name = "MP5",      key = "mp5",     status = weaponStatus.mp5},
-        {name = "AK47",     key = "ak47",    status = weaponStatus.ak47},
-        {name = "M4",       key = "m4",      status = weaponStatus.m4},
-        {name = "BAZUCA",  key = "bazooka", status = weaponStatus.bazooka}
-    }
+-- Adicionando constantes e variáveis necessárias para a função weaponsMenu
+local DISABLED = "❌"
+local ENABLED = "✅"
 
-    -- Construindo opções do menu com emojis de status
-    for i, weapon in ipairs(weapons) do
-        local statusIcon = (weapon.status == ENABLED) and "🟢" or "🔴"
-        menuOptions[i] = string.format("%s %s", statusIcon, weapon.name)
-    end
+local weaponStatus = {
+    desert = DISABLED,
+    shotgun = DISABLED,
+    mp5 = DISABLED,
+    ak47 = DISABLED,
+    m4 = DISABLED,
+    bazooka = DISABLED
+}
 
-    -- Exibe o menu com tratamento de erro
-    local choice, err
-    local success, result = pcall(function()
-        return gg.choice(menuOptions, nil, "🔫 MENU DE ARMAS 🔫")
-    end)
-
-    if not success then
-        gg.alert("Erro ao exibir menu: " .. tostring(result))
-        return false
-    elseif not result then
-        gg.toast("Menu cancelado")
-        return false
-    end
-
-    choice = result
-
-    -- Função para alternar armas com tratamento de erro
-    local function safeToggleWeapon(weapon, ...)
-        local params = {...}
-        local success, result = pcall(toggleWeapon, weapon, unpack(params))
-        if not success then
-            gg.alert(string.format("Erro ao modificar %s:\n%s", weapon, tostring(result)))
-            return nil
+-- Função para alternar o status da arma
+function toggleWeapon(weaponName, offset1, offset2, offset3, offset4, currentStatus)
+    if currentStatus == DISABLED then
+        -- Ativar a arma
+        gg.setRanges(gg.REGION_ANONYMOUS)
+        gg.searchNumber("1D;1D;1D;1D::9", gg.TYPE_DWORD)
+        gg.refineNumber("1", gg.TYPE_DWORD)
+        local results = gg.getResults(4)
+        
+        if #results >= 4 then
+            results[1].address = results[1].address + offset1
+            results[2].address = results[2].address + offset2
+            results[3].address = results[3].address + offset3
+            results[4].address = results[4].address + offset4
+            
+            for i = 1, 4 do
+                results[i].value = 9999
+                results[i].freeze = true
+            end
+            
+            gg.addListItems(results)
+            gg.toast(weaponName .. " ativada!")
+            return ENABLED
+        else
+            gg.toast("Falha ao ativar " .. weaponName)
+            return DISABLED
         end
-        return result
+    else
+        -- Desativar a arma
+        gg.clearList()
+        gg.toast(weaponName .. " desativada!")
+        return DISABLED
     end
+end
 
-    -- Processa a escolha do usuário
-    local weaponChanged = false
+-- Função do menu de armas (como fornecido)
+function weaponsMenu()
+    local choice = gg.choice({
+        weaponStatus.desert .. " DESERT",
+        weaponStatus.shotgun .. " SHOTGUN",
+        weaponStatus.mp5 .. " MP5",
+        weaponStatus.ak47 .. " AK47",
+        weaponStatus.m4 .. " M4",
+        weaponStatus.bazooka .. " BAZUCA"
+    }, nil, "Selecione uma arma:")
+    
+    if not choice then return end
     
     if choice == 1 then
-        weaponStatus.desert = safeToggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
-        weaponChanged = true
+        weaponStatus.desert = toggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
     elseif choice == 2 then
-        weaponStatus.shotgun = safeToggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
-        weaponChanged = true
+        weaponStatus.shotgun = toggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
     elseif choice == 3 then
-        weaponStatus.mp5 = safeToggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
-        weaponChanged = true
+        weaponStatus.mp5 = toggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
     elseif choice == 4 then
-        weaponStatus.ak47 = safeToggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
-        if weaponStatus.ak47 == ENABLED then
-            weaponStatus.m4 = DISABLED
-            gg.toast("AK47 ativado - M4 desativado automaticamente")
-        end
-        weaponChanged = true
+        weaponStatus.ak47 = toggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
+        weaponStatus.m4 = DISABLED
     elseif choice == 5 then
-        weaponStatus.m4 = safeToggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
-        if weaponStatus.m4 == ENABLED then
-            weaponStatus.ak47 = DISABLED
-            gg.toast("M4 ativado - AK47 desativado automaticamente")
-        end
-        weaponChanged = true
+        weaponStatus.m4 = toggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
+        weaponStatus.ak47 = DISABLED
     elseif choice == 6 then
-        gg.alert("🚧 Bazuca em desenvolvimento! 🚧\nEsta arma estará disponível na próxima atualização")
+        gg.toast("Em breve...")
     end
-
-    -- Atualiza visualização se alguma arma foi modificada
-    if weaponChanged then
-        gg.toast("Status das armas atualizado!")
-        -- Mostra menu novamente após alteração
-        return weaponsMenu()
-    end
-
-    return true
 end
 
--- Exemplo de como chamar a função com tratamento de erro
-local function safeWeaponsMenu()
-    local status, err = pcall(weaponsMenu)
-    if not status then
-        gg.alert("ERRO CRÍTICO no menu de armas:\n" .. tostring(err))
-        return false
-    end
-    return true
-end
-
--- Chamada segura do menu
-safeWeaponsMenu()
-
--- Chamada segura da função principal
-local status, result = pcall(teleportPlayerOn)
-if not status then
-    gg.alert("Erro crítico no script:\n" .. tostring(result))
-end
 
 -- Aim Kill Carro
 function aimkillcarro()
