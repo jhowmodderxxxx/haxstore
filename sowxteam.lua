@@ -223,7 +223,14 @@ end
 
 
 function teleportPlayerOn()
-    local idJogador = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
+    -- Verificar se o jogo está aberto
+    if not gg.isVisible() then
+        gg.toast("Erro: Jogo não detectado")
+        return
+    end
+
+    -- Solicitar ID do jogador com validação
+    local idJogador = gg.prompt({"Digite o ID do jogador (0-99999):"}, {""}, {"number"})
     
     if not idJogador or not idJogador[1] then
         gg.toast("Teleporte cancelado")
@@ -231,45 +238,77 @@ function teleportPlayerOn()
     end
     
     idJogador = tonumber(idJogador[1])
-    
-    -- Buscar coordenadas do jogador alvo
-    gg.clearResults()
-    gg.searchNumber(idJogador, gg.TYPE_DWORD)
-    local playerResults = gg.getResults(100)
-    
-    if #playerResults == 0 then
-        gg.alert("Jogador não encontrado!")
+    if not idJogador or idJogador < 0 or idJogador > 99999 then
+        gg.alert("ID inválido! Use números entre 0 e 99999")
         return
     end
+
+    -- Configurar para busca segura
+    gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)
+    gg.clearResults()
+
+    -- Buscar ID do jogador com limite de resultados
+    local success, err = pcall(function()
+        gg.searchNumber(idJogador, gg.TYPE_DWORD)
+    end)
     
-    -- Encontrar e aplicar coordenadas
+    if not success then
+        gg.alert("Erro na busca: "..err)
+        return
+    end
+
+    local playerResults = gg.getResults(50)  -- Limitar a 50 resultados
+    if #playerResults == 0 then
+        gg.alert("Jogador com ID "..idJogador.." não encontrado!")
+        return
+    end
+
+    -- Procurar coordenadas válidas
+    local found = false
     for i, v in ipairs(playerResults) do
-        local y = gg.getValues({{address = v.address - 0x60, flags = gg.TYPE_FLOAT}})[1].value
-        local x = gg.getValues({{address = v.address - 0x5C, flags = gg.TYPE_FLOAT}})[1].value
-        local z = gg.getValues({{address = v.address - 0x58, flags = gg.TYPE_FLOAT}})[1].value
-        
-        if y and x and z then
-            -- Buscar pointer do jogador
-            gg.clearResults()
-            gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-            local pointer = gg.getResults(1)
+        -- Verificar endereços válidos antes de acessar
+        if v.address > 0x10000 then  -- Endereço mínimo válido
+            local success, yVal = pcall(gg.getValues, {{address = v.address - 0x60, flags = gg.TYPE_FLOAT}})
+            local success2, xVal = pcall(gg.getValues, {{address = v.address - 0x5C, flags = gg.TYPE_FLOAT}})
+            local success3, zVal = pcall(gg.getValues, {{address = v.address - 0x58, flags = gg.TYPE_FLOAT}})
             
-            if #pointer > 0 then
-                local base = pointer[1].address
-                gg.setValues({
-                    {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
-                    {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
-                    {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
-                })
-                gg.toast("🟢Teleportado para ID: "..idJogador.."🟢")
-                return
+            if success and success2 and success3 then
+                local y = yVal[1].value
+                local x = xVal[1].value
+                local z = zVal[1].value
+
+                -- Verificar se são coordenadas válidas (valores razoáveis para o jogo)
+                if math.abs(y) < 10000 and math.abs(x) < 10000 and z > -100 and z < 1000 then
+                    -- Buscar pointer do jogador local com proteção
+                    gg.clearResults()
+                    local success4 = pcall(function()
+                        gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+                    end)
+                    
+                    if success4 then
+                        local pointer = gg.getResults(1)
+                        if #pointer > 0 and pointer[1].address > 0x10000 then
+                            local base = pointer[1].address
+                            gg.setValues({
+                                {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
+                                {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
+                                {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
+                            })
+                            gg.toast("🟢 Teleportado para ID: "..idJogador.." 🟢")
+                            found = true
+                            break
+                        end
+                    end
+                end
             end
         end
     end
-    
-    gg.alert("Falha ao teleportar!")
-end
 
+    gg.clearResults()
+    if not found then
+        gg.alert("Falha ao encontrar coordenadas válidas para o jogador")
+    end
+end
 
 -- Aim Kill Carro
 function aimkillcarro()
