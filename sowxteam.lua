@@ -71,6 +71,16 @@ elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
     expirationMinute = 10
     usuario = loginInfo[1]
 
+
+elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
+    expirationYear = 2025
+    expirationMonth = 4
+    expirationDay = 2
+    expirationHour = 8
+    expirationMinute = 10
+    usuario = loginInfo[1]
+
+
 elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
     expirationYear = 2026
     expirationMonth = 5
@@ -104,7 +114,7 @@ else
 end
 
 
-gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n\n Auto farm de 1 segundo para 0,4")
+gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n Auto farm de 1 segundo para 0,5 (foi para 0,5 pq estou tomando kick dps de um tempo com 0,4)")
 
 
 versao = "SCRIPT SOWxTEAM V3 PREMIUM"
@@ -1011,8 +1021,8 @@ function construtorcivil()
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-            -- Adicionar um delay de 4 segundos
-            gg.sleep(400)
+       
+            gg.sleep(500)
         end
         gg.toast("Farm BySOWxTEAM")
     end
