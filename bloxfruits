@@ -7,28 +7,6 @@ local DISABLED = "❌ "
 local BASE_ADDRESS = nil -- Should be defined elsewhere
 
 
-
--- API Request Function
-
-function makeRequest(url, headers, body)
-
-    local response = gg.makeRequest(url, headers, body)
-
-    if not response then
-
-        gg.alert("Houve um erro. Por favor contate o desenvolvedor.")
-
-        os.exit()
-
-    end
-
-    return response
-
-end
-
-
-
-
 -- Weapon Functions
 
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
