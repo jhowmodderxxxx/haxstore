@@ -104,15 +104,15 @@ else
 end
 
 
-gg.alert("VERSAO V2 CORRIGIDA \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado")
+gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n\n Auto farm de 1 segundo para 0,4")
 
 
-versao = "SCRIPT SOWxTEAM V2 PREMIUM"
+versao = "SCRIPT SOWxTEAM V3 PREMIUM"
 
 
 function menufarm()
     local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V2 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        "🎇SCRIPT SOWxTEAM V3 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
         usuario,expirationDay, expirationMonth, expirationYear, expirationHour, expirationMinute 
     )
 
@@ -1012,7 +1012,7 @@ function construtorcivil()
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
             -- Adicionar um delay de 4 segundos
-            gg.sleep(1000)
+            gg.sleep(400)
         end
         gg.toast("Farm BySOWxTEAM")
     end
