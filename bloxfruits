@@ -7,6 +7,75 @@ local DISABLED = "❌ "
 local BASE_ADDRESS = nil -- Should be defined elsewhere
 
 
+
+-- API Request Function
+
+function makeRequest(url, headers, body)
+
+    local response = gg.makeRequest(url, headers, body)
+
+    if not response then
+
+        gg.alert("Houve um erro. Por favor contate o desenvolvedor.")
+
+        os.exit()
+
+    end
+
+    return response
+
+end
+
+
+
+-- Update Function
+
+function checkForUpdates()
+
+    local updateUrl = "https://example.com/update" -- Replace with actual URL
+
+    local response = makeRequest(updateUrl, {
+
+        ["Content-type"] = "application/json"
+
+    }, "{ \"type\":2 }")
+
+    
+
+    if not response.content then
+
+        gg.alert("Erro ao baixar a atualização.\nContate o desenvolvedor imediatamente!")
+
+        os.exit()
+
+    end
+
+    
+
+    local file = io.open("menu.lua", "w")
+
+    if file then
+
+        file:write(response.content)
+
+        file:close()
+
+        gg.alert("Atualização concluída.\nPor favor reinicie o menu!")
+
+        os.exit()
+
+    else
+
+        gg.alert("Erro ao instalar a atualização.\nContate o desenvolvedor imedlementamente!")
+
+        os.exit()
+
+    end
+
+end
+
+
+
 -- Weapon Functions
 
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
@@ -507,15 +576,60 @@ end
 
 
 
+-- Initialization
 
-function exit()
-    os.exit(gg.alert("Script finalizada com sucesso!"))
-end
+function init()
 
-while true do
-    if gg.isVisible() then
-        gg.setVisible(false)
-        gg.toast("SOWxTEAM-")
-        menufarm()
+    gg.setVisible(false)
+
+    isAutoFarming = false
+
+    combatMode = false
+
+    
+
+    -- Find base address
+
+    gg.searchNumber("7.5F;0.10000000149", gg.TYPE_FLOAT)
+
+    local results = gg.getResults(1)
+
+    if #results > 0 then
+
+        BASE_ADDRESS = results[1].address - 32
+
+        gg.clearResults()
+
+        mainMenu()
+
+    else
+
+        gg.alert("Failed to find base address!")
+
+        os.exit()
+
     end
+
+    
+
+    while true do
+
+        if gg.isVisible() then
+
+            gg.setVisible(false)
+
+            mainMenu()
+
+        end
+
+        gg.sleep(50)
+
+    end
+
 end
+
+
+
+-- Start the script
+
+init()
