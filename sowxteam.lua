@@ -229,6 +229,15 @@ function teleportPlayerOn()
         return
     end
     
+    -- Obtém informações do processo atual do GG
+    local info = gg.getTargetInfo()
+    if not info then
+        gg.alert("Nenhum processo selecionado no Game Guardian!")
+        return
+    end
+    
+    gg.toast("Processo atual: "..(info.name or "Desconhecido"))
+    
     -- Pede o ID do jogador
     local input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
     
@@ -253,55 +262,65 @@ function teleportPlayerOn()
         return
     end
     
-    -- Tentar encontrar o jogador local (pelo pointer)
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local pointerResults = gg.getResults(1)
+    -- Tentar encontrar o jogador local (com proteção contra crash)
+    local pointerResults
+    for _, value in ipairs({999.765625, 1000.0, 999.0, 999.5}) do
+        gg.clearResults()
+        gg.searchNumber(value, gg.TYPE_FLOAT)
+        pointerResults = gg.getResults(1)
+        if pointerResults and #pointerResults > 0 then
+            break
+        end
+    end
     
     if not pointerResults or #pointerResults == 0 then
-        gg.alert("Pointer do jogador local não encontrado!")
+        gg.alert("Não foi possível encontrar o pointer do jogador local!")
         return
     end
     
     local base = pointerResults[1].address
     local teleported = false
     
-    -- Procurar pelas coordenadas do alvo
+    -- Procurar pelas coordenadas do alvo com verificações de segurança
     for i, v in ipairs(playerResults) do
-        local yAddr = v.address - 0x60
-        local xAddr = v.address - 0x5C
-        local zAddr = v.address - 0x58
-        
-        -- Verificar se os endereços são válidos
-        if yAddr > 0 and xAddr > 0 and zAddr > 0 then
-            local coords = gg.getValues({
-                {address = yAddr, flags = gg.TYPE_FLOAT},
-                {address = xAddr, flags = gg.TYPE_FLOAT},
-                {address = zAddr, flags = gg.TYPE_FLOAT}
-            })
+        if v.address and v.address > 0 then
+            local yAddr = v.address - 0x60
+            local xAddr = v.address - 0x5C
+            local zAddr = v.address - 0x58
             
-            if coords and #coords == 3 then
-                -- Aplicar coordenadas ao jogador local
-                gg.setValues({
-                    {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
-                    {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
-                    {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
+            -- Verificação adicional de endereços
+            if yAddr > 0 and xAddr > 0 and zAddr > 0 then
+                local success, coords = pcall(gg.getValues, {
+                    {address = yAddr, flags = gg.TYPE_FLOAT},
+                    {address = xAddr, flags = gg.TYPE_FLOAT},
+                    {address = zAddr, flags = gg.TYPE_FLOAT}
                 })
                 
-                gg.toast("🟢 Teleportado para ID: "..idJogador.." 🟢")
-                teleported = true
-                break
+                if success and coords and #coords == 3 then
+                    -- Tentativa segura de escrita
+                    local successWrite = pcall(gg.setValues, {
+                        {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
+                        {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
+                        {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
+                    })
+                    
+                    if successWrite then
+                        gg.toast(string.format("🟢 Teleportado para ID: %d 🟢\nJogo: %s", idJogador, info.name or "Desconhecido"))
+                        teleported = true
+                        break
+                    end
+                end
             end
         end
     end
     
     if not teleported then
-        gg.alert("Falha ao teleportar! Coordenadas inválidas.")
+        gg.alert(string.format("Falha ao teleportar!\nJogo: %s", info.name or "Desconhecido"))
     end
     
-    -- Limpar resultados para evitar problemas
+    -- Limpar resultados
     gg.clearResults()
-end
+ends
 
 -- Aim Kill Carro
 function aimkillcarro()
