@@ -320,7 +320,7 @@ function teleportPlayerOn()
     
     -- Limpar resultados
     gg.clearResults()
-ends
+end
 
 -- Aim Kill Carro
 function aimkillcarro()
