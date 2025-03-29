@@ -223,103 +223,139 @@ end
 
 
 function teleportPlayerOn()
-    -- Verifica se o GG está aberto
-    if not gg then
-        gg.alert("Game Guardian não está disponível!")
-        return
+    -- Verificação inicial do ambiente
+    if not gg or not gg.alert or not gg.prompt then
+        print("Erro: Game Guardian não está disponível ou API incompleta")
+        return false
     end
+
+    -- Obtém informações do processo com tratamento de erro
+    local targetInfo = {}
+    local success, err = pcall(function()
+        targetInfo = gg.getTargetInfo() or {}
+    end)
     
-    -- Obtém informações do processo atual do GG
-    local info = gg.getTargetInfo()
-    if not info then
-        gg.alert("Nenhum processo selecionado no Game Guardian!")
-        return
+    if not success then
+        gg.alert("Erro ao obter informações do processo: " .. tostring(err))
+        return false
     end
+
+    gg.toast("Processo atual: " .. (targetInfo.name or "Desconhecido"))
+
+    -- Entrada do ID do jogador com validação
+    local input
+    success, err = pcall(function()
+        input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"}) or {}
+    end)
     
-    gg.toast("Processo atual: "..(info.name or "Desconhecido"))
-    
-    -- Pede o ID do jogador
-    local input = gg.prompt({"Digite o ID do jogador:"}, {""}, {"number"})
-    
-    if not input or not input[1] then
-        gg.toast("Teleporte cancelado")
-        return
+    if not success or not input[1] then
+        gg.toast("Teleporte cancelado ou erro na entrada")
+        return false
     end
-    
-    local idJogador = tonumber(input[1])
-    if not idJogador then
-        gg.toast("ID inválido!")
-        return
+
+    local playerId = tonumber(input[1])
+    if not playerId then
+        gg.alert("ID inválido! Digite apenas números.")
+        return false
     end
-    
-    -- Buscar coordenadas do jogador alvo
-    gg.clearResults()
-    gg.searchNumber(idJogador, gg.TYPE_DWORD)
-    
-    local playerResults = gg.getResults(100)
-    if not playerResults or #playerResults == 0 then
-        gg.alert("Jogador não encontrado!")
-        return
+
+    -- Função auxiliar para busca segura
+    local function safeSearch(value, type, maxResults)
+        local results = {}
+        success, err = pcall(function()
+            gg.clearResults()
+            gg.searchNumber(value, type)
+            results = gg.getResults(maxResults or 100) or {}
+        end)
+        return success, results, err
     end
-    
-    -- Tentar encontrar o jogador local (com proteção contra crash)
-    local pointerResults
-    for _, value in ipairs({999.765625, 1000.0, 999.0, 999.5}) do
-        gg.clearResults()
-        gg.searchNumber(value, gg.TYPE_FLOAT)
-        pointerResults = gg.getResults(1)
-        if pointerResults and #pointerResults > 0 then
+
+    -- Busca pelo ID do jogador
+    local found, playerResults, searchErr = safeSearch(playerId, gg.TYPE_DWORD)
+    if not found or #playerResults == 0 then
+        gg.alert("Jogador não encontrado!\nErro: " .. tostring(searchErr))
+        return false
+    end
+
+    -- Busca pelo ponteiro do jogador local com múltiplos padrões
+    local pointerFound = false
+    local pointerAddress = 0
+    local pointerPatterns = {999.765625, 1000.0, 999.0, 998.5, 1001.0}
+
+    for _, pattern in ipairs(pointerPatterns) do
+        found, localPointer, _ = safeSearch(pattern, gg.TYPE_FLOAT, 1)
+        if found and #localPointer > 0 then
+            pointerAddress = localPointer[1].address
+            pointerFound = true
             break
         end
     end
-    
-    if not pointerResults or #pointerResults == 0 then
-        gg.alert("Não foi possível encontrar o pointer do jogador local!")
-        return
+
+    if not pointerFound then
+        gg.alert("Pointer do jogador local não encontrado!")
+        return false
     end
-    
-    local base = pointerResults[1].address
-    local teleported = false
-    
-    -- Procurar pelas coordenadas do alvo com verificações de segurança
-    for i, v in ipairs(playerResults) do
-        if v.address and v.address > 0 then
-            local yAddr = v.address - 0x60
-            local xAddr = v.address - 0x5C
-            local zAddr = v.address - 0x58
+
+    -- Coleta coordenadas do alvo
+    local function getCoordinates(targetAddr)
+        local offsets = {
+            y = {offset = -0x60, type = gg.TYPE_FLOAT},
+            x = {offset = -0x5C, type = gg.TYPE_FLOAT},
+            z = {offset = -0x58, type = gg.TYPE_FLOAT}
+        }
+        
+        local coords = {}
+        for coord, info in pairs(offsets) do
+            local addr = targetAddr + info.offset
+            local values = {}
+            success, err = pcall(function()
+                values = gg.getValues({{address = addr, flags = info.type}}) or {}
+            end)
             
-            -- Verificação adicional de endereços
-            if yAddr > 0 and xAddr > 0 and zAddr > 0 then
-                local success, coords = pcall(gg.getValues, {
-                    {address = yAddr, flags = gg.TYPE_FLOAT},
-                    {address = xAddr, flags = gg.TYPE_FLOAT},
-                    {address = zAddr, flags = gg.TYPE_FLOAT}
+            if not success or #values == 0 then
+                return nil, "Erro ao ler coordenada "..coord..": "..tostring(err)
+            end
+            coords[coord] = values[1].value
+        end
+        return coords
+    end
+
+    -- Processa cada resultado encontrado
+    for _, result in ipairs(playerResults) do
+        local coords, err = getCoordinates(result.address)
+        if coords then
+            -- Aplica as coordenadas ao jogador local
+            success, err = pcall(function()
+                gg.setValues({
+                    {address = pointerAddress + 0x60, flags = gg.TYPE_FLOAT, value = coords.y},
+                    {address = pointerAddress + 0x64, flags = gg.TYPE_FLOAT, value = coords.x},
+                    {address = pointerAddress + 0x68, flags = gg.TYPE_FLOAT, value = coords.z}
                 })
-                
-                if success and coords and #coords == 3 then
-                    -- Tentativa segura de escrita
-                    local successWrite = pcall(gg.setValues, {
-                        {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
-                        {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
-                        {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
-                    })
-                    
-                    if successWrite then
-                        gg.toast(string.format("🟢 Teleportado para ID: %d 🟢\nJogo: %s", idJogador, info.name or "Desconhecido"))
-                        teleported = true
-                        break
-                    end
-                end
+            end)
+            
+            if success then
+                gg.toast(string.format(
+                    "✅ Teleportado para ID: %d\nX: %.2f Y: %.2f Z: %.2f\nJogo: %s",
+                    playerId, coords.x, coords.y, coords.z,
+                    targetInfo.name or "Desconhecido"
+                ))
+                gg.clearResults()
+                return true
+            else
+                gg.toast("Erro ao aplicar teleporte: "..tostring(err))
             end
         end
     end
-    
-    if not teleported then
-        gg.alert(string.format("Falha ao teleportar!\nJogo: %s", info.name or "Desconhecido"))
-    end
-    
-    -- Limpar resultados
+
+    gg.alert("Falha ao teleportar: não foi possível obter coordenadas válidas")
     gg.clearResults()
+    return false
+end
+
+-- Chamada segura da função principal
+local status, result = pcall(teleportPlayerOn)
+if not status then
+    gg.alert("Erro crítico no script:\n" .. tostring(result))
 end
 
 -- Aim Kill Carro
