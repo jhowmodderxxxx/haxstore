@@ -241,7 +241,7 @@ function teleportParaJogador()
     gg.searchNumber("999.765625", gg.TYPE_FLOAT)
     local results = gg.getResults(1)
     
-    if #results == 0 then
+    if results == 0 then
         gg.alert("Pointer não encontrado!")
         return
     end
