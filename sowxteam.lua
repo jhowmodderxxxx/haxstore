@@ -218,9 +218,8 @@ function outros()
     if xoutros == 2 then aimkillcarro() end
     if xoutros  == 3 then wallhack() end
     if xoutros == 4 then esticada() end
-    if xoutros == 5 then teleportParaJogador() end
-    if xoutros == 6 then repairVehicle() end
-    if xoutros == 7 then teleport() end
+    if xoutros == 5 then repairVehicle() end
+    if xoutros == 6 then teleport() end
 end
 
 
