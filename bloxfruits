@@ -227,7 +227,7 @@ end
 -- Adicionando as definições necessárias para o menu de armas
 local DISABLED = "❌"
 local ENABLED = "✅"
-local BASE_ADDRESS = 0 -- Você precisará definir o endereço base correto para o seu jogo
+local BASE_ADDRESS = nil -- Será determinado dinamicamente
 
 local weaponStatus = {
     desert = DISABLED,
@@ -238,8 +238,28 @@ local weaponStatus = {
     bazooka = DISABLED
 }
 
--- Weapon Functions (como você forneceu)
+-- Função para encontrar o endereço base
+function findBaseAddress()
+    gg.clearResults()
+    gg.searchNumber("1D;1D;1D;1D::9", gg.TYPE_DWORD)
+    gg.refineNumber("1", gg.TYPE_DWORD)
+    local results = gg.getResults(1)
+    if #results > 0 then
+        BASE_ADDRESS = results[1].address
+        gg.toast("Endereço base encontrado: " .. string.format("%X", BASE_ADDRESS))
+    else
+        gg.alert("Não foi possível encontrar o endereço base!")
+        os.exit()
+    end
+    gg.clearResults()
+end
+
+-- Weapon Functions atualizadas
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
+    if BASE_ADDRESS == nil then
+        findBaseAddress()
+    end
+    
     if statusVar == ENABLED then
         addWeaponItems(weaponName, 0, 0, 0, addressOffset)
         return DISABLED
@@ -250,36 +270,40 @@ function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset
 end
 
 function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
-    gg.addListItems({
+    local items = {
         {
             address = BASE_ADDRESS + baseOffset,
             flags = gg.TYPE_DWORD,
             value = tostring(idValue),
             name = weaponName .. " ID",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
-        },
-        {
+            freeze = true
+        }
+    }
+    
+    -- Apenas adiciona munição e slots se a arma estiver sendo ativada
+    if idValue ~= 0 then
+        table.insert(items, {
             address = BASE_ADDRESS + baseOffset + 8,
             flags = gg.TYPE_DWORD,
             value = tostring(firesValue),
             name = weaponName .. " FIRES COUNT",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
-        },
-        {
+            freeze = true
+        })
+        
+        table.insert(items, {
             address = BASE_ADDRESS + baseOffset + 12,
             flags = gg.TYPE_DWORD,
             value = tostring(slotsValue),
             name = weaponName .. " SLOTS COUNT",
-            freeze = true,
-            freezetype = gg.FREEZE_NORMAL
-        }
-    })
+            freeze = true
+        })
+    end
+    
+    gg.addListItems(items)
     gg.setVisible(false)
 end
 
--- Weapons Menu atualizado para usar o novo sistema
+-- Weapons Menu atualizado
 function weaponsMenu()
     local choice = gg.choice({
         weaponStatus.desert .. " DESERT",
@@ -308,7 +332,6 @@ function weaponsMenu()
         gg.toast("Em breve...")
     end
 end
-
 
 -- Aim Kill Carro
 function aimkillcarro()
