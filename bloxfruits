@@ -530,6 +530,10 @@ end
 
 
 
+function exit()
+    os.exit(gg.alert("Script finalizada com sucesso!"))
+end
+
 while true do
     if gg.isVisible() then
         gg.setVisible(false)
