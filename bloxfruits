@@ -27,6 +27,8 @@ function makeRequest(url, headers, body)
 end
 
 
+
+
 -- Weapon Functions
 
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
