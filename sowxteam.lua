@@ -225,66 +225,6 @@ end
 
 
 
-function teleportParaJogador()
-    -- Solicitar o ID do jogador
-    local idJogador = gg.prompt({"Digite o ID do jogador para teleportar:"}, {""}, {"number"})
-    
-    if not idJogador or not idJogador[1] then
-        gg.toast("Teleporte cancelado")
-        return
-    end
-    
-    idJogador = tonumber(idJogador[1])
-    
-    -- Primeiro, encontrar o endereço base das coordenadas do jogador
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-    
-    if results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
-    end
-    
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    -- Agora, buscar as coordenadas do jogador alvo
-    gg.clearResults()
-    -- Primeiro buscamos o ID do jogador
-    gg.searchNumber(idJogador, gg.TYPE_DWORD)
-    local playerResults = gg.getResults(100)
-    
-    if playerResults == 0 then
-        gg.alert("Jogador com ID "..idJogador.." não encontrado!")
-        return
-    end
-    
-    -- Agora encontramos as coordenadas relativas ao ID
-    for i, v in ipairs(playerResults) do
-        -- Verificamos se há valores de coordenadas próximos
-        local y = gg.getValues({{address = v.address - 0x60, flags = gg.TYPE_FLOAT}})[1].value
-        local x = gg.getValues({{address = v.address - 0x5C, flags = gg.TYPE_FLOAT}})[1].value
-        local z = gg.getValues({{address = v.address - 0x58, flags = gg.TYPE_FLOAT}})[1].value
-        
-        -- Se encontrarmos coordenadas válidas
-        if y and x and z then
-            -- Teleportar para as coordenadas do jogador
-            gg.setValues({
-                {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-                {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-                {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-            })
-            gg.toast("Teleportado para o jogador ID: "..idJogador)
-            return
-        end
-    end
-    
-    gg.alert("Não foi possível encontrar as coordenadas do jogador!")
-end
-
 function repairVehicle()
     gg.clearResults()
     gg.searchNumber("300", gg.TYPE_FLOAT)
