@@ -1,527 +1,635 @@
--- Configurações globais
-local velocidadefarm = 700
-local version = "🔥 RIO RISE V2 🔥"
-local developer = "SOWxTEAM"
-local expiration = "04-07-26"
-local titulon = "_____________________________________________\n\n 😁CRIADO POR "..developer.."😁 \n\n ⛔"..version.."⛔  \n\n _____________________________________________"
+-- Constants
 
--- Constantes para o sistema de armas
 local ENABLED = "✔️ "
+
 local DISABLED = "❌ "
-local weaponStatus = {
-    desert = DISABLED,
-    shotgun = DISABLED,
-    mp5 = DISABLED,
-    ak47 = DISABLED,
-    m4 = DISABLED,
-    bazooka = DISABLED
-}
 
--- Offsets para cada arma (ajuste conforme necessário)
-local weaponOffsets = {
-    desert = {id = 196, fires = 204, slots = 208},
-    shotgun = {id = 228, fires = 236, slots = 240},
-    mp5 = {id = 260, fires = 268, slots = 272},
-    ak47 = {id = 292, fires = 300, slots = 304},
-    m4 = {id = 292, fires = 300, slots = 304},  -- Nota: mesmo offset do AK47
-    bazooka = {id = 0, fires = 0, slots = 0}    -- Ajustar quando implementado
-}
-
--- Configurações de munição para cada arma
-local weaponAmmo = {
-    desert = {id = 24, fires = 7, slots = 35},
-    shotgun = {id = 25, fires = 1, slots = 30},
-    mp5 = {id = 29, fires = 30, slots = 60},
-    ak47 = {id = 30, fires = 30, slots = 90},
-    m4 = {id = 31, fires = 30, slots = 90},
-    bazooka = {id = 0, fires = 0, slots = 0}
-}
-
--- Mostrar banner inicial
-if gg.alert("✌️SCRIPT BY "..developer.." ✌️\n\n🔥EXPIRA "..expiration.."🔥\n\n 🇧🇷 "..version.." 🇧🇷") ~= 1 then
-    os.exit()
-end
-
-function activateWeapon(weaponName, weaponId, firesCount, slotsCount)
-    local offsets = weaponOffsets[weaponName]
-    if not offsets then return false end
-    
-    -- Primeiro desativa qualquer arma que use o mesmo offset
-    deactivateWeapon(weaponName)
-    
-    -- Ativa a nova arma
-    gg.addListItems({
-        {
-            address = offsets.id,
-            flags = gg.TYPE_DWORD,
-            value = tostring(weaponId),
-            name = weaponName:upper().." ID",
-            freeze = true
-        },
-        {
-            address = offsets.fires,
-            flags = gg.TYPE_DWORD,
-            value = tostring(firesCount),
-            name = weaponName:upper().." FIRES",
-            freeze = true
-        },
-        {
-            address = offsets.slots,
-            flags = gg.TYPE_DWORD,
-            value = tostring(slotsCount),
-            name = weaponName:upper().." SLOTS",
-            freeze = true
-        }
-    })
-    
-    weaponStatus[weaponName] = ENABLED
-    return true
-end
-
-function deactivateWeapon(weaponName)
-    local offsets = weaponOffsets[weaponName]
-    if not offsets then return false end
-    
-    gg.addListItems({
-        {
-            address = offsets.id,
-            flags = gg.TYPE_DWORD,
-            value = "0",
-            name = weaponName:upper().." ID OFF",
-            freeze = false
-        },
-        {
-            address = offsets.fires,
-            flags = gg.TYPE_DWORD,
-            value = "0",
-            name = weaponName:upper().." FIRES OFF",
-            freeze = false
-        },
-        {
-            address = offsets.slots,
-            flags = gg.TYPE_DWORD,
-            value = "0",
-            name = weaponName:upper().." SLOTS OFF",
-            freeze = false
-        }
-    })
-    
-    weaponStatus[weaponName] = DISABLED
-    return true
-end
+local BASE_ADDRESS = nil -- Should be defined elsewhere
 
 
 
+-- API Request Function
 
--- Animação de toast
-local Bar = "🔥Script Rio Rise By "..developer.."🔥"
-for i = 1, 8 do
-    gg.sleep(500)
-    Bar = Bar:gsub("", "", 1)
-    gg.toast(Bar)
-end
+function makeRequest(url, headers, body)
 
--- Funções utilitárias
-function splitCoords(coords)
-    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-    return tonumber(y), tonumber(x), tonumber(z)
-end
+    local response = gg.makeRequest(url, headers, body)
 
-function teleportPlayer(coords)
-    local y, x, z = splitCoords(coords)
-    if not y or not x or not z then
-        gg.alert("Coordenadas inválidas!")
-        return false
+    if not response then
+
+        gg.alert("Houve um erro. Por favor contate o desenvolvedor.")
+
+        os.exit()
+
     end
 
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
+    return response
+
+end
+
+
+
+-- Update Function
+
+function checkForUpdates()
+
+    local updateUrl = "https://example.com/update" -- Replace with actual URL
+
+    local response = makeRequest(updateUrl, {
+
+        ["Content-type"] = "application/json"
+
+    }, "{ \"type\":2 }")
+
     
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return false
+
+    if not response.content then
+
+        gg.alert("Erro ao baixar a atualização.\nContate o desenvolvedor imediatamente!")
+
+        os.exit()
+
     end
+
     
-    local base = results[1].address
+
+    local file = io.open("menu.lua", "w")
+
+    if file then
+
+        file:write(response.content)
+
+        file:close()
+
+        gg.alert("Atualização concluída.\nPor favor reinicie o menu!")
+
+        os.exit()
+
+    else
+
+        gg.alert("Erro ao instalar a atualização.\nContate o desenvolvedor imedlementamente!")
+
+        os.exit()
+
+    end
+
+end
+
+
+
+-- Weapon Functions
+
+function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
+
+    if statusVar == ENABLED then
+
+        addWeaponItems(weaponName, 0, 0, 0, addressOffset)
+
+        return DISABLED
+
+    else
+
+        addWeaponItems(weaponName, weaponId, ammoCount, slotsCount, addressOffset)
+
+        return ENABLED
+
+    end
+
+end
+
+
+
+function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
+
+    gg.addListItems({
+
+        {
+
+            address = BASE_ADDRESS + baseOffset,
+
+            flags = gg.TYPE_DWORD,
+
+            value = tostring(idValue),
+
+            name = weaponName .. " ID",
+
+            freeze = true,
+
+            freezetype = gg.FREEZE_NORMAL
+
+        },
+
+        {
+
+            address = BASE_ADDRESS + baseOffset + 8,
+
+            flags = gg.TYPE_DWORD,
+
+            value = tostring(firesValue),
+
+            name = weaponName .. " FIRES COUNT",
+
+            freeze = true,
+
+            freezetype = gg.FREEZE_NORMAL
+
+        },
+
+        {
+
+            address = BASE_ADDRESS + baseOffset + 12,
+
+            flags = gg.TYPE_DWORD,
+
+            value = tostring(slotsValue),
+
+            name = weaponName .. " SLOTS COUNT",
+
+            freeze = true,
+
+            freezetype = gg.FREEZE_NORMAL
+
+        }
+
+    })
+
+    gg.setVisible(false)
+
+end
+
+
+
+-- Health Functions
+
+function setHealth(value)
+
     gg.setValues({
-        {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
-        {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
-        {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
+
+        {
+
+            address = BASE_ADDRESS,
+
+            flags = gg.TYPE_FLOAT,
+
+            value = tostring(value)
+
+        }
+
     })
-    
-    gg.clearResults()
-    gg.toast("Teleportado com sucesso!")
-    return true
+
 end
 
-function autoFarm(coordsList, delay)
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
+
+
+function setArmor(value)
+
+    gg.setValues({
+
+        {
+
+            address = BASE_ADDRESS + 8,
+
+            flags = gg.TYPE_FLOAT,
+
+            value = tostring(value)
+
+        }
+
+    })
+
+end
+
+
+
+function resetHealthAndArmor()
+
+    setHealth(200.0)
+
+    setArmor(100.0)
+
+end
+
+
+
+function healthMenu()
+
+    local choice = gg.choice({
+
+        "COMBATE MODE",
+
+        "REGENERAR",
+
+        "200 VIDA",
+
+        "150 VIDA",
+
+        "100 VIDA",
+
+        "20 VIDA",
+
+        "0 VIDA"
+
+    })
+
     
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
-        return
+
+    if choice == 1 then
+
+        combatMode = true
+
+        resetHealthAndArmor()
+
+    elseif choice == 2 then
+
+        resetHealthAndArmor()
+
+    elseif choice == 3 then
+
+        setHealth(200.0)
+
+    elseif choice == 4 then
+
+        setHealth(150.0)
+
+    elseif choice == 5 then
+
+        setHealth(100.0)
+
+    elseif choice == 6 then
+
+        setHealth(20.0)
+
+    elseif choice == 7 then
+
+        setHealth(0.0)
+
     end
+
+end
+
+
+
+function armorMenu()
+
+    local choice = gg.choice({
+
+        "150 COLETE",
+
+        "100 COLETE",
+
+        "0 COLETE"
+
+    }, nil, "Selecione uma opção:")
+
     
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-    
-    while true do
-        for _, coords in ipairs(coordsList) do
-            local y, x, z = splitCoords(coords)
-            if y and x and z then
-                gg.setValues({
-                    {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-                    {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-                    {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-                })
-                gg.sleep(delay or 7000)
-            end
-        end
-        gg.toast("Farm By "..developer)
+
+    if choice == 1 then
+
+        setArmor(150.0)
+
+    elseif choice == 2 then
+
+        setArmor(100.0)
+
+    elseif choice == 3 then
+
+        setArmor(0.0)
+
     end
+
 end
 
--- Menus principais
-function mainMenu()
-    local menu = gg.choice({
-        "HAX STORE- FUNCTION ▶",
-        "🎮 Fechar Script 🎮"
-    }, nil, titulon)
 
-    if menu == 1 then teleportMenu() end
-    if menu == 2 then exit() end
+
+-- Teleport Functions
+
+function setCoordinates(x, y, z, address, flags)
+
+    gg.setValues({
+
+        {address = address + 96, flags = flags, value = x},
+
+        {address = address + 100, flags = flags, value = y},
+
+        {address = address + 104, flags = flags, value = z}
+
+    })
+
+    gg.clearResults()
+
 end
+
+
+
+function stopAutoFarm()
+
+    local choice = gg.choice({
+
+        "PARAR AUTO FARM",
+
+        "CANCELAR"
+
+    }, nil, "Selecione uma opção:")
+
+    
+
+    if choice == 1 then
+
+        isAutoFarming = false
+
+        showTeleportMenu()
+
+    end
+
+end
+
+
 
 function teleportMenu()
+
     local choice = gg.choice({
-        "↪"..developer.." TEAM AUTO FARM",
-        "↪"..developer.." TEAM TELEPORTES",
-        "↪"..developer.." TEAM OUTROS",
-        "↩️Voltar↩️"
-    }, nil, titulon)
 
-    if choice == 1 then farmsMenu() end
-    if choice == 2 then teleportesMenu() end
-    if choice == 3 then outrosMenu() end
-    if choice == 4 then mainMenu() end
-end
+        "FARM OBRA (REDUZIDO)",
 
-function teleportesMenu()
-    local choice = gg.choice({
-        "🧑‍💼EMPREGOS PARA INICIANTES🧑‍💼",
-        "🌎OUTROS LOCAIS🌎",
-        "↩️Voltar↩️"
-    }, nil, titulon)
+        "OBRA",
 
-    if choice == 1 then empregosIniciaisMenu() end
-    if choice == 2 then locaisPublicosMenu() end
-    if choice == 3 then teleportMenu() end
-end
+        "MONTAGEM DE PNEUS",
 
--- Menus de teleportes
-function locaisPublicosMenu()
-    local locais = {
-        "🏢PREFEITURA🏢",
-        "🚙ESCOLA DE CONDUÇÃO🚙",
-        "🪒MERCADO DE ACESSORIOS🪒",
-        "🛕IGREJA🛕",
-        "💱CONCESSIONARIA ECONOMICA💱",
-        "💲CONCESSIONARIA CLASSE MEDIA💲",
-        "💲CONCESSIONARIA PREMIUM💲",
-        "🛵LOJA DE MOTOS/BICICLETA🚲",
-        "🛠CENTRO DE SERVIÇOS🛠",
-        "🔍CENTRO DE ESTILIZAÇÃO🔍",
-        "🎌CENTRO DE MONTAGENS DE PNEUS🎌",
-        "💎CASA DE LEILÕES💎",
-        "🚗MERCADO DE VEICULOS🚗",
-        "🔫LOJA DE ARMAS🔫",
-        "↩️ Voltar ↩️"
-    }
+        "MONTAGEM DE PNEUS (SAIR)",
 
-    local coordenadas = {
-        "624.03594970703;-1836.7177734375;1.90315747261",      -- Prefeitura
-        "-1276.47875976562;-2579.33666992188;32.66515731812",  -- Escola de condução
-        "-1124.16625976562;-1727.64794921875;54.33406066895",  -- Mercado de acessórios
-        "-1382.31628417969;-2776.79150390625;32.67558288574",  -- Igreja
-        "-1325.89147949219;-2727.76196289062;32.67558288574",  -- Concessionaria economica
-        "738.46606445312;-1053.29809570312;2.43835258484",     -- Concessionaria classe media
-        "551.91986083984;-1967.55102539062;1.94436502457",     -- Concessionaria premium
-        "1073.56848144531;-1908.31091308594;1.71507740021",    -- Loja de motos/bicicleta
-        "738.68981933594;-1049.78930664062;2.43835258484",     -- Centro de serviços
-        "1040.67517089844;-1479.70666503906;1.74624991417",    -- Centro de estilização
-        "966.01129150391;-1841.40051269531;2.00436973572",     -- Centro de montagens de pneus
-        "708.20947265625;-1461.50708007812;3.03739500046",     -- Casa de leilões
-        "-1496.09301757812;-1320.88623046875;54.33312606812",  -- Mercado de veiculos
-        "↩️ Voltar ↩️"
-    }
+        "CONCESSIONÁRIA ECONÔMICA",
 
-    local choice = gg.choice(locais, nil, titulon)
+        "CONCESSIONÁRIA MÉDIA",
+
+        "IGREJA"
+
+    }, nil, "Selecione uma opção:")
+
     
-    if choice and choice <= #coordenadas then
-        teleportPlayer(coordenadas[choice])
-    elseif choice == #locais then
-        teleportesMenu()
-    end
-end
 
-function empregosIniciaisMenu()
-    local empregos = {
-        "🏗️OBRA🏗️ (CONTRUÇÃO)",
-        "⛏️MINA⛏️",
-        "🚜FAZENDA🚜",
-        "↩️ Voltar ↩️"
-    }
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
 
-    local coordenadas = {
-        "-365.93130493164;-2170.88891601562;32.85216140747",  -- Obra
-        "-91.88101959229;-1574.79077148438;63.44041442871",   -- Mina
-        "-60.00552368164;83.19628143311;3.1171875",           -- Fazenda
-        "↩️ Voltar ↩️"
-    }
+    local results = gg.getResults(1)
 
-    local choice = gg.choice(empregos, nil, titulon)
     
-    if choice and choice <= #coordenadas then
-        teleportPlayer(coordenadas[choice])
-    elseif choice == #empregos then
-        teleportesMenu()
-    end
-end
 
--- Menu de farms automáticos
-function farmsMenu()
-    local choice = gg.choice({
-        "🟢TRABALHO NA MINERADORA(EM TESTE)🟢",
-        "🟢TRABALHO NA OBRA🟢",
-        "↩️Voltar↩️"
-    }, nil, titulon)
+    if #results == 0 then return end
 
-    if choice == 1 then mineradoraMenu() end
-    if choice == 2 then obraMenu() end
-    if choice == 3 then teleportMenu() end
-end
-
-function mineradoraMenu()
-    local choice = gg.choice({
-        "🟢AUTO FARM MINERAÇÃO🟢",
-        "↩️Voltar↩️"
-    }, nil, "🏆AUTO FARM MINERAÇÃO🏆")
-
-    if choice == 1 then 
-        local pontos = {
-            "831.698303;43.119785;1014.812012",  -- Checkpoint 1
-            "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 1
-            "808.595154;21.552530;1009.467468",  -- Checkpoint 2
-            "833.932190;22.043259;1012.000000",  -- Entregar Carrinho 2
-            "858.003296;19.574184;1012.041199",  -- Checkpoint 3
-            "833.932190;22.043259;1012.000000"   -- Entregar Carrinho 3
-        }
-        autoFarm(pontos, velocidadefarm)
-    elseif choice == 2 then 
-        farmsMenu()
-    end
-end
-
-function obraMenu()
-    local choice = gg.choice({
-        "🟢AUTO FARM CONSTRUÇÃO🟢",
-        "↩️Voltar↩️"
-    }, nil, "🏆AUTO FARM CONSTRUÇÃO🏆")
-
-    if choice == 1 then 
-        local pontos = {
-            "-305.936035;-2264.125000;33.306194",
-            "-320.685028;-2256.816650;38.829632",
-            "-289.364014;-2230.501465;38.829632"
-        }
-        autoFarm(pontos, velocidadefarm)
-    elseif choice == 2 then 
-        farmsMenu()
-    end
-end
-
--- Atualize o menu outros para incluir as novas funções
-function outrosMenu()
-    local choice = gg.choice({
-        "🔫Munição infinita (PRECISA SER LV2)🔫",
-        "🔥HOMEM B0MBA (MOTO/CARRO)🔥",
-        "🏠WALL HACK PAREDES🏠",
-        "🔫MENU DE ARMAS🔫",
-        "🔧REPARAR VEÍCULO🔧",
-        "↩️Voltar↩️"
-    }, nil, titulon)
-
-    if choice == 1 then cheatArmas() end
-    if choice == 2 then homemBombaMenu() end
-    if choice == 3 then wallHackMenu() end
-    if choice == 4 then weaponsMenu() end
-    if choice == 5 then repairVehicle() end
-    if choice == 6 then teleportMenu() end
-end
-
-
-function homemBombaMenu()
-    local choice = gg.choice({"🟢ON🟢", "⚪OFF⚪", "◀️Voltar"}, nil, version)
     
-    if choice == 1 then homemBombaOn() end
-    if choice == 2 then homemBombaOff() end
-    if choice == 3 then outrosMenu() end
-end
 
-function homemBombaOn()
-    gg.setRanges(gg.REGION_C_ALLOC)
-    gg.searchNumber("1000", gg.TYPE_FLOAT)
-    gg.alert("bata o veiculo na parede, você tem alguns segundos para isso")
-    gg.sleep(10000)
-    gg.refineNumber("800~999.5", gg.TYPE_FLOAT)
-    local results = gg.getResults(100000)
-    for i, v in ipairs(results) do
-        if v.value >= 800 and v.value <= 999.5 then
-            v.value = "10000000000000000000000000"
-            v.freeze = true
+    local targetAddress = results[1].address
+
+    local flags = results[1].flags
+
+    gg.clearResults()
+
+    
+
+    if choice == 1 then
+
+        isAutoFarming = true
+
+        while isAutoFarming do
+
+            setCoordinates("-305", "-2,264", "33", targetAddress, flags)
+
+            gg.sleep(5000)
+
+            setCoordinates("-288", "-2,229", "39", targetAddress, flags)
+
+            gg.sleep(5000)
+
+            setCoordinates("-320", "-2,256", "39", targetAddress, flags)
+
+            gg.sleep(5000)
+
         end
-    end
-    gg.addListItems(results)
-    gg.clearResults()
-    gg.toast("🟢 HOMEM BOMBA ON 🚗 🟢")
-end
 
-function homemBombaOff()
-    gg.setRanges(gg.REGION_C_ALLOC)
-    gg.searchNumber("10000000000000000000000000", gg.TYPE_FLOAT)
-    local results = gg.getResults(100000)
-    for i, v in ipairs(results) do
-        if v.value == "10000000000000000000000000" then
-            v.value = "1000"
-            v.freeze = false
-        end
-    end
-    gg.addListItems(results)
-    gg.clearResults()
-    gg.toast("HOMEM BOMBA OFF 🚗 ⚪!")
-end
+    elseif choice == 2 then
 
-function cheatArmas()
-    local weapon = gg.prompt({"Digite a quantidade de munição da arma\nEx: 100-50\nVocê digita 150"}, {"0"}, {"number"})
-    if not weapon then
-        gg.toast("Cancelado")
-        return
-    end
+        setCoordinates("-366", "-2,170", "33", targetAddress, flags)
 
-    gg.searchNumber(weapon[1], gg.TYPE_DWORD)
-    gg.alert("Gaste um pente de municao!!")
-    gg.toast("Você tem 5 segundos para gastar uma munição")
-    gg.sleep(5000)
+    elseif choice == 3 then
 
-    local weapon2 = gg.prompt({"Agora digite a quantidade de munição que está após 1 tiro\nEx: 99-50\nVocê digita 149"}, {"0"}, {"number"})
-    if not weapon2 then
-        gg.toast("Cancelado")
-        return
+        setCoordinates("966", "-1,843", "2", targetAddress, flags)
+
+    elseif choice == 4 then
+
+        setCoordinates("627", "-12", "1001", targetAddress, flags)
+
+    elseif choice == 5 then
+
+        setCoordinates("-1,325", "-2,728", "32", targetAddress, flags)
+
+    elseif choice == 6 then
+
+        setCoordinates("739", "-1,052", "2", targetAddress, flags)
+
+    elseif choice == 7 then
+
+        setCoordinates("-1,385", "-2,781", "33", targetAddress, flags)
+
     end
 
-    gg.refineNumber(weapon2[1], gg.TYPE_DWORD)
-    local t = gg.getResults(99999)
-    for i, v in ipairs(t) do
-        if v.flags == gg.TYPE_DWORD then
-            v.value = weapon[1]
-            v.freeze = true
-        end
-    end
-    gg.addListItems(t)
-    gg.clearResults()
-    gg.toast("Ativo")
-end
-
-function wallHackMenu()
-    local choice = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "↩️Voltar↩️"}, nil, version)
-    
-    if choice == 1 then wallHackOn() end
-    if choice == 2 then wallHackOff() end
-    if choice == 3 then outrosMenu() end
-end
-
-function wallHackOn()
-    gg.searchNumber("60", gg.TYPE_FLOAT)
-    gg.getResults(99999)
-    gg.editAll("60.7", gg.TYPE_FLOAT)
-    gg.toast("🟢Wall hack ON🟢")
-    gg.clearResults()
-end
-
-function wallHackOff()
-    gg.searchNumber("60.7", gg.TYPE_FLOAT)
-    gg.getResults(99999)
-    gg.editAll("60", gg.TYPE_FLOAT)
-    gg.toast("⚪Wall hack OFF⚪")
-    gg.clearResults()
 end
 
 
--- Menu de armas
+
+-- Weapons Menu
+
+local weaponStatus = {
+
+    desert = DISABLED,
+
+    shotgun = DISABLED,
+
+    mp5 = DISABLED,
+
+    ak47 = DISABLED,
+
+    m4 = DISABLED,
+
+    bazooka = DISABLED
+
+}
+
+
+
 function weaponsMenu()
+
     local choice = gg.choice({
+
         weaponStatus.desert .. "DESERT",
+
         weaponStatus.shotgun .. "SHOTGUN",
+
         weaponStatus.mp5 .. "MP5",
+
         weaponStatus.ak47 .. "AK47",
+
         weaponStatus.m4 .. "M4",
-        weaponStatus.bazooka .. "BAZUCA",
-        "↩️ Voltar ↩️"
-    }, nil, "MENU DE ARMAS\nSelecione uma arma para ativar/desativar:")
 
-    if not choice or choice == 7 then return end  -- Voltar
+        weaponStatus.bazooka .. "BAZUCA"
+
+    }, nil, "Selecione uma arma:")
+
     
-    local weapons = {"desert", "shotgun", "mp5", "ak47", "m4", "bazooka"}
-    local selectedWeapon = weapons[choice]
+
+    if not choice then return end
+
     
-    if selectedWeapon == "bazooka" then
+
+    if choice == 1 then
+
+        weaponStatus.desert = toggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
+
+    elseif choice == 2 then
+
+        weaponStatus.shotgun = toggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
+
+    elseif choice == 3 then
+
+        weaponStatus.mp5 = toggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
+
+    elseif choice == 4 then
+
+        weaponStatus.ak47 = toggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
+
+        weaponStatus.m4 = DISABLED
+
+    elseif choice == 5 then
+
+        weaponStatus.m4 = toggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
+
+        weaponStatus.ak47 = DISABLED
+
+    elseif choice == 6 then
+
         gg.toast("Em breve...")
-        return
+
     end
-    
-    -- Desativa outras armas do mesmo slot (AK47/M4 compartilham offset)
-    if selectedWeapon == "ak47" then weaponStatus.m4 = DISABLED end
-    if selectedWeapon == "m4" then weaponStatus.ak47 = DISABLED end
-    
-    if weaponStatus[selectedWeapon] == ENABLED then
-        -- Desativar arma
-        addWeaponItems(selectedWeapon, 0, 0, 0)
-        weaponStatus[selectedWeapon] = DISABLED
-    else
-        -- Ativar arma
-        local ammo = weaponAmmo[selectedWeapon]
-        addWeaponItems(selectedWeapon, ammo.id, ammo.fires, ammo.slots)
-        weaponStatus[selectedWeapon] = ENABLED
-    end
-    
-    gg.toast(selectedWeapon:upper() .. (weaponStatus[selectedWeapon] == ENABLED and " ATIVADA" or " DESATIVADA"))
+
 end
 
--- Função para reparar veículo (substitui a L29_44)
+
+
+-- Vehicle Functions
+
 function repairVehicle()
+
     gg.clearResults()
+
     gg.searchNumber("300", gg.TYPE_FLOAT)
+
     gg.getResults(100)
+
     gg.editAll("1000", gg.TYPE_FLOAT)
+
     gg.clearResults()
-    gg.toast("🔧 VEÍCULO REPARADO! 🔧")
+
 end
 
-function exit()
-    os.exit(gg.alert("Script finalizado com sucesso!"))
-end
 
--- Loop principal
-while true do
-    if gg.isVisible() then
-        gg.setVisible(false)
-        gg.toast("HAX STORE-")
-        mainMenu()
+
+-- Main Menu
+
+function mainMenu()
+
+    local choice = gg.choice({
+
+        "MENU TELEPORTE",
+
+        "MENU VIDA",
+
+        "MENU COLETE",
+
+        "MENU ARMAS",
+
+        "RESTAURAR CARRO"
+
+    }, nil, "Selecione uma opção:")
+
+    
+
+    if choice == 1 then
+
+        teleportMenu()
+
+    elseif choice == 2 then
+
+        healthMenu()
+
+    elseif choice == 3 then
+
+        armorMenu()
+
+    elseif choice == 4 then
+
+        weaponsMenu()
+
+    elseif choice == 5 then
+
+        repairVehicle()
+
     end
-    gg.sleep(100)
+
 end
+
+
+
+-- Initialization
+
+function init()
+
+    gg.setVisible(false)
+
+    isAutoFarming = false
+
+    combatMode = false
+
+    
+
+    -- Find base address
+
+    gg.searchNumber("7.5F;0.10000000149", gg.TYPE_FLOAT)
+
+    local results = gg.getResults(1)
+
+    if #results > 0 then
+
+        BASE_ADDRESS = results[1].address - 32
+
+        gg.clearResults()
+
+        mainMenu()
+
+    else
+
+        gg.alert("Failed to find base address!")
+
+        os.exit()
+
+    end
+
+    
+
+    while true do
+
+        if gg.isVisible() then
+
+            gg.setVisible(false)
+
+            mainMenu()
+
+        end
+
+        gg.sleep(50)
+
+    end
+
+end
+
+
+
+-- Start the script
+
+init()
