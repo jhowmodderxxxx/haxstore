@@ -227,16 +227,10 @@ end
 function repairVehicle()
     gg.clearResults()
     gg.searchNumber("300", gg.TYPE_FLOAT)
-    local results = gg.getResults(100)
-    if #results > 0 then
-        gg.editAll("1000", gg.TYPE_FLOAT)
-        gg.toast("🟢 Veículo reparado com sucesso! 🟢")
-    else
-        gg.toast("⚠️ Nenhum valor encontrado para reparar ⚠️")
-    end
+    gg.getResults(100)
+    gg.editAll("1000", gg.TYPE_FLOAT)
     gg.clearResults()
 end
-
 
 
 -- Aim Kill Carro
