@@ -71,6 +71,15 @@ elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
     expirationMinute = 10
     usuario = loginInfo[1]
 
+
+elseif loginInfo and loginInfo[1] == "Igorzin" and loginInfo[2] == "igor123" then
+    expirationYear = 2025
+    expirationMonth = 4
+    expirationDay = 6
+    expirationHour = 8
+    expirationMinute = 10
+    usuario = loginInfo[1]
+
 elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
     expirationYear = 2026
     expirationMonth = 5
@@ -1011,7 +1020,7 @@ function construtorcivil()
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-            -- Adicionar um delay de 4 segundos
+       
             gg.sleep(400)
         end
         gg.toast("Farm BySOWxTEAM")
