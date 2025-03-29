@@ -120,6 +120,50 @@ gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n novas funçõ
 versao = "SCRIPT SOWxTEAM V3 PREMIUM"
 
 
+-- Weapon Functions
+function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
+    if statusVar == ENABLED then
+        addWeaponItems(weaponName, 0, 0, 0, addressOffset)
+        return DISABLED
+    else
+        addWeaponItems(weaponName, weaponId, ammoCount, slotsCount, addressOffset)
+        return ENABLED
+    end
+end
+
+function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
+    gg.addListItems({
+        {
+            address = BASE_ADDRESS + baseOffset,
+            flags = gg.TYPE_DWORD,
+            value = tostring(idValue),
+            name = weaponName .. " ID",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        },
+        {
+            address = BASE_ADDRESS + baseOffset + 8,
+            flags = gg.TYPE_DWORD,
+            value = tostring(firesValue),
+            name = weaponName .. " FIRES COUNT",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        },
+        {
+            address = BASE_ADDRESS + baseOffset + 12,
+            flags = gg.TYPE_DWORD,
+            value = tostring(slotsValue),
+            name = weaponName .. " SLOTS COUNT",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        }
+    })
+    gg.setVisible(false)
+end
+
+
+
+
 function menufarm()
     local titulo = string.format(
         "🎇SCRIPT SOWxTEAM V3 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
@@ -223,12 +267,7 @@ end
 
 
 
-
--- Adicionando as definições necessárias para o menu de armas
-local DISABLED = "❌"
-local ENABLED = "✅"
-local BASE_ADDRESS = nil -- Será determinado dinamicamente
-
+-- Weapons Menu
 local weaponStatus = {
     desert = DISABLED,
     shotgun = DISABLED,
@@ -238,100 +277,35 @@ local weaponStatus = {
     bazooka = DISABLED
 }
 
--- Função para encontrar o endereço base
-function findBaseAddress()
-    gg.clearResults()
-    gg.searchNumber("1D;1D;1D;1D::9", gg.TYPE_DWORD)
-    gg.refineNumber("1", gg.TYPE_DWORD)
-    local results = gg.getResults(1)
-    if #results > 0 then
-        BASE_ADDRESS = results[1].address
-        gg.toast("Endereço base encontrado: " .. string.format("%X", BASE_ADDRESS))
-    else
-        gg.alert("Não foi possível encontrar o endereço base!")
-        os.exit()
-    end
-    gg.clearResults()
-end
-
--- Weapon Functions atualizadas
-function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
-    if BASE_ADDRESS == nil then
-        findBaseAddress()
-    end
-    
-    if statusVar == ENABLED then
-        addWeaponItems(weaponName, 0, 0, 0, addressOffset)
-        return DISABLED
-    else
-        addWeaponItems(weaponName, weaponId, ammoCount, slotsCount, addressOffset)
-        return ENABLED
-    end
-end
-
-function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
-    local items = {
-        {
-            address = BASE_ADDRESS + baseOffset,
-            flags = gg.TYPE_DWORD,
-            value = tostring(idValue),
-            name = weaponName .. " ID",
-            freeze = true
-        }
-    }
-    
-    -- Apenas adiciona munição e slots se a arma estiver sendo ativada
-    if idValue ~= 0 then
-        table.insert(items, {
-            address = BASE_ADDRESS + baseOffset + 8,
-            flags = gg.TYPE_DWORD,
-            value = tostring(firesValue),
-            name = weaponName .. " FIRES COUNT",
-            freeze = true
-        })
-        
-        table.insert(items, {
-            address = BASE_ADDRESS + baseOffset + 12,
-            flags = gg.TYPE_DWORD,
-            value = tostring(slotsValue),
-            name = weaponName .. " SLOTS COUNT",
-            freeze = true
-        })
-    end
-    
-    gg.addListItems(items)
-    gg.setVisible(false)
-end
-
--- Weapons Menu atualizado
 function weaponsMenu()
     local choice = gg.choice({
-        weaponStatus.desert .. " DESERT",
-        weaponStatus.shotgun .. " SHOTGUN",
-        weaponStatus.mp5 .. " MP5",
-        weaponStatus.ak47 .. " AK47",
-        weaponStatus.m4 .. " M4",
-        weaponStatus.bazooka .. " BAZUCA"
+        weaponStatus.desert .. "DESERT",
+        weaponStatus.shotgun .. "SHOTGUN",
+        weaponStatus.mp5 .. "MP5",
+        weaponStatus.ak47 .. "AK47",
+        weaponStatus.m4 .. "M4",
+        weaponStatus.bazooka .. "BAZUCA"
     }, nil, "Selecione uma arma:")
     
     if not choice then return end
     
     if choice == 1 then
-        weaponStatus.desert = toggleWeapon("DESERT", 24, 9999, 9999, 196, weaponStatus.desert)
+        weaponStatus.desert = toggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
     elseif choice == 2 then
-        weaponStatus.shotgun = toggleWeapon("SHOTGUN", 25, 9999, 9999, 228, weaponStatus.shotgun)
+        weaponStatus.shotgun = toggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
     elseif choice == 3 then
-        weaponStatus.mp5 = toggleWeapon("MP5", 29, 9999, 9999, 260, weaponStatus.mp5)
+        weaponStatus.mp5 = toggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
     elseif choice == 4 then
-        weaponStatus.ak47 = toggleWeapon("AK47", 30, 9999, 9999, 292, weaponStatus.ak47)
+        weaponStatus.ak47 = toggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
         weaponStatus.m4 = DISABLED
     elseif choice == 5 then
-        weaponStatus.m4 = toggleWeapon("M4", 31, 9999, 9999, 292, weaponStatus.m4)
+        weaponStatus.m4 = toggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
         weaponStatus.ak47 = DISABLED
     elseif choice == 6 then
         gg.toast("Em breve...")
     end
 end
+
 
 -- Aim Kill Carro
 function aimkillcarro()
