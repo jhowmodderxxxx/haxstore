@@ -224,9 +224,10 @@ end
 
 
 
--- Adicionando constantes e variáveis necessárias para a função weaponsMenu
+-- Adicionando as definições necessárias para o menu de armas
 local DISABLED = "❌"
 local ENABLED = "✅"
+local BASE_ADDRESS = 0 -- Você precisará definir o endereço base correto para o seu jogo
 
 local weaponStatus = {
     desert = DISABLED,
@@ -237,42 +238,48 @@ local weaponStatus = {
     bazooka = DISABLED
 }
 
--- Função para alternar o status da arma
-function toggleWeapon(weaponName, offset1, offset2, offset3, offset4, currentStatus)
-    if currentStatus == DISABLED then
-        -- Ativar a arma
-        gg.setRanges(gg.REGION_ANONYMOUS)
-        gg.searchNumber("1D;1D;1D;1D::9", gg.TYPE_DWORD)
-        gg.refineNumber("1", gg.TYPE_DWORD)
-        local results = gg.getResults(4)
-        
-        if #results >= 4 then
-            results[1].address = results[1].address + offset1
-            results[2].address = results[2].address + offset2
-            results[3].address = results[3].address + offset3
-            results[4].address = results[4].address + offset4
-            
-            for i = 1, 4 do
-                results[i].value = 9999
-                results[i].freeze = true
-            end
-            
-            gg.addListItems(results)
-            gg.toast(weaponName .. " ativada!")
-            return ENABLED
-        else
-            gg.toast("Falha ao ativar " .. weaponName)
-            return DISABLED
-        end
-    else
-        -- Desativar a arma
-        gg.clearList()
-        gg.toast(weaponName .. " desativada!")
+-- Weapon Functions (como você forneceu)
+function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
+    if statusVar == ENABLED then
+        addWeaponItems(weaponName, 0, 0, 0, addressOffset)
         return DISABLED
+    else
+        addWeaponItems(weaponName, weaponId, ammoCount, slotsCount, addressOffset)
+        return ENABLED
     end
 end
 
--- Função do menu de armas (como fornecido)
+function addWeaponItems(weaponName, idValue, firesValue, slotsValue, baseOffset)
+    gg.addListItems({
+        {
+            address = BASE_ADDRESS + baseOffset,
+            flags = gg.TYPE_DWORD,
+            value = tostring(idValue),
+            name = weaponName .. " ID",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        },
+        {
+            address = BASE_ADDRESS + baseOffset + 8,
+            flags = gg.TYPE_DWORD,
+            value = tostring(firesValue),
+            name = weaponName .. " FIRES COUNT",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        },
+        {
+            address = BASE_ADDRESS + baseOffset + 12,
+            flags = gg.TYPE_DWORD,
+            value = tostring(slotsValue),
+            name = weaponName .. " SLOTS COUNT",
+            freeze = true,
+            freezetype = gg.FREEZE_NORMAL
+        }
+    })
+    gg.setVisible(false)
+end
+
+-- Weapons Menu atualizado para usar o novo sistema
 function weaponsMenu()
     local choice = gg.choice({
         weaponStatus.desert .. " DESERT",
@@ -286,16 +293,16 @@ function weaponsMenu()
     if not choice then return end
     
     if choice == 1 then
-        weaponStatus.desert = toggleWeapon("desert", 24, 7, 35, 196, weaponStatus.desert)
+        weaponStatus.desert = toggleWeapon("DESERT", 24, 9999, 9999, 196, weaponStatus.desert)
     elseif choice == 2 then
-        weaponStatus.shotgun = toggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
+        weaponStatus.shotgun = toggleWeapon("SHOTGUN", 25, 9999, 9999, 228, weaponStatus.shotgun)
     elseif choice == 3 then
-        weaponStatus.mp5 = toggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
+        weaponStatus.mp5 = toggleWeapon("MP5", 29, 9999, 9999, 260, weaponStatus.mp5)
     elseif choice == 4 then
-        weaponStatus.ak47 = toggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
+        weaponStatus.ak47 = toggleWeapon("AK47", 30, 9999, 9999, 292, weaponStatus.ak47)
         weaponStatus.m4 = DISABLED
     elseif choice == 5 then
-        weaponStatus.m4 = toggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
+        weaponStatus.m4 = toggleWeapon("M4", 31, 9999, 9999, 292, weaponStatus.m4)
         weaponStatus.ak47 = DISABLED
     elseif choice == 6 then
         gg.toast("Em breve...")
