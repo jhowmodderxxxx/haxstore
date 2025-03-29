@@ -1021,7 +1021,7 @@ function construtorcivil()
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
        
-            gg.sleep(400)
+            gg.sleep(500)
         end
         gg.toast("Farm BySOWxTEAM")
     end
