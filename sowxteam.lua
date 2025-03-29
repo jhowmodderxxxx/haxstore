@@ -222,92 +222,78 @@ function outros()
 end
 
 
-function teleportPlayerOn()
-    -- Verificar se o jogo está aberto
-    if not gg.isVisible() then
-        gg.toast("Erro: Jogo não detectado")
+function teleportToPlayer()
+    -- Menu principal
+    local choice = gg.choice({
+        '🔵 TELEPORTAR PARA JOGADOR',
+        '🔙 VOLTAR'
+    }, nil, 'TELEPORTE PARA JOGADORES')
+    
+    if choice == nil or choice == 2 then return end
+    
+    -- Solicitar ID do jogador
+    local input = gg.prompt({'Digite o ID do jogador:'}, {[1]='0'}, {'number'})
+    if not input then return end
+    
+    local targetId = tonumber(input[1])
+    if not targetId or targetId < 1 then
+        gg.alert('ID inválido!')
         return
     end
 
-    -- Solicitar ID do jogador com validação
-    local idJogador = gg.prompt({"Digite o ID do jogador (0-99999):"}, {""}, {"number"})
-    
-    if not idJogador or not idJogador[1] then
-        gg.toast("Teleporte cancelado")
-        return
-    end
-    
-    idJogador = tonumber(idJogador[1])
-    if not idJogador or idJogador < 0 or idJogador > 99999 then
-        gg.alert("ID inválido! Use números entre 0 e 99999")
-        return
-    end
-
-    -- Configurar para busca segura
-    gg.setRanges(gg.REGION_ANONYMOUS | gg.REGION_C_ALLOC)
+    -- Buscar o ID na memória
     gg.clearResults()
-
-    -- Buscar ID do jogador com limite de resultados
-    local success, err = pcall(function()
-        gg.searchNumber(idJogador, gg.TYPE_DWORD)
-    end)
+    gg.searchNumber(targetId, gg.TYPE_DWORD)
+    local results = gg.getResults(100)
     
-    if not success then
-        gg.alert("Erro na busca: "..err)
+    if #results == 0 then
+        gg.alert('Jogador não encontrado!')
         return
     end
 
-    local playerResults = gg.getResults(50)  -- Limitar a 50 resultados
-    if #playerResults == 0 then
-        gg.alert("Jogador com ID "..idJogador.." não encontrado!")
-        return
-    end
-
-    -- Procurar coordenadas válidas
+    -- Tentar encontrar as coordenadas
     local found = false
-    for i, v in ipairs(playerResults) do
-        -- Verificar endereços válidos antes de acessar
-        if v.address > 0x10000 then  -- Endereço mínimo válido
-            local success, yVal = pcall(gg.getValues, {{address = v.address - 0x60, flags = gg.TYPE_FLOAT}})
-            local success2, xVal = pcall(gg.getValues, {{address = v.address - 0x5C, flags = gg.TYPE_FLOAT}})
-            local success3, zVal = pcall(gg.getValues, {{address = v.address - 0x58, flags = gg.TYPE_FLOAT}})
+    for i, v in ipairs(results) do
+        local coordY = v.address - 0x60
+        local coordX = v.address - 0x5C
+        local coordZ = v.address - 0x58
+        
+        -- Pegar valores das coordenadas
+        local coords = gg.getValues({
+            {address = coordY, flags = gg.TYPE_FLOAT},
+            {address = coordX, flags = gg.TYPE_FLOAT},
+            {address = coordZ, flags = gg.TYPE_FLOAT}
+        })
+        
+        -- Verificar se são coordenadas válidas
+        if math.abs(coords[1].value) < 10000 and 
+           math.abs(coords[2].value) < 10000 and 
+           coords[3].value > -100 and coords[3].value < 1000 then
+           
+            -- Encontrar nosso próprio pointer
+            gg.clearResults()
+            gg.searchNumber('999.765625', gg.TYPE_FLOAT)
+            local selfPointer = gg.getResults(1)
             
-            if success and success2 and success3 then
-                local y = yVal[1].value
-                local x = xVal[1].value
-                local z = zVal[1].value
-
-                -- Verificar se são coordenadas válidas (valores razoáveis para o jogo)
-                if math.abs(y) < 10000 and math.abs(x) < 10000 and z > -100 and z < 1000 then
-                    -- Buscar pointer do jogador local com proteção
-                    gg.clearResults()
-                    local success4 = pcall(function()
-                        gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-                    end)
-                    
-                    if success4 then
-                        local pointer = gg.getResults(1)
-                        if #pointer > 0 and pointer[1].address > 0x10000 then
-                            local base = pointer[1].address
-                            gg.setValues({
-                                {address = base + 0x60, flags = gg.TYPE_FLOAT, value = y},
-                                {address = base + 0x64, flags = gg.TYPE_FLOAT, value = x},
-                                {address = base + 0x68, flags = gg.TYPE_FLOAT, value = z}
-                            })
-                            gg.toast("🟢 Teleportado para ID: "..idJogador.." 🟢")
-                            found = true
-                            break
-                        end
-                    end
-                end
+            if #selfPointer > 0 then
+                local base = selfPointer[1].address
+                -- Aplicar novas coordenadas
+                gg.setValues({
+                    {address = base + 0x60, flags = gg.TYPE_FLOAT, value = coords[1].value},
+                    {address = base + 0x64, flags = gg.TYPE_FLOAT, value = coords[2].value},
+                    {address = base + 0x68, flags = gg.TYPE_FLOAT, value = coords[3].value}
+                })
+                gg.toast('Teleportado para o jogador!')
+                found = true
+                break
             end
         end
     end
-
-    gg.clearResults()
+    
     if not found then
-        gg.alert("Falha ao encontrar coordenadas válidas para o jogador")
+        gg.alert('Não foi possível completar o teleporte')
     end
+    gg.clearResults()
 end
 
 -- Aim Kill Carro
