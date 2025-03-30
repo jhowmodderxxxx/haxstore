@@ -990,17 +990,20 @@ function construtorcivill()
     if construtorcivillops == 1 then 
         -- Adicionado menu de seleção de velocidade
         local speedChoice = gg.choice({
-            "⚡ Velocidade Rápida (0.5s)",
-            "🐢 Velocidade Normal (2s)",
-            "🐌 Velocidade Lenta (3s)"
+            "⚡ Velocidade Rápida (0.5s) (chance alta de kick)",
+            "⚡ Velocidade Rápida (1s) (chance baixa de kick)",
+            "🐢 Velocidade Normal (2s) (chance baixa de kick)",
+            "🐌 Velocidade Lenta (3s) (chance baixa de kick)"
         }, nil, "Selecione a velocidade do farm")
         
         local sleepTime = 500
         if speedChoice == 1 then
             sleepTime = 500 -- 0.5 segundos
         elseif speedChoice == 2 then
-            sleepTime = 2000 -- 2 segundos
+            sleepTime = 1000-- 1 segundos
         elseif speedChoice == 3 then
+            sleepTime = 2000 -- 2 segundos
+        elseif speedChoice == 4 then
             sleepTime = 3000 -- 3 segundos
         else
             return -- Se cancelar, volta
