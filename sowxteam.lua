@@ -122,7 +122,7 @@ else
 end
 
 
-gg.alert("VERSAO V3  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n Auto farm de 1 segundo para 0,5 (foi para 0,5 pq estou tomando kick dps de um tempo com 0,4)")
+gg.alert("VERSAO V3.1  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n Sistema de escolher velocidade de farm!!!!!")
 
 
 versao = "SCRIPT SOWxTEAM V3 PREMIUM"
