@@ -1002,6 +1002,19 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
 end
 
 function construtorcivil()
+    -- Menu para selecionar o intervalo
+    local intervalo_opcoes = "3 segundos", "2 segundos", "0.5 segundos"}
+    local intervalo_escolhido = gg.choice(intervalo_opcoes, nil, "⏱️ Selecione o intervalo de farm:")
+    
+    if not intervalo_escolhido then return end
+    
+    local intervalos = {
+        [1] = 3000,  -- 3 segundos em milissegundos
+        [2] = 2000,  -- 2 segundos
+        [3] = 500    -- 0.5 segundos
+    }
+    local intervalo = intervalos[intervalo_escolhido]
+    
     local pontos = {
         "-305.936035;-2264.125000;33.306194",
         "-320.685028;-2256.816650;38.829632",
