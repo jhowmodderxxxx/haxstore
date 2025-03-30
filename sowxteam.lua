@@ -987,11 +987,32 @@ function construtorcivill()
         "↩️Voltar↩️"
     }, nil, "🏆AUTO FARM CONSTRUÇÃO🏆")
 
-    if construtorcivillops == 1 then construtorcivil() end
+    if construtorcivillops == 1 then 
+        -- Adicionado menu de seleção de velocidade
+        local speedChoice = gg.choice({
+            "⚡ Velocidade Rápida (0.5s)",
+            "🐢 Velocidade Normal (2s)",
+            "🐌 Velocidade Lenta (3s)"
+        }, nil, "Selecione a velocidade do farm")
+        
+        local sleepTime = 500
+        if speedChoice == 1 then
+            sleepTime = 500 -- 0.5 segundos
+        elseif speedChoice == 2 then
+            sleepTime = 2000 -- 2 segundos
+        elseif speedChoice == 3 then
+            sleepTime = 3000 -- 3 segundos
+        else
+            return -- Se cancelar, volta
+        end
+        
+        construtorcivil(sleepTime) 
+    end
     if construtorcivillops == 2 then farms() end
 end
 
 function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
+    -- Definir novas coordenadas
     gg.setValues({
         {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
         {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
@@ -1000,24 +1021,14 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function construtorcivil()
-    local tempo = gg.choice({
-        "3 Segundos (safe)",
-        "2 Segundos (risco baixo de kick)",
-        "0.5 Segundos(risco alto de kick)"
-    }, nil, "⏱️ SELECIONE O TEMPO DE FARM:")
-    
-    if tempo == 1 then tempo = 3000
-    elseif tempo == 2 then tempo = 2000
-    elseif tempo == 3 then tempo = 500
-    else return end
-    
+function construtorcivil(sleepTime)
     local pontos = {
         "-305.936035;-2264.125000;33.306194",
         "-320.685028;-2256.816650;38.829632",
         "-289.364014;-2230.501465;38.829632"
     }
     
+    -- Buscar o endereço uma única vez
     gg.clearResults()
     gg.searchNumber("999.765625", gg.TYPE_FLOAT)
     local results = gg.getResults(1)
@@ -1032,17 +1043,18 @@ function construtorcivil()
     local offset_X = base + 0x64
     local offset_Z = base + 0x68
 
+    -- Loop para teleportar entre os pontos
     while true do
         for _, coords in ipairs(pontos) do
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-            y, x, z = tonumber(y), tonumber(x), tonumber(z)
+            y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-            gg.sleep(tempo)
+       
+            gg.sleep(sleepTime) -- Usa o tempo selecionado pelo usuário
         end
         gg.toast("Farm BySOWxTEAM")
     end
 end
-
 -- Criadores
 function criadores()
     gg.alert("SCRIPT FEITO POR RodrigoGTyx , Chines Mods e Detroid")
