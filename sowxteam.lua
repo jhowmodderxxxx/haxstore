@@ -991,7 +991,7 @@ function construtorcivill()
         -- Adicionado menu de seleção de velocidade
         local speedChoice = gg.choice({
             "⚡ Velocidade Rápida (0.5s) (chance alta de kick)",
-            "⚡ Velocidade Rápida (1s) (chance baixa de kick)",
+            "⚡ Velocidade Quase Rápida (1s) (chance baixa de kick)",
             "🐢 Velocidade Normal (2s) (chance baixa de kick)",
             "🐌 Velocidade Lenta (3s) (chance baixa de kick)"
         }, nil, "Selecione a velocidade do farm")
