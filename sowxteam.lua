@@ -125,12 +125,12 @@ end
 gg.alert("VERSAO V3.1  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n Sistema de escolher velocidade de farm!!!!!")
 
 
-versao = "SCRIPT SOWxTEAM V3 PREMIUM"
+versao = "SCRIPT SOWxTEAM V3.1 PREMIUM"
 
 
 function menufarm()
     local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V3 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        "🎇SCRIPT SOWxTEAM V3.1 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
         usuario,expirationDay, expirationMonth, expirationYear, expirationHour, expirationMinute 
     )
 
