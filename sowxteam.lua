@@ -229,6 +229,37 @@ end
 
 
 
+function sairInterior()
+    local coords = "-1276.47875976562;-2579.33666992188;32.66515731812"  -- Substitua por coordenadas válidas fora de interiores
+    local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
+    y, x, z = tonumber(y), tonumber(x), tonumber(z)
+
+    -- Buscar o endereço do pointer
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local results = gg.getResults(1)
+    
+    if #results == 0 then
+        gg.alert("Pointer não encontrado!")
+        return
+    end
+    
+    local base = results[1].address
+    local offset_Y = base + 0x60
+    local offset_X = base + 0x64
+    local offset_Z = base + 0x68
+    
+    -- Definir novas coordenadas
+    gg.setValues({
+        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
+        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
+        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
+    })
+    gg.toast("Saiu do interior com sucesso!")
+    gg.clearResults()
+end
+
+
 -- Aim Kill Carro
 function aimkillcarro()
     local aimkillcarroonoff = gg.choice({"🟢ATIVAR FUNÇÃO🟢", "⚪DESATIVAR FUNÇÃO⚪", "◀️Voltar"}, nil, versao)
@@ -899,12 +930,14 @@ function farms()
     farmsss = gg.choice({
         "🟢TRABALHO NA MINERADORA(EM TESTE)🟢",
         "🟢TRABALHO NA OBRA🟢",
+        "🟢SAIR DO BUG DO TELEPORT🟢",
         "↩️Voltar↩️"
       }, nil, titulo)
 
     if farmsss == 1 then mineradora() end
     if farmsss == 2 then construtorcivill() end
-    if farmsss == 3 then teleport() end
+    if farmsss == 3 then sairInterior() end
+    if farmsss == 4 then teleport() end
 end
 
 function mineradora()
