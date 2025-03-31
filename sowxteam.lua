@@ -83,7 +83,7 @@ elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
 elseif loginInfo and loginInfo[1] == "Igorzin" and loginInfo[2] == "igor123" then
     expirationYear = 2025
     expirationMonth = 4
-    expirationDay = 2
+    expirationDay = 12
     expirationHour = 8
     expirationMinute = 10
     usuario = loginInfo[1]
