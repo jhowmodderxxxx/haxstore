@@ -288,13 +288,14 @@ local titulo = string.format(
 
     menu = gg.choice({
         "SOWxTEAM - FUNCTION ▶",
-        "↩️Voltar ↩️"
     }, nil, titulo)
     
     local choice = gg.choice({
 
         "SOWxTEAM SETAR VIDA 🤎",
+        
         "SOWxTEAM SETAR COLETE🛡",
+        
         "SOWxTEAM SETAR ARMAS🔫"
         
 
