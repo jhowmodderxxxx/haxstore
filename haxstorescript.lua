@@ -1,16 +1,6 @@
--- Constants
-local velocidadefarm = 700
---By MrJhowTeamRX
-
 
 
 gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
-
-
-versao = "SCRIPT SOWxTEAM V1 PREMIUM"
-
-
-
 
 
 local ENABLED = "✔️ "
@@ -340,6 +330,15 @@ end
 
 ----- teleports farm
 
+function init()
+
+    gg.setVisible(false)
+
+    isAutoFarming = false
+
+    combatMode = false
+
+    
 
     -- Find base address
 
@@ -358,24 +357,28 @@ end
     else
 
         gg.alert("Failed to find base address!")
+
         os.exit()
+
     end
 
--- Initialization
+    
 
-function init()
-
-    gg.setVisible(false)
     while true do
+
         if gg.isVisible() then
+
             gg.setVisible(false)
+
             mainMenu()
+
         end
+
         gg.sleep(50)
+
     end
+
 end
-
-
 
 
 
