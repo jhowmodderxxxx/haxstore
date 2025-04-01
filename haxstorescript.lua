@@ -536,7 +536,7 @@ function mainMenu()
 
     local choice = gg.choice({
 
-        "MENU TELEPORTE",
+      --  "MENU TELEPORTE",
 
         "MENU VIDA",
 
@@ -550,23 +550,23 @@ function mainMenu()
 
     
 
+   -- if choice == 1 then
+
+     --   teleportMenu()
+
     if choice == 1 then
-
-        teleportMenu()
-
-    elseif choice == 2 then
 
         healthMenu()
 
-    elseif choice == 3 then
+    elseif choice == 2 then
 
         armorMenu()
 
-    elseif choice == 4 then
+    elseif choice == 3 then
 
         weaponsMenu()
 
-    elseif choice == 5 then
+    elseif choice == 4 then
 
         repairVehicle()
 
