@@ -1,7 +1,6 @@
 
 
-gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
-
+-- Constants
 
 local ENABLED = "✔️ "
 
@@ -32,6 +31,53 @@ end
 
 
 -- Update Function
+
+function checkForUpdates()
+
+    local updateUrl = "https://example.com/update" -- Replace with actual URL
+
+    local response = makeRequest(updateUrl, {
+
+        ["Content-type"] = "application/json"
+
+    }, "{ \"type\":2 }")
+
+    
+
+    if not response.content then
+
+        gg.alert("Erro ao baixar a atualização.\nContate o desenvolvedor imediatamente!")
+
+        os.exit()
+
+    end
+
+    
+
+    local file = io.open("menu.lua", "w")
+
+    if file then
+
+        file:write(response.content)
+
+        file:close()
+
+        gg.alert("Atualização concluída.\nPor favor reinicie o menu!")
+
+        os.exit()
+
+    else
+
+        gg.alert("Erro ao instalar a atualização.\nContate o desenvolvedor imedlementamente!")
+
+        os.exit()
+
+    end
+
+end
+
+
+
 -- Weapon Functions
 
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
@@ -117,58 +163,105 @@ end
 -- Health Functions
 
 function setHealth(value)
+
     gg.setValues({
+
         {
+
             address = BASE_ADDRESS,
+
             flags = gg.TYPE_FLOAT,
+
             value = tostring(value)
+
         }
+
     })
+
 end
 
 
 
 function setArmor(value)
+
     gg.setValues({
+
         {
+
             address = BASE_ADDRESS + 8,
+
             flags = gg.TYPE_FLOAT,
+
             value = tostring(value)
+
         }
+
     })
+
 end
 
 
 
 function resetHealthAndArmor()
+
     setHealth(200.0)
+
     setArmor(100.0)
+
 end
 
 
 
 function healthMenu()
+
     local choice = gg.choice({
-        "REGENERAR VIDA🤎",
-        "SETAR 200 VIDA🤎",
-        "SETAR 150 VIDA🤎",
-        "SETAR 100 VIDA🤎",
-        "SETAR 20 VIDA🤎",
-        "SETAR 0 VIDA🤎"
+
+        "COMBATE MODE",
+
+        "REGENERAR",
+
+        "200 VIDA",
+
+        "150 VIDA",
+
+        "100 VIDA",
+
+        "20 VIDA",
+
+        "0 VIDA"
+
     })
 
+    
 
     if choice == 1 then
+
+        combatMode = true
+
         resetHealthAndArmor()
+
     elseif choice == 2 then
-        setHealth(200.0)
+
+        resetHealthAndArmor()
+
     elseif choice == 3 then
-        setHealth(150.0)
+
+        setHealth(200.0)
+
     elseif choice == 4 then
-        setHealth(100.0)
+
+        setHealth(150.0)
+
     elseif choice == 5 then
-        setHealth(20.0)
+
+        setHealth(100.0)
+
     elseif choice == 6 then
+
+        setHealth(20.0)
+
+    elseif choice == 7 then
+
         setHealth(0.0)
 
     end
@@ -181,11 +274,11 @@ function armorMenu()
 
     local choice = gg.choice({
 
-        "150 COLETE 🛡",
+        "150 COLETE",
 
-        "100 COLETE 🛡",
+        "100 COLETE",
 
-        "0 COLETE 🛡"
+        "0 COLETE"
 
     }, nil, "Selecione uma opção:")
 
@@ -208,7 +301,140 @@ function armorMenu()
 end
 
 
--- Weapons Menu
+
+-- Teleport Functions
+
+function setCoordinates(x, y, z, address, flags)
+
+    gg.setValues({
+
+        {address = address + 96, flags = flags, value = x},
+
+        {address = address + 100, flags = flags, value = y},
+
+        {address = address + 104, flags = flags, value = z}
+
+    })
+
+    gg.clearResults()
+
+end
+
+
+
+function stopAutoFarm()
+
+    local choice = gg.choice({
+
+        "PARAR AUTO FARM",
+
+        "CANCELAR"
+
+    }, nil, "Selecione uma opção:")
+
+    
+
+    if choice == 1 then
+
+        isAutoFarming = false
+
+        showTeleportMenu()
+
+    end
+
+end
+
+
+
+function teleportMenu()
+
+    local choice = gg.choice({
+
+        "FARM OBRA (REDUZIDO)",
+
+        "OBRA",
+
+        "MONTAGEM DE PNEUS",
+
+        "MONTAGEM DE PNEUS (SAIR)",
+
+        "CONCESSIONÁRIA ECONÔMICA",
+
+        "CONCESSIONÁRIA MÉDIA",
+
+        "IGREJA"
+
+    }, nil, "Selecione uma opção:")
+
+    
+
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+
+    local results = gg.getResults(1)
+
+    
+
+    if #results == 0 then return end
+
+    
+
+    local targetAddress = results[1].address
+
+    local flags = results[1].flags
+
+    gg.clearResults()
+
+    
+
+    if choice == 1 then
+
+        isAutoFarming = true
+
+        while isAutoFarming do
+
+            setCoordinates("-305", "-2,264", "33", targetAddress, flags)
+
+            gg.sleep(5000)
+
+            setCoordinates("-288", "-2,229", "39", targetAddress, flags)
+
+            gg.sleep(5000)
+
+            setCoordinates("-320", "-2,256", "39", targetAddress, flags)
+
+            gg.sleep(5000)
+
+        end
+
+    elseif choice == 2 then
+
+        setCoordinates("-366", "-2,170", "33", targetAddress, flags)
+
+    elseif choice == 3 then
+
+        setCoordinates("966", "-1,843", "2", targetAddress, flags)
+
+    elseif choice == 4 then
+
+        setCoordinates("627", "-12", "1001", targetAddress, flags)
+
+    elseif choice == 5 then
+
+        setCoordinates("-1,325", "-2,728", "32", targetAddress, flags)
+
+    elseif choice == 6 then
+
+        setCoordinates("739", "-1,052", "2", targetAddress, flags)
+
+    elseif choice == 7 then
+
+        setCoordinates("-1,385", "-2,781", "33", targetAddress, flags)
+
+    end
+
+end
+
+
 
 -- Weapons Menu
 
@@ -234,17 +460,17 @@ function weaponsMenu()
 
     local choice = gg.choice({
 
-        weaponStatus.desert .. "🔫DESERT🔫",
+        weaponStatus.desert .. "DESERT",
 
-        weaponStatus.shotgun .. "🔫SHOTGUN🔫",
+        weaponStatus.shotgun .. "SHOTGUN",
 
-        weaponStatus.mp5 .. "🔫MP5🔫",
+        weaponStatus.mp5 .. "MP5",
 
-        weaponStatus.ak47 .. "🔫AK47🔫",
+        weaponStatus.ak47 .. "AK47",
 
-        weaponStatus.m4 .. "🔫M4🔫",
+        weaponStatus.m4 .. "M4",
 
-        weaponStatus.bazooka .. "🔫BAZUCA🔫"
+        weaponStatus.bazooka .. "BAZUCA"
 
     }, nil, "Selecione uma arma:")
 
@@ -285,6 +511,25 @@ function weaponsMenu()
     end
 
 end
+
+
+
+-- Vehicle Functions
+
+function repairVehicle()
+
+    gg.clearResults()
+
+    gg.searchNumber("300", gg.TYPE_FLOAT)
+
+    gg.getResults(100)
+
+    gg.editAll("1000", gg.TYPE_FLOAT)
+
+    gg.clearResults()
+
+end
+
 
 
 -- Main Menu
@@ -328,7 +573,8 @@ local titulo = string.format(
 end
 
 
------ teleports farm
+
+-- Initialization
 
 function init()
 
