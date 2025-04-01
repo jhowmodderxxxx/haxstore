@@ -42,20 +42,8 @@ if loginInfo then
     local login = loginInfo[1]
     local password = loginInfo[2]
     local saveLoginOption = loginInfo[3] -- true se o checkbox estiver marcado
-
-
- 
-if loginInfo and loginInfo[1] == "chines" and loginInfo[2] == "cria13" then
-    expirationYear = 2026
-    expirationMonth = 9
-    expirationDay = 21
-    expirationHour = 21
-    expirationMinute = 20
-    usuario = loginInfo[1]
-
-
-
-elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
+    
+if  loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
     expirationYear = 2026
     expirationMonth = 5
     expirationDay = 28
