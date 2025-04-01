@@ -2,125 +2,6 @@
 local velocidadefarm = 700
 --By MrJhowTeamRX
 
--- Função para salvar o login em um arquivo
-function saveLogin(login, password)
-    local file = io.open("/sdcard/loginsalvo.txt", "w") -- Caminho do arquivo
-    if file then
-        file:write(login .. "\n") -- Salva o login
-        file:write(password)      -- Salva a senha
-        file:close()
-        gg.toast("Login salvo com sucesso!")
-    else
-        gg.toast("Erro ao salvar o login!")
-    end
-end
-
--- Função para carregar o login de um arquivo
-function loadLogin()
-    local file = io.open("/sdcard/loginsalvo.txt", "r") -- Caminho do arquivo
-    if file then
-        local login = file:read("*line") -- Lê a primeira linha (login)
-        local password = file:read("*line") -- Lê a segunda linha (senha)
-        file:close()
-        return login, password
-    else
-        return nil, nil
-    end
-end
-
--- Carregar o login salvo, se existir
-local savedLogin, savedPassword = loadLogin()
-
--- Solicitar login, senha e opção de salvar login
-local loginInfo = gg.prompt(
-    {"Digite seu login:", "Digite sua senha:", "Salvar login"}, -- Campos
-    {savedLogin or "", savedPassword or "", false}, -- Valores padrão
-    {"text", "text", "checkbox"} -- Tipos de entrada
-)
-
-
-if loginInfo then
-    local login = loginInfo[1]
-    local password = loginInfo[2]
-    local saveLoginOption = loginInfo[3] -- true se o checkbox estiver marcado
-
-
- 
-if loginInfo and loginInfo[1] == "chines" and loginInfo[2] == "cria13" then
-    expirationYear = 2026
-    expirationMonth = 9
-    expirationDay = 21
-    expirationHour = 21
-    expirationMinute = 20
-    usuario = loginInfo[1]
-
-
-
-elseif loginInfo and loginInfo[1] == "jhow" and loginInfo[2] == "modder" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
-    expirationYear = 2025
-    expirationMonth = 4
-    expirationDay = 6
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-
-elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
-    expirationYear = 2025
-    expirationMonth = 4
-    expirationDay = 2
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-elseif loginInfo and loginInfo[1] == "Igorzin" and loginInfo[2] == "igor123" then
-    expirationYear = 2025
-    expirationMonth = 4
-    expirationDay = 2
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-
-elseif loginInfo and loginInfo[1] == "Detroid" and loginInfo[2] == "9108" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-
-elseif loginInfo and loginInfo[1] == "Gabriel" and loginInfo[2] == "122113145" then
-    expirationYear = 2026
-    expirationMonth = 5
-    expirationDay = 28
-    expirationHour = 8
-    expirationMinute = 10
-    usuario = loginInfo[1]
-   
-else
-    gg.alert("Usuário ou senha incorretos!")
-    os.exit()
-end
-
-if saveLoginOption then
-    saveLogin(login, password)
-end
- 
-
-gg.alert("Bem-vindo, " .. usuario .. "!")
-else
-    gg.alert("Nenhum login fornecido!")
-    os.exit()
-end
 
 
 gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
@@ -345,13 +226,7 @@ local weaponStatus = {
 
     shotgun = DISABLED,
 
-    mp5 = DISABLED,
-
-    ak47 = DISABLED,
-
     m4 = DISABLED,
-
-    bazooka = DISABLED
 
 }
 
@@ -380,8 +255,6 @@ function weaponsMenu()
     elseif choice == 2 then
 
         weaponStatus.shotgun = toggleWeapon("shotgun", 25, 1, 30, 228, weaponStatus.shotgun)
-        
-        weaponStatus.m4 = DISABLED
 
     elseif choice == 3 then
 
