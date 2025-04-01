@@ -312,13 +312,6 @@ end
       if jhowmddrx == 1 then healthMenu() end
     if jhowmddrx == 2 then armorMenu() end
     if jhowmddrx == 3 then weaponsMenu() end
-    if jhowmddrx == 4 then
-    local script = gg.makeRequest("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/sowxteam.lua").content
-    if script then
-        local f, err = load(script)
-        if f then f() end
-    end
-end
     end
    
 
