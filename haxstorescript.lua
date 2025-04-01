@@ -281,7 +281,15 @@ end
 
 
 function mainMenu()
+local titulo = string.format(
+        "🎇SCRIPT SOWxTEAM V3.2 🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        usuario, expirationDay, expirationMonth, expirationYear
+    )
 
+    menu = gg.choice({
+        "SOWxTEAM - FUNCTION ▶",
+    }, nil, titulo)
+    
     local choice = gg.choice({
 
         "SOWxTEAM SETAR VIDA 🤎",
@@ -293,23 +301,11 @@ function mainMenu()
     }, nil, "Selecione uma opção:")
 
     
-
-    if choice == 1 then
-
-        healthMenu()
-
-    elseif choice == 2 then
-
-        armorMenu()
-
-    elseif choice == 3 then
-
-        weaponsMenu()
-
+      if jhowmddrx == 1 then healthMenu() end
+    if jhowmddrx == 2 then armorMenu() end
+    if jhowmddrx == 3 then weaponsMenu() end
     end
-
-end
-
+   
 
 ----- teleports farm
 
