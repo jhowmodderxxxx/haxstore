@@ -59,6 +59,14 @@ elseif loginInfo and loginInfo[1] == "lucas" and loginInfo[2] == "112113" then
     expirationMinute = 10
     usuario = loginInfo[1]
 
+elseif loginInfo and loginInfo[1] == "SR22" and loginInfo[2] == "JESUS22" then
+    expirationYear = 2025
+    expirationMonth = 4
+    expirationDay = 3
+    expirationHour = 8
+    expirationMinute = 10
+    usuario = loginInfo[1]
+
 
 elseif loginInfo and loginInfo[1] == "MATEUS" and loginInfo[2] == "mods" then
     expirationYear = 2025
