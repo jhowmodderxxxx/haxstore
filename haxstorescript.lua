@@ -288,14 +288,22 @@ local titulo = string.format(
 
     menu = gg.choice({
         "SOWxTEAM - FUNCTION ▶",
+        "↩️Voltar ↩️"
     }, nil, titulo)
+    
+    if menu == 2 then
+    local script = gg.makeRequest("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/main/haxstorescript.lua").content
+    if script then
+        local f, err = load(script)
+        if f then f() end
+    end
+end
     
     local choice = gg.choice({
 
         "SOWxTEAM SETAR VIDA 🤎",
         "SOWxTEAM SETAR COLETE🛡",
         "SOWxTEAM SETAR ARMAS🔫"
-        "↩️Voltar ↩️"
         
 
     }, nil, "Selecione uma opção:")
