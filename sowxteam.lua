@@ -122,27 +122,35 @@ else
 end
 
 
-gg.alert("VERSAO V3.1  \n\n Bug de script terminado foi corrigido \n nova funçao (tela esticada) \n mais otimização no script \n bypass ant kick implementado\n Sistema de escolher velocidade de farm!!!!!")
+gg.alert("VERSAO V3.2  \n\nNOVO MENU V2 DE PUXAR ARMAS , VIDA E COLETE")
 
 
-versao = "SCRIPT SOWxTEAM V3.1 PREMIUM"
-
+versao = "SCRIPT SOWxTEAM V3.2 PREMIUM"
 
 function menufarm()
     local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V3.1 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        "🎇SCRIPT SOWxTEAM V3.2 PREMIUM🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
         usuario,expirationDay, expirationMonth, expirationYear, expirationHour, expirationMinute 
     )
 
     menu = gg.choice({
     "SOWxTEAM - FUNCTION ▶",
+    "SOWxTEAM - MENU V2  ▶",
     "🎮 Fechar Script 🎮"
 }, nil, titulo)
 
--- Executando as opções do menu
 if menu == 1 then teleport() end
-if menu == 2 then exit() end
+if menu == 2 then
+    local script = gg.makeRequest("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/main/haxstorescript.lua").content
+    if script then
+        local f, err = load(script)
+        if f then f() end
+    end
 end
+if menu == 3 then exit() end
+end
+
+--- Admin Script
 
 ----- teleports farm
 
@@ -152,7 +160,7 @@ function teleport()
         "↪SOWxTEAM TEAM AUTO FARM",
         "↪SOWxTEAM TEAM TELEPORTES",
         "↪SOWxTEAM TEAM OUTROS",
-        "↪SOWxTEAM TEAM CRIADORES",
+        "↪SOWxTEAM TEAM CRIADOR",
         "↩️Voltar↩️"
     }, nil, titulo)
 
@@ -1059,11 +1067,8 @@ function construtorcivil(sleepTime)
 end
 -- Criadores
 function criadores()
-    gg.alert("SCRIPT FEITO POR RodrigoGTyx , Chines Mods e Detroid")
+    gg.alert("SCRIPT FEITO POR RodrigoGTyx")
 end
-
-
-
 
 
 function exit()
