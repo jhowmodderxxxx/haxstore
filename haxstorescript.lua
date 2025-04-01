@@ -290,7 +290,7 @@ local titulo = string.format(
         "SOWxTEAM - FUNCTION ▶",
     }, nil, titulo)
     
-    local choice = gg.choice({
+    jhowmddrx = gg.choice({
 
         "SOWxTEAM SETAR VIDA 🤎",
         
