@@ -1,5 +1,3 @@
-
-
 -- Constants
 
 local ENABLED = "✔️ "
@@ -535,22 +533,18 @@ end
 -- Main Menu
 
 function mainMenu()
-local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V1 🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
-        usuario, expirationDay, expirationMonth, expirationYear
-    )
 
-    menu = gg.choice({
-        "SOWxTEAM - FUNCTION ▶",
-    }, nil, titulo)
-    
     local choice = gg.choice({
 
-        "SOWxTEAM SETAR VIDA 🤎",
+        "MENU TELEPORTE",
 
-        "SOWxTEAM SETAR COLETE🛡",
+        "MENU VIDA",
 
-        "SOWxTEAM SETAR ARMAS🔫",
+        "MENU COLETE",
+
+        "MENU ARMAS",
+
+        "RESTAURAR CARRO"
 
     }, nil, "Selecione uma opção:")
 
@@ -558,15 +552,23 @@ local titulo = string.format(
 
     if choice == 1 then
 
-        healthMenu()
+        teleportMenu()
 
     elseif choice == 2 then
 
-        armorMenu()
+        healthMenu()
 
     elseif choice == 3 then
 
+        armorMenu()
+
+    elseif choice == 4 then
+
         weaponsMenu()
+
+    elseif choice == 5 then
+
+        repairVehicle()
 
     end
 
