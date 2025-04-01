@@ -279,20 +279,9 @@ function weaponsMenu()
 end
 
 
--- Main Menu
-
-gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
 
 function mainMenu()
-local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V1 🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
-        usuario, expirationDay, expirationMonth, expirationYear
-    )
 
-    menu = gg.choice({
-        "SOWxTEAM - FUNCTION ▶",
-    }, nil, titulo)
-    
     local choice = gg.choice({
 
         "SOWxTEAM SETAR VIDA 🤎",
