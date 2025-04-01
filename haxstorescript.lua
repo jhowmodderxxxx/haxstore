@@ -1,8 +1,3 @@
-
-
-gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
-
-
 local ENABLED = "✔️ "
 
 local DISABLED = "❌ "
@@ -29,9 +24,6 @@ function makeRequest(url, headers, body)
 
 end
 
-
-
--- Update Function
 -- Weapon Functions
 
 function toggleWeapon(weaponName, weaponId, ammoCount, slotsCount, addressOffset, statusVar)
@@ -288,6 +280,8 @@ end
 
 
 -- Main Menu
+
+gg.alert("VERSAO V1 \n\nSCRIPT DE PUXAR ARMAS, COLETE E VIDA By RodrigoGTyx")
 
 function mainMenu()
 local titulo = string.format(
