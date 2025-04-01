@@ -220,13 +220,21 @@ end
 
 -- Weapons Menu
 
+-- Weapons Menu
+
 local weaponStatus = {
 
     desert = DISABLED,
 
     shotgun = DISABLED,
 
+    mp5 = DISABLED,
+
+    ak47 = DISABLED,
+
     m4 = DISABLED,
+
+    bazooka = DISABLED
 
 }
 
@@ -237,8 +245,16 @@ function weaponsMenu()
     local choice = gg.choice({
 
         weaponStatus.desert .. "🔫DESERT🔫",
+
         weaponStatus.shotgun .. "🔫SHOTGUN🔫",
+
+        weaponStatus.mp5 .. "🔫MP5🔫",
+
+        weaponStatus.ak47 .. "🔫AK47🔫",
+
         weaponStatus.m4 .. "🔫M4🔫",
+
+        weaponStatus.bazooka .. "🔫BAZUCA🔫"
 
     }, nil, "Selecione uma arma:")
 
@@ -258,9 +274,23 @@ function weaponsMenu()
 
     elseif choice == 3 then
 
+        weaponStatus.mp5 = toggleWeapon("mp5", 29, 30, 60, 260, weaponStatus.mp5)
+
+    elseif choice == 4 then
+
+        weaponStatus.ak47 = toggleWeapon("ak47", 30, 30, 90, 292, weaponStatus.ak47)
+
+        weaponStatus.m4 = DISABLED
+
+    elseif choice == 5 then
+
         weaponStatus.m4 = toggleWeapon("m4", 31, 30, 90, 292, weaponStatus.m4)
 
         weaponStatus.ak47 = DISABLED
+
+    elseif choice == 6 then
+
+        gg.toast("Em breve...")
 
     end
 
