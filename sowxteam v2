@@ -1000,19 +1000,16 @@ function construtorcivill()
         }, nil, "Selecione a velocidade do farm")
         
         if speedChoice == 1 then
-            sleepTime = 1000 -- 1 segundos
-            initialDelay = 2000 -- Delay maior para o primeiro ponto
+            sleepTime = 1000-- 1 segundos
         elseif speedChoice == 2 then
             sleepTime = 2000 -- 2 segundos
-            initialDelay = 3000 -- Delay maior para o primeiro ponto
         elseif speedChoice == 3 then
             sleepTime = 3000 -- 3 segundos
-            initialDelay = 4000 -- Delay maior para o primeiro ponto
         else
             return -- Se cancelar, volta
         end
         
-        construtorcivil(sleepTime, initialDelay) 
+        construtorcivil(sleepTime) 
     end
     if construtorcivillops == 2 then farms() end
 end
@@ -1027,14 +1024,13 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function construtorcivil(sleepTime, initialDelay)
+function construtorcivil(sleepTime)
     local pontos = {
         "-305.936035;-2264.125000;33.306194",
         "-320.685028;-2256.816650;38.829632",
         "-289.364014;-2230.501465;38.829632"
     }
     
-    -- Buscar o endereço uma única vez
     gg.clearResults()
     gg.searchNumber("999.765625", gg.TYPE_FLOAT)
     local results = gg.getResults(1)
@@ -1049,21 +1045,24 @@ function construtorcivil(sleepTime, initialDelay)
     local offset_X = base + 0x64
     local offset_Z = base + 0x68
 
-    -- Loop para teleportar entre os pontos
     while true do
-        for i, coords in ipairs(pontos) do
+        for _, coords in ipairs(pontos) do
+            -- Adiciona pequena variação nas coordenadas
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-            y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
+            y = addRandomOffset(tonumber(y), 0.5)
+            x = addRandomOffset(tonumber(x), 0.5)
+            z = addRandomOffset(tonumber(z), 0.2)
+            
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
             
-            -- Aplica delay maior apenas para o primeiro ponto
-            if i == 1 then
-                gg.sleep(initialDelay)
-            else
-                gg.sleep(sleepTime) -- Usa o tempo normal para os outros pontos
-            end
+            -- Tempo de espera variável
+            local currentDelay = getRandomDelay(sleepTime)
+            gg.sleep(currentDelay)
+            
+            -- Comportamento humano ocasional
+            humanLikePause()
         end
-        gg.toast("Farm BySOWxTEAM")
+        gg.toast("Farm By SOWxTEAM")
     end
 end
 -- Criadores
