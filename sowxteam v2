@@ -1000,16 +1000,19 @@ function construtorcivill()
         }, nil, "Selecione a velocidade do farm")
         
         if speedChoice == 1 then
-            sleepTime = 1000-- 1 segundos
+            sleepTime = 1000 -- 1 segundos
+            initialDelay = 2000 -- Delay maior para o primeiro ponto
         elseif speedChoice == 2 then
             sleepTime = 2000 -- 2 segundos
+            initialDelay = 3000 -- Delay maior para o primeiro ponto
         elseif speedChoice == 3 then
             sleepTime = 3000 -- 3 segundos
+            initialDelay = 4000 -- Delay maior para o primeiro ponto
         else
             return -- Se cancelar, volta
         end
         
-        construtorcivil(sleepTime) 
+        construtorcivil(sleepTime, initialDelay) 
     end
     if construtorcivillops == 2 then farms() end
 end
@@ -1024,7 +1027,7 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function construtorcivil(sleepTime)
+function construtorcivil(sleepTime, initialDelay)
     local pontos = {
         "-305.936035;-2264.125000;33.306194",
         "-320.685028;-2256.816650;38.829632",
@@ -1048,12 +1051,17 @@ function construtorcivil(sleepTime)
 
     -- Loop para teleportar entre os pontos
     while true do
-        for _, coords in ipairs(pontos) do
+        for i, coords in ipairs(pontos) do
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
             y, x, z = tonumber(y), tonumber(x), tonumber(z) -- Converter para número
             teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-       
-            gg.sleep(sleepTime) -- Usa o tempo selecionado pelo usuário
+            
+            -- Aplica delay maior apenas para o primeiro ponto
+            if i == 1 then
+                gg.sleep(initialDelay)
+            else
+                gg.sleep(sleepTime) -- Usa o tempo normal para os outros pontos
+            end
         end
         gg.toast("Farm BySOWxTEAM")
     end
