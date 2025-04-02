@@ -1024,45 +1024,54 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function construtorcivil(sleepTime)
-    local pontos = {
-        "-305.936035;-2264.125000;33.306194",
-        "-320.685028;-2256.816650;38.829632",
-        "-289.364014;-2230.501465;38.829632"
+function startConstructionFarm()
+    -- Pontos de teleporte otimizados
+    local constructionPoints = {
+        {-305.936035, -2264.125000, 33.306194},   -- Ponto de coleta 1
+        {-320.685028, -2256.816650, 38.829632},   -- Ponto de entrega
+        {-289.364014, -2230.501465, 38.829632},   -- Ponto de coleta 2
+        {-320.685028, -2256.816650, 38.829632}    -- Ponto de entrega
     }
     
-    gg.clearResults()
-    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
-    local results = gg.getResults(1)
-
-    if #results == 0 then
-        gg.alert("Pointer não encontrado!")
+    -- Verificar e obter pointer uma única vez
+    local base, yOff, xOff, zOff = getPositionPointer()
+    if not base then
+        gg.alert("Erro: Não foi possível encontrar o pointer de posição!")
         return
     end
-
-    local base = results[1].address
-    local offset_Y = base + 0x60
-    local offset_X = base + 0x64
-    local offset_Z = base + 0x68
-
+    
+    gg.toast("🟢 INICIANDO FARM DE CONSTRUÇÃO 🟢\nVelocidade: "..(constructionSpeed/1000).."s")
+    
+    -- Contador de ciclos
+    local cycleCount = 0
+    
     while true do
-        for _, coords in ipairs(pontos) do
-            -- Adiciona pequena variação nas coordenadas
-            local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
-            y = addRandomOffset(tonumber(y), 0.5)
-            x = addRandomOffset(tonumber(x), 0.5)
-            z = addRandomOffset(tonumber(z), 0.2)
+        cycleCount = cycleCount + 1
+        
+        -- Teleportar entre os pontos
+        for i, point in ipairs(constructionPoints) do
+            if not teleportTo(point[1], point[2], point[3]) then
+                gg.toast("❌ ERRO NO TELEPORTE - PARANDO")
+                return
+            end
             
-            teleportar(y, x, z, offset_Y, offset_X, offset_Z)
+            -- Mensagem informativa
+            if i % 2 == 0 then
+                gg.toast("✅ Entrega realizada\nCiclo: "..cycleCount)
+            else
+                gg.toast("⛏ Coletando materiais")
+            end
             
-            -- Tempo de espera variável
-            local currentDelay = getRandomDelay(sleepTime)
-            gg.sleep(currentDelay)
-            
-            -- Comportamento humano ocasional
-            humanLikePause()
+            gg.sleep(constructionSpeed)
         end
-        gg.toast("Farm By SOWxTEAM")
+        
+        -- Verificar se o usuário quer parar a cada 5 ciclos
+        if cycleCount % 5 == 0 then
+            if gg.alert("Farm em andamento ("..cycleCount.." ciclos)\nDeseja continuar?", "Sim", "Não") == 2 then
+                gg.toast("⏹ Farm parado pelo usuário")
+                return
+            end
+        end
     end
 end
 -- Criadores
