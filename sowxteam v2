@@ -994,16 +994,20 @@ function construtorcivill()
     if construtorcivillops == 1 then 
         -- Adicionado menu de seleção de velocidade
         local speedChoice = gg.choice({
+            "⚡ Velocidade Rápida (0.5s) (chance alta de kick)",
             "⚡ Velocidade Quase Rápida (1s) (chance baixa de kick)",
             "🐢 Velocidade Normal (2s) (chance baixa de kick)",
             "🐌 Velocidade Lenta (3s) (chance baixa de kick)"
         }, nil, "Selecione a velocidade do farm")
         
+        local sleepTime = 500
         if speedChoice == 1 then
-            sleepTime = 1000-- 1 segundos
+            sleepTime = 500 -- 0.5 segundos
         elseif speedChoice == 2 then
-            sleepTime = 2000 -- 2 segundos
+            sleepTime = 1000-- 1 segundos
         elseif speedChoice == 3 then
+            sleepTime = 2000 -- 2 segundos
+        elseif speedChoice == 4 then
             sleepTime = 3000 -- 3 segundos
         else
             return -- Se cancelar, volta
@@ -1024,56 +1028,64 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function construtorcivil()
-    -- Pontos de teleporte otimizados
-    local constructionPoints = {
-        {-305.936035, -2264.125000, 33.306194},   -- Ponto de coleta 1
-        {-320.685028, -2256.816650, 38.829632},   -- Ponto de entrega
-        {-289.364014, -2230.501465, 38.829632},   -- Ponto de coleta 2
-        {-320.685028, -2256.816650, 38.829632}    -- Ponto de entrega
+function construtorcivil(sleepTime)
+    local pontos = {
+        "-305.936035;-2264.125000;33.306194",
+        "-320.685028;-2256.816650;38.829632",
+        "-289.364014;-2230.501465;38.829632"
     }
     
-    -- Verificar e obter pointer uma única vez
-    local base, yOff, xOff, zOff = getPositionPointer()
-    if not base then
-        gg.alert("Erro: Não foi possível encontrar o pointer de posição!")
+    -- Buscar o endereço uma única vez
+    gg.clearResults()
+    gg.searchNumber("999.765625", gg.TYPE_FLOAT)
+    local results = gg.getResults(1)
+
+    if #results == 0 then
+        gg.alert("Pointer não encontrado!")
         return
     end
+
+    local base = results[1].address
+    local offset_Y = base + 0x60
+    local offset_X = base + 0x64
+    local offset_Z = base + 0x68
+
+    -- Contador de iterações
+    local iteracao = 0
     
-    gg.toast("🟢 INICIANDO FARM DE CONSTRUÇÃO 🟢\nVelocidade: "..(constructionSpeed/1000).."s")
-    
-    -- Contador de ciclos
-    local cycleCount = 0
-    
+    -- Loop principal com proteção permanente
     while true do
-        cycleCount = cycleCount + 1
+        iteracao = iteracao + 1
         
-        -- Teleportar entre os pontos
-        for i, point in ipairs(constructionPoints) do
-            if not teleportTo(point[1], point[2], point[3]) then
-                gg.toast("❌ ERRO NO TELEPORTE - PARANDO")
-                return
-            end
-            
-            -- Mensagem informativa
-            if i % 2 == 0 then
-                gg.toast("✅ Entrega realizada\nCiclo: "..cycleCount)
-            else
-                gg.toast("⛏ Coletando materiais")
-            end
-            
-            gg.sleep(constructionSpeed)
+        -- Verificação anti-kick a cada 5 iterações
+        if iteracao % 5 == 0 then
+            local pausaAleatoria = math.random(2000, 5000)
+            gg.sleep(pausaAleatoria) -- Pausa aleatória longa
+            gg.toast("SOWxTEAM - Anti-kick ativo")
         end
         
-        -- Verificar se o usuário quer parar a cada 5 ciclos
-        if cycleCount % 5 == 0 then
-            if gg.alert("Farm em andamento ("..cycleCount.." ciclos)\nDeseja continuar?", "Sim", "Não") == 2 then
-                gg.toast("⏹ Farm parado pelo usuário")
-                return
-            end
+        for _, coords in ipairs(pontos) do
+            local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
+            y, x, z = tonumber(y), tonumber(x), tonumber(z)
+            
+            -- Adiciona pequena variação aleatória nas coordenadas
+            y = y + (math.random(-10, 10) * 0.01)
+            x = x + (math.random(-10, 10) * 0.01)
+            
+            teleportar(y, x, z, offset_Y, offset_X, offset_Z)
+            
+            -- Tempo de espera com variação aleatória
+            local tempoEspera = sleepTime + math.random(-300, 300)
+            gg.sleep(tempoEspera)
+        end
+        
+        -- Mensagem periódica
+        if iteracao % 3 == 0 then
+            gg.toast("Farm By SOWxTEAM - Iteração: " .. iteracao)
         end
     end
 end
+
 -- Criadores
 function criadores()
     gg.alert("SCRIPT FEITO POR RodrigoGTyx")
