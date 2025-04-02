@@ -1024,7 +1024,7 @@ function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
     gg.toast("Teletransportado com sucesso!")
 end
 
-function startConstructionFarm()
+function construtorcivil()
     -- Pontos de teleporte otimizados
     local constructionPoints = {
         {-305.936035, -2264.125000, 33.306194},   -- Ponto de coleta 1
