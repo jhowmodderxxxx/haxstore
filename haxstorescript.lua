@@ -282,7 +282,7 @@ end
 
 function mainMenu()
 local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V3.2 🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d",
+        "🎇SCRIPT SOWxTEAM V3.2  🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d \n\nQuando ativar colete ou vida interrompe o script e executa dnv!",
         usuario, expirationDay, expirationMonth, expirationYear
     )
 
