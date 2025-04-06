@@ -987,61 +987,44 @@ end
 
 function construtorcivill()
     construtorcivillops = gg.choice({
-        "🟢AUTO FARM CONSTRUÇÃO🟢",
+        "🟢AUTO FARM CONSTRUÇÃO (VOO AUTOMÁTICO)🟢",
         "↩️Voltar↩️"
-    }, nil, "🏆AUTO FARM CONSTRUÇÃO🏆")
+    }, nil, "🏆AUTO FARM CONSTRUÇÃO - MODO NOCLIP🏆")
 
     if construtorcivillops == 1 then 
-        -- Adicionado menu de seleção de velocidade
         local speedChoice = gg.choice({
-            "⚡ Velocidade Rápida (0.5s) (chance alta de kick)",
-            "⚡ Velocidade Quase Rápida (1s) (chance baixa de kick)",
-            "🐢 Velocidade Normal (2s) (chance baixa de kick)",
-            "🐌 Velocidade Lenta (3s) (chance baixa de kick)"
-        }, nil, "Selecione a velocidade do farm")
+            "⚡ Velocidade Máxima (voa rápido)",
+            "🚀 Velocidade Rápida (recomendado)",
+            "🕊️ Velocidade Normal (mais natural)",
+            "🐦 Velocidade Suave (muito lento)"
+        }, nil, "Selecione a velocidade do voo")
         
-        local sleepTime = 500
+        local velocidadeVoo = 10.0 -- Valor padrão
         if speedChoice == 1 then
-            sleepTime = 500 -- 0.5 segundos
+            velocidadeVoo = 25.0
         elseif speedChoice == 2 then
-            sleepTime = 1000-- 1 segundos
+            velocidadeVoo = 15.0
         elseif speedChoice == 3 then
-            sleepTime = 2000 -- 2 segundos
+            velocidadeVoo = 8.0
         elseif speedChoice == 4 then
-            sleepTime = 3000 -- 3 segundos
+            velocidadeVoo = 4.0
         else
-            return -- Se cancelar, volta
+            return
         end
         
-        construtorcivil(sleepTime) 
+        ativarModoNoclip(velocidadeVoo) 
     end
     if construtorcivillops == 2 then farms() end
 end
 
-function teleportar(y, x, z, offset_Y, offset_X, offset_Z)
-    -- Definir novas coordenadas
-    gg.setValues({
-        {address = offset_Y, flags = gg.TYPE_FLOAT, value = y},
-        {address = offset_X, flags = gg.TYPE_FLOAT, value = x},
-        {address = offset_Z, flags = gg.TYPE_FLOAT, value = z}
-    })
-    gg.toast("Teletransportado com sucesso!")
-end
-
-function construtorcivil(sleepTime)
-    local pontos = {
-        "-305.936035;-2264.125000;33.306194",
-        "-320.685028;-2256.816650;38.829632",
-        "-289.364014;-2230.501465;38.829632"
-    }
-    
-    -- Buscar o endereço uma única vez
+function ativarModoNoclip(velocidade)
+    -- Buscar endereços de posição
     gg.clearResults()
     gg.searchNumber("999.765625", gg.TYPE_FLOAT)
     local results = gg.getResults(1)
-
+    
     if #results == 0 then
-        gg.alert("Pointer não encontrado!")
+        gg.alert("Pointer de posição não encontrado!")
         return
     end
 
@@ -1050,38 +1033,110 @@ function construtorcivil(sleepTime)
     local offset_X = base + 0x64
     local offset_Z = base + 0x68
 
-    -- Contador de iterações
+    -- Verificar/Ativar noclip (se necessário)
+    -- (Adicione aqui a lógica para ativar noclip se o jogo tiver essa funcionalidade)
+
+    local pontos = {
+        "-305.936035;-2264.125000;33.306194",
+        "-320.685028;-2256.816650;38.829632",
+        "-289.364014;-2230.501465;38.829632"
+    }
+
+    -- Função para voar até um ponto específico
+    local function voarParaPonto(yDestino, xDestino, zDestino)
+        local posAtual = {
+            y = gg.getValues({{address = offset_Y, flags = gg.TYPE_FLOAT}})[1].value,
+            x = gg.getValues({{address = offset_X, flags = gg.TYPE_FLOAT}})[1].value,
+            z = gg.getValues({{address = offset_Z, flags = gg.TYPE_FLOAT}})[1].value
+        }
+
+        -- Calcular direção
+        local direcao = {
+            y = yDestino - posAtual.y,
+            x = xDestino - posAtual.x,
+            z = zDestino - posAtual.z
+        }
+
+        -- Normalizar direção e aplicar velocidade
+        local distancia = math.sqrt(direcao.y^2 + direcao.x^2 + direcao.z^2)
+        if distancia > 0 then
+            direcao.y = (direcao.y / distancia) * velocidade
+            direcao.x = (direcao.x / distancia) * velocidade
+            direcao.z = (direcao.z / distancia) * velocidade
+        end
+
+        -- Movimento contínuo até chegar próximo ao destino
+        while distancia > 1.5 do  -- 1.5 unidades de tolerância
+            -- Atualizar posição atual
+            posAtual = {
+                y = gg.getValues({{address = offset_Y, flags = gg.TYPE_FLOAT}})[1].value,
+                x = gg.getValues({{address = offset_X, flags = gg.TYPE_FLOAT}})[1].value,
+                z = gg.getValues({{address = offset_Z, flags = gg.TYPE_FLOAT}})[1].value
+            }
+
+            -- Mover na direção do destino
+            gg.setValues({
+                {address = offset_Y, flags = gg.TYPE_FLOAT, value = posAtual.y + direcao.y},
+                {address = offset_X, flags = gg.TYPE_FLOAT, value = posAtual.x + direcao.x},
+                {address = offset_Z, flags = gg.TYPE_FLOAT, value = posAtual.z + direcao.z}
+            })
+
+            -- Pequena pausa para movimento suave
+            gg.sleep(50)
+
+            -- Recalcular distância e direção (para ajustar trajetória)
+            distancia = math.sqrt(
+                (yDestino - posAtual.y)^2 + 
+                (xDestino - posAtual.x)^2 + 
+                (zDestino - posAtual.z)^2
+            )
+            
+            if distancia > 0 then
+                direcao.y = ((yDestino - posAtual.y) / distancia) * velocidade
+                direcao.x = ((xDestino - posAtual.x) / distancia) * velocidade
+                direcao.z = ((zDestino - posAtual.z) / distancia) * velocidade
+            end
+        end
+
+        -- Ajuste final para posição exata
+        gg.setValues({
+            {address = offset_Y, flags = gg.TYPE_FLOAT, value = yDestino},
+            {address = offset_X, flags = gg.TYPE_FLOAT, value = xDestino},
+            {address = offset_Z, flags = gg.TYPE_FLOAT, value = zDestino}
+        })
+    end
+
+    -- Loop principal de farm
     local iteracao = 0
-    
-    -- Loop principal com proteção permanente
     while true do
         iteracao = iteracao + 1
         
-        -- Verificação anti-kick a cada 5 iterações
+        -- Anti-kick (pausas aleatórias)
         if iteracao % 5 == 0 then
-            local pausaAleatoria = math.random(2000, 5000)
-            gg.sleep(pausaAleatoria) -- Pausa aleatória longa
+            gg.sleep(math.random(2000, 4000))
             gg.toast("SOWxTEAM - Anti-kick ativo")
         end
-        
+
         for _, coords in ipairs(pontos) do
             local y, x, z = coords:match("([^;]+);([^;]+);([^;]+)")
             y, x, z = tonumber(y), tonumber(x), tonumber(z)
             
-            -- Adiciona pequena variação aleatória nas coordenadas
-            y = y + (math.random(-10, 10) * 0.01)
-            x = x + (math.random(-10, 10) * 0.01)
+            -- Adicionar pequena variação aleatória no destino
+            local yDestino = y + (math.random(-10, 10) * 0.05
+            local xDestino = x + (math.random(-10, 10) * 0.05
+            local zDestino = z + (math.random(-5, 5) * 0.05
             
-            teleportar(y, x, z, offset_Y, offset_X, offset_Z)
+            gg.toast("Voando para checkpoint...")
+            voarParaPonto(yDestino, xDestino, zDestino)
             
-            -- Tempo de espera com variação aleatória
-            local tempoEspera = sleepTime + math.random(-300, 300)
+            -- Tempo de espera no ponto (com variação aleatória)
+            local tempoEspera = math.random(1500, 3000)
             gg.sleep(tempoEspera)
         end
-        
-        -- Mensagem periódica
+
+        -- Feedback visual
         if iteracao % 3 == 0 then
-            gg.toast("Farm By SOWxTEAM - Iteração: " .. iteracao)
+            gg.toast("Farm Noclip By SOWxTEAM - Ciclo: " .. iteracao)
         end
     end
 end
@@ -1103,4 +1158,3 @@ while true do
         menufarm()
     end
 end
-
