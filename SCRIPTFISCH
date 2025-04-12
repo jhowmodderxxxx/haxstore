@@ -1,5 +1,5 @@
 ---@diagnostic disable: redundant-value
-if getgenv().hub then warn("JhowModderX : ta executado meu patrao!") return end
+if getgenv().hub then warn("HAXSTORE : ta executado meu patrao!") return end
 getgenv().hub = true    
 
 if not game:IsLoaded() then
@@ -9,8 +9,8 @@ end
 
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/JhowModderX/refs/heads/main/savemanagerhax"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/JhowModderX/refs/heads/main/interface"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 
@@ -43,7 +43,7 @@ TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.BackgroundTransparency = 1
 TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
-TextButton.Text = "JhowModderX"
+TextButton.Text = "HAXSTORE"
 TextButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.TextSize = 14
 TextButton.AutoButtonColor = false
@@ -99,7 +99,7 @@ local function update(input)
 end
 
 
---mexer o flutuante com nome JhowModderX no pc--
+--mexer o flutuante com nome hax store no pc--
 MainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -124,7 +124,7 @@ MainFrame.InputBegan:Connect(function(input)
 
 
 
---mexer o flutuante com nome JhowModderX no mobile--
+--mexer o flutuante com nome hax store no mobile--
   MainFrame.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
@@ -147,7 +147,7 @@ TextButton.MouseButton1Click:Connect(function()
 end)
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | JhowModderX - PREMIUM",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - PREMIUM",
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -202,7 +202,7 @@ local RunCount = false
 -- // // // Functions // // // --
 function ShowNotification(String)
     Fluent:Notify({
-        Title = "JhowModderX",
+        Title = "HAX STORE",
         Content = String,
         Duration = 5
     })
@@ -591,7 +591,7 @@ Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
-        Title = "DISCORD DA JhowModderX",
+        Title = "DISCORD DA HAX STORE",
         Description = "CONTAS E SCRIPTS SO LA!!",
         Callback = function()
             setclipboard("https://discord.gg/MbqyhEJ3") -- discord link
@@ -599,7 +599,7 @@ do
     })
 
     -- // Main Tab // --
-    local section = Tabs.Main:AddSection("FARM JhowModderX")
+    local section = Tabs.Main:AddSection("FARM HAX STORE")
     local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "AUTO CAST", Default = false })
     autoCast:OnChanged(function()
         local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
@@ -1090,7 +1090,7 @@ print("Anti-AFK Script ativado")
 
 
 ---@diagnostic disable: redundant-value
-if getgenv().hub then warn("JhowModderX : ta executado meu patrao!") return end
+if getgenv().hub then warn("HAXSTORE : ta executado meu patrao!") return end
 getgenv().hub = true    
 
 if not game:IsLoaded() then
@@ -1100,8 +1100,8 @@ end
 
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/JhowModderX/refs/heads/main/savemanagerhax"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/JhowModderX/refs/heads/main/interface"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/savemanagerhax"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/refs/heads/main/interface"))()
 
 local DeviceType = game:GetService("UserInputService").TouchEnabled and "Mobile" or "PC"
 
@@ -1134,7 +1134,7 @@ TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.BackgroundTransparency = 1
 TextButton.BorderSizePixel = 0
 TextButton.Size = UDim2.new(1, 0, 1, 0)
-TextButton.Text = "JhowModderX"
+TextButton.Text = "HAXSTORE"
 TextButton.TextColor3 = Color3.fromRGB(0, 255, 255)
 TextButton.TextSize = 14
 TextButton.AutoButtonColor = false
@@ -1190,7 +1190,7 @@ local function update(input)
 end
 
 
---mexer o flutuante com nome JhowModderX no pc--
+--mexer o flutuante com nome hax store no pc--
 MainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -1215,7 +1215,7 @@ MainFrame.InputBegan:Connect(function(input)
 
 
 
---mexer o flutuante com nome JhowModderX no mobile--
+--mexer o flutuante com nome hax store no mobile--
   MainFrame.InputChanged:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
@@ -1238,7 +1238,7 @@ TextButton.MouseButton1Click:Connect(function()
 end)
 
 local Window = Fluent:CreateWindow({
-    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | JhowModderX - PREMIUM",
+    Title = game:GetService("MarketplaceService"):GetProductInfo(16732694052).Name .." | HAX STORE - PREMIUM",
     SubTitle = "",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
@@ -1293,7 +1293,7 @@ local RunCount = false
 -- // // // Functions // // // --
 function ShowNotification(String)
     Fluent:Notify({
-        Title = "JhowModderX",
+        Title = "HAX STORE",
         Content = String,
         Duration = 5
     })
@@ -1681,7 +1681,7 @@ Window:SelectTab(Home)
 
 do
     Tabs.Home:AddButton({
-        Title = "DISCORD DA JhowModderX",
+        Title = "DISCORD DA HAX STORE",
         Description = "CONTAS E SCRIPTS SO LA!!",
         Callback = function()
             setclipboard("https://discord.gg/MbqyhEJ3") -- discord link
@@ -1689,7 +1689,7 @@ do
     })
 
     -- // Main Tab // --
-    local section = Tabs.Main:AddSection("FARM JhowModderX")
+    local section = Tabs.Main:AddSection("FARM HAX STORE")
     local autoCast = Tabs.Main:AddToggle("autoCast", {Title = "AUTO CAST", Default = false })
     autoCast:OnChanged(function()
         local RodName = ReplicatedStorage.playerstats[LocalPlayer.Name].Stats.rod.Value
@@ -2166,70 +2166,6 @@ section:AddButton({
     end)
 end
 
-local v39 = v10.Main:AddToggle('MyToggle', {
-    Title = 'AntiCheat',
-    Description = "",
-    Default = false,
-    Callback = function(v176)
-        if (v176 ~= v43) then
-            local v400 = 0;
-            while true do
-                if (v400 == (0)) then
-                    if v176 then
-                        v8:Notify({
-                            Title = 'Anti Cheat Enable',
-                            Content = "Now Do Whatever You Want You're Immortal",
-                            Duration = 5
-                        });
-                    else
-                        v8:Notify({
-                            Title = 'Anti Cheat Disable',
-                            Content = 'Chance of getting ban increased by 43%',
-                            Duration = 5
-                        });
-                    end
-                    v43 = v176;
-                    break
-                end
-            end
-        end
-    end
-});
-
-
-function AntiAfk2()
-    spawn(function()
-        while v29 do
-            local v385 = 0;
-            while true do
-                if (v385 == 0) then
-                    game:GetService('ReplicatedStorage'):WaitForChild('events'):WaitForChild('afk'):FireServer(false);
-                    task.wait(1E-2);
-                    break
-                end
-            end
-        end
-    end);
-end
-v15.ChildAdded:Connect(function(v158)
-    if v158:IsA('ScreenGui') then
-    elseif ((v158.Name == 'reel') and v23) then
-        local v508 = ReplicatedStorage:WaitForChild('events'):WaitForChild('reelfinished');
-        if v508 then
-            while v158 do
-                local v619 = 0;
-                while true do
-                    if ((0) == v619) then
-                        task.wait(2);
-                        v508:FireServer(100, false);
-                        break
-                    end
-                end
-            end
-        end
-    end
-end);
-
 
 -- Anti-AFK Script
 local VirtualUser = game:GetService("VirtualUser")
@@ -2245,7 +2181,16 @@ print("Anti-AFK Script ativado")
 
 Window:SelectTab(1)
 Fluent:Notify({
-    Title = "JhowModderX",
+    Title = "HAX STORE",
+    Content = "Executed!",
+    Duration = 8
+})
+
+
+
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "HAX STORE",
     Content = "Executed!",
     Duration = 8
 })
