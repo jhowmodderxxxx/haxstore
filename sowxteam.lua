@@ -138,7 +138,7 @@ function menufarm()
 
 if menu == 1 then teleport() end
 if menu == 2 then
-    local script = gg.makeRequest("https://raw.githubusercontent.com/jhowmodderxxxx/haxstore/main/haxstorescript.lua").content
+    local script = gg.makeRequest("https://garcia.mmmodsstudios.com/script/gg1/MMmods").content
     if script then
         local f, err = load(script)
         if f then f() end
