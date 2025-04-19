@@ -216,7 +216,7 @@ local weaponStatus = {
 
     m4 = DISABLED,
 
-    bazooka = DISABLED
+    minigun = DISABLED
 
 }
 
@@ -236,7 +236,7 @@ function weaponsMenu()
 
         weaponStatus.m4 .. "🔫M4🔫",
 
-        weaponStatus.bazooka .. "🔫BAZUCA🔫"
+        weaponStatus.minigun .. "🔫Minigun (Teste)🔫"
 
     }, nil, "Selecione uma arma:")
 
@@ -272,7 +272,7 @@ function weaponsMenu()
 
     elseif choice == 6 then
 
-        gg.toast("Em breve...")
+        weaponStatus.minigun = toggleWeapon("Minigun (teste)", 38, 7, 362, 10000, weaponStatus.minigun)
 
     end
 
@@ -282,21 +282,21 @@ end
 
 function mainMenu()
 local titulo = string.format(
-        "🎇SCRIPT SOWxTEAM V3.2  🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d \n\nQuando ativar colete ou vida interrompe o script e executa dnv!",
+        "🎇SCRIPT NovaX V3.2  🎇\n\n 👤 Usuário: %s\n\n 🔓 Expiração: %02d/%02d/%d \n\nQuando ativar colete ou vida interrompe o script e executa dnv!",
         usuario, expirationDay, expirationMonth, expirationYear
     )
 
     menu = gg.choice({
-        "SOWxTEAM - FUNCTION ▶",
+        "NovaX - FUNCTION ▶",
     }, nil, titulo)
     
     jhowmddrx = gg.choice({
 
-        "SOWxTEAM SETAR VIDA 🤎",
+        "NovaX SETAR VIDA 🤎",
         
-        "SOWxTEAM SETAR COLETE🛡",
+        "NovaX SETAR COLETE🛡",
         
-        "SOWxTEAM SETAR ARMAS🔫"
+        "NovaX SETAR ARMAS🔫"
         
 
     }, nil, "Selecione uma opção:")
